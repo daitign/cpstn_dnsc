@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.7.2",
+        "vite": "^4.0.0"
+    },
+    "dependencies": {
+        "@mdi/font": "^7.1.96",
+        "@yaireo/tagify": "^4.17.7",
+        "bootstrap": "^5.2.3",
+        "jquery": "^3.6.4",
+        "sweetalert2": "^11.7.3"
+    }
+}

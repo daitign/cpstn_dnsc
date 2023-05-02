@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <title>Evidence</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script type="module" src="http://[::1]:5173/@vite/client"></script><link rel="stylesheet" href="http://[::1]:5173/resources/css/app.css" /><script type="module" src="http://[::1]:5173/resources/js/app.js"></script>        <link rel="shortcut icon" href="/storage/assets/dnsc_logo.png" type="image/x-icon">
+        <link rel="stylesheet" href="http://127.0.0.1:8000/storage/assets/fonts/fontawesome-all.min.css">
+        <script type="module" src="http://[::1]:5173/@vite/client"></script><script type="module" src="http://[::1]:5173/resources/js/jq.js"></script>                    </head>
+    <body>
+                    <style>
+    @media (min-width: 992px) {
+        body {
+            padding-left: 14rem;
+        }
+    }
+
+    .drop-menu .active {
+        background-color: #ffffff !important;
+    }
+
+    .drop-menu .active span {
+        color: #005b40 !important;
+    }
+
+    /* Sidebar Styles */
+
+    .sidebar {
+        max-width: 14rem !important;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #005b40;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    .sidebar .logo {
+        font-size: 1.6rem;
+    }
+
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active {
+        background-color: #ffffff;
+        opacity: 1;
+        color: #005b40;
+    }
+
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active span {
+        background-color: #ffffff;
+        opacity: 1;
+        color: #005b40;
+    }
+
+    .sidebar .nav-link span {
+        font-size: 1rem;
+        color: #ffffff;
+    }
+
+    .sidebar .nav-link:hover span {
+        font-size: 1rem;
+        color: #005b40;
+    }
+
+    .sidebar .dropdown-toggle:after {
+        display: none;
+    }
+
+    .sidebar .dropdown-menu {
+        position: relative !important;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        overflow: hidden;
+        transform: unset !important;
+        top: unset !important;
+        left: unset !important;
+        min-width: unset !important;
+        background-color: #005b40;
+        border-radius: 0 !important;
+    }
+
+    .sidebar .dropdown-item {
+        padding: 0.8rem 0 0.8rem 1.5rem;
+        margin: 0;
+    }
+
+    .sidebar .dropdown-item:hover,
+    .sidebar .dropdown-item:active,
+    .dropdown-item:focus {
+        background-color: #005b40;
+    }
+
+    .sidebar .nav-link {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        font-size: 1rem;
+        position: relative;
+        opacity: 0.9;
+        color: #ffffff;
+    }
+
+    .sidebar .fas.fa-caret-down.float-none.float-lg-right.fa-sm {
+        position: absolute;
+        top: 50%;
+        right: 5%;
+        transform: translate(-50%, -50%);
+    }
+
+    .sidebar.collapsed .nav-item:not(.logo-holder) {
+        display: none !important;
+    }
+
+    @media (max-width: 991px) {
+        .sidebar.mobile-hid .nav-item {
+            display: none !important;
+        }
+    }
+
+    .sidebar.collapsed #sidebarToggleHolder {
+        position: absolute !important;
+        color: #ffffff !important;
+        left: 0;
+        top: 0;
+        padding: 10px;
+        z-index: 999;
+        margin-top: 3px;
+    }
+
+    @media (max-width: 991px) {
+        .sidebar.mobile-hid #sidebarToggleHolder {
+            position: absolute !important;
+            color: #858791 !important;
+            left: 0;
+            top: 0;
+            margin: 10px;
+            z-index: 999;
+        }
+    }
+
+    .sidebar.collapsed .logo #title {
+        display: none;
+    }
+
+    @media (max-width: 991px) {
+        .sidebar.mobile-hid .logo #title {
+            display: none;
+        }
+    }
+
+    .sidebar.collapsed #sidebarToggleHolder {
+        float: none !important;
+    }
+
+    @media (max-width: 991px) {
+        .sidebar.mobile-hid #sidebarToggleHolder {
+            float: none !important;
+        }
+    }
+
+    .sidebar.collapsed {
+        width: 0 !important;
+    }
+
+    @media (max-width: 991px) {
+        .sidebar.mobile-hid {
+            width: 0 !important;
+        }
+    }
+
+    .sidebar #sidebarToggleHolder {
+        font-size: 20px !important;
+        margin: 7px 5px;
+    }
+
+    .dropdown-item span {
+        color: #ffffff;
+    }
+
+    .dropdown-item:hover span {
+        color: #005b40;
+    }
+
+    .dropdown-item:hover {
+        background-color: #ffffff !important;
+        /*color: #ffffff;*/
+    }
+
+    .dropdown-menu .dropdown-item .active {
+        background-color: #ffffff !important;
+    }
+
+    #title {
+        color: #ffffff;
+    }
+</style>
+
+<ul class="nav flex-column shadow d-flex sidebar mobile-hid">
+    <li class="nav-item logo-holder">
+        <div class="text-center text-white logo py-4 mx-4"><img class="img-fluid"
+                src="http://127.0.0.1:8000/storage/assets/dnsc-logo.png" width="55" height="50"><a id="title"
+                class="text-decoration-none" href="#"><strong>DNSC</strong></a><a class="float-end text-white"
+                id="sidebarToggleHolder" href="#"><i class="fas fa-bars" id="sidebarToggle"></i></a></div>
+    </li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 " href="http://127.0.0.1:8000/dcc/dashboard"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 " href="http://127.0.0.1:8000/dcc/template"><i class="fas fa-newspaper mx-3 mx-3"></i><span class="text-nowrap mx-2">Templates</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 " href="http://127.0.0.1:8000/dcc/evidence"><i class="fas fa-file-alt mx-3 mx-3"></i><span class="text-nowrap mx-2">Evidences</span></a></li>
+    <li class="nav-item dropdown"><a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-book mx-3"></i><span class="text-nowrap" style="margin-left: 11px;">Manuals</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
+        <div class="dropdown-menu border-0 animated fadeIn"><a class="dropdown-item" href="#"><span>Pending</span></a></div>
+    </li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0" href="#"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0" href="#"><i class="fas fa-chart-bar mx-3"></i><span class="text-nowrap mx-2">Statistics</span></a></li>
+</ul>
+
+          <nav class="navbar navbar-light navbar-expand-md" style="background-color: #37a87f;">
+        <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
+                    class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <p class="navbar-text text-white ms-5" style="margin-bottom: 0;">Office of the Director for Quality
+                    Assurance (Document Control Custodian)</p>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-2"><a class="nav-link active" href="#"><i
+                                class="fas fa-comment-alt text-warning" title="10"></i><span class="text-warning"
+                                style="font-size: 10px;margin: 0px;margin-top: 0px;position: absolute;">10</span></a></li>
+                    <li class="nav-item me-2"><a class="nav-link" href="#"><i class="fas fa-bell text-white"></i></a>
+                    </li>
+                    <li class="nav-item me-2"><a class="nav-link" href="#"><i class="fas fa-user text-white"></i></a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="http://127.0.0.1:8000/logout"><i class="fas fa-power-off text-white"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+        <style>
+        .folder{
+            width: 140px;
+            height: 123px;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-image: url("/storage/assets/folder.png");
+            color: #ffffff;
+        }
+        .folder:hover{
+            border: 1px #d1d1d1 solid;
+            color: #ffffff;
+        }
+        .file{
+
+        }
+    </style>
+    <div class="container">
+        <h1>Evidences</h1>
+        <div class="text-end">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add">
+                <span class="mdi mdi-plus"></span> Add
+            </button>
+        </div>
+    </div>
+    
+    <div class="container">
+        
+        
+                
+        
+        <div class="row">
+                        <div class="col-2">
+                
+                                <a class="folder btn d-flex align-items-center justify-content-center" href="evidence/Test">
+                    Test
+                </a>
+                            </div>
+                    </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Add Evidence</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="http://127.0.0.1:8000/dcc/evidence-add-folder" id="area" method="POST">
+                        <input type="hidden" name="_token" value="c9bQGra0TSIxTYhM80KOawfhtqD680FoLbFDyoEv">                        <input type="hidden" id="whitelist" value='[{"id":1,"program_name":"BSIT","program_description":"Bachelor of Science in Information Technology","institute_id":1,"deleted_at":null,"created_at":"2023-04-04T16:30:39.000000Z","updated_at":"2023-04-04T16:30:39.000000Z","pivot":{"user_id":2,"program_id":1}},{"id":2,"program_name":"BSIS","program_description":"Bachelor of Science in Information System","institute_id":1,"deleted_at":null,"created_at":"2023-04-06T06:31:06.000000Z","updated_at":"2023-04-06T06:31:06.000000Z","pivot":{"user_id":2,"program_id":2}}]'>
+                        <input type="hidden" name="parent" value="Test">
+                        <div class="mb-2">
+                            <span>Folder Name</span>
+                            <input type="text" class="form-control" placeholder="Folder" name="folder" required>
+                        </div>
+                        <div class="mb-2">
+                            <span>Area Access</span>
+                            <input type="text" class="form-control" placeholder="Area" name="area" id="area_input" required>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="http://[::1]:5173/@vite/client"></script><script type="module" src="http://[::1]:5173/resources/js/sidebar.js"></script>    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            (function($) {
+            let win = $(window);
+            let w = win.width();
+
+            let body = $('body');
+            let btn = $('#sidebarToggle');
+            let sidebar = $('.sidebar');
+
+            // Collapse on load
+
+            if (win.width() < 992) {
+                sidebar.addClass('collapsed');
+            }
+
+            sidebar.removeClass('mobile-hid');
+
+            // Events
+
+            btn.click(toggleSidebar);
+
+            win.resize(function() {
+
+                if (w == win.width()) {
+                    return;
+                }
+
+                w = win.width();
+
+                if (w < 992 && !sidebar.hasClass('collapsed')) {
+                    toggleSidebar();
+                } else if (w > 992 && sidebar.hasClass('collapsed')) {
+                    toggleSidebar();
+                }
+            });
+
+            function toggleSidebar() {
+
+                if (win.width() < 992 || !sidebar.hasClass('collapsed')) {
+                    body.animate({
+                        'padding-left': '0'
+                    }, 100);
+                } else if (win.width() > 992 && sidebar.hasClass('collapsed')) {
+                    body.animate({
+                        'padding-left': '14rem'
+                    }, 100);
+                }
+
+                if (!sidebar.hasClass('collapsed')) {
+                    sidebar.fadeOut(100, function() {
+                        btn.hide();
+                        sidebar.addClass('collapsed');
+                        btn.fadeIn(100);
+                    });
+                } else {
+                    sidebar.removeClass('collapsed');
+                    sidebar.fadeIn(100);
+                }
+
+            }
+            })(jQuery) 
+        });
+    </script>
+                        <div id="loading">
+            <div class="spinner"></div>
+        </div>
+    </body>
+</html>

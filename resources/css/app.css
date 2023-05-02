@@ -1,0 +1,80 @@
+/* @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap'); */
+html,
+body {
+    margin: 0 !important;
+    height: 100vh;
+    background-color: #eef1f4 !important;
+}
+
+@font-face {
+    font-display: swap;
+    font-family: 'M PLUS Rounded 1c';
+    font-style: normal;
+    font-weight: 400;
+    /* src: url('../fonts/m-plus-rounded-1c-v15-latin-regular.eot'); */
+    src: url('../../storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.eot');
+    /* src: url('../fonts/m-plus-rounded-1c-v15-latin-regular.eot?#iefix') format('embedded-opentype'), */
+    src: url('../../storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.eot?#iefix') format('embedded-opentype'),
+        /* url('../fonts/m-plus-rounded-1c-v15-latin-regular.woff2') format('woff2'),  */
+        url('../../storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.woff2') format('woff2'),
+        /* url('../fonts/m-plus-rounded-1c-v15-latin-regular.woff') format('woff'),  */
+        url('../../storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.woff') format('woff'),
+        /* url('../fonts/m-plus-rounded-1c-v15-latin-regular.ttf') format('truetype'), */
+        url('../../storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.ttf') format('truetype'),
+        /* url('../fonts/m-plus-rounded-1c-v15-latin-regular.svg#MPLUSRounded1c') format('svg'); */
+        url('../../storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.svg#MPLUSRounded1c') format('svg');
+}
+/* 
+* {
+    font-family: 'M PLUS Rounded 1c' !important;
+} */
+
+#loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ccc;
+    border-top-color: #333;
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.green-line {
+    height: 137px;
+    padding-top: -37px;
+    background: #005B40;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.green-line > img {
+    margin-top: -25px;
+}
+
+.page-header {
+    background-image: url('/storage/assets/bg-header.png');
+    background-size: cover;
+    min-height: 127px;
+    padding-top: 70px;
+    padding-left: 20px;
+    color: #005B40;
+    background-position: right;
+}
