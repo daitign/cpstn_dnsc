@@ -106,6 +106,23 @@
                         </li>
                         @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
                         <li>
+                            @if(!empty($file->share) && $file->share == true)
+                                <a href="#" class="text-decoration-none btn-confirm" data-message="Are you sure you wan't to unshare the file" data-target="#unshare_file_{{ $file->id }}">Unshare</button>
+                                    <form id="unshare_file_{{ $file->id }}" action="{{ route('archives-unshare-file', $file->id) }}" class="d-none" method="POST">
+                                        @csrf
+                                    </form>
+                                </a>
+                            @else
+                                <a href="#" class="text-decoration-none btn-confirm" data-message="Are you sure you wan't to share the file" data-target="#share_file_{{ $file->id }}">Share</button>
+                                    <form id="share_file_{{ $file->id }}" action="{{ route('archives-share-file', $file->id) }}" class="d-none" method="POST">
+                                        @csrf
+                                    </form>
+                                </a>
+                            @endif
+                        </li>
+                        @endif
+                        @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
+                        <li>
                             <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}">Delete</button>
                                 <form id="delete_file_{{ $file->id }}" action="{{ route('archives-delete-file', $file->id) }}" class="d-none" method="POST">
                                     @csrf
@@ -161,6 +178,10 @@
                         <div class="mb-3">
                             <label for="file_name" class="form-label">Name</label>
                             <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Enter Filename" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="checkbox" class="form-check-input" name="share" id="share">
+                            <label for="share" class="form-label">Share with Everyone</label>
                         </div>
                         <div class="mb-3">
                             <label for="file_attachment" class="form-label">Attachment</label>
@@ -248,14 +269,14 @@
 
     $('.btn-confirm').on('click', function(){
         var form = $(this).data('target');
+        var message = $(this).data('message') ?? "Are you sure you wan't to delete?";
         Swal.fire({
-            title: "Are you sure you wan't to delete?",
-            text: "You won't be able to revert this!",
-            icon: 'warning',
+            text: message,
+            icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $(form).submit();

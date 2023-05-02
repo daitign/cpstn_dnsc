@@ -143,12 +143,7 @@ return [
         // 'store'  => 'redis',
     ],
 
-    'manage_archive' => [
-        'Administrator', 
-        'Human Resources', 
-        'Document Control Custodian', 
-        'Process Owner'
-    ],
+    'manage_archive' => ['Administrator'],
 
     /*
     |--------------------------------------------------------------------------

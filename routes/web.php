@@ -64,6 +64,10 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/file',[ArchiveController::class,'storeFile'])->name('archives-store-file');
         Route::get('/file/{id}',[ArchiveController::class,'downloadFile'])->name('archives-download-file');
         Route::delete('/file/{id}',[ArchiveController::class,'deleteFile'])->name('archives-delete-file');
+
+        Route::post('/file/{id}/share',[ArchiveController::class,'shareFile'])->name('archives-share-file');
+        Route::post('/file/{id}/unshare',[ArchiveController::class,'unshareFile'])->name('archives-unshare-file');
+        
     });
 
 
