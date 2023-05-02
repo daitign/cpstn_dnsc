@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Models\Directory;
 use App\Http\Controllers\Controller;
 use App\Models\Office;
 use Illuminate\Http\Request;
@@ -20,6 +21,14 @@ class OfficeController extends Controller
         $office->office_description = $request->office_description;
         $office->area_id = 1;
         $office->save();
+
+        $directories = Directory::where('name', 'Administration')->whereNotNull('area_dependent')->get();
+        foreach($directories as $directory) {
+            Directory::create([
+                'name' => $request->office_name,
+                'parent_id' => $directory->id
+            ]);
+        }
 
         return redirect()->route('admin-area-page')->with('success', 'Office added successfully');
     }

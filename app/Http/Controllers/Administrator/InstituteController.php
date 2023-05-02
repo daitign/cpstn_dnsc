@@ -21,6 +21,14 @@ class InstituteController extends Controller
         $institute->area_id = 2;
         $institute->save();
 
+        $directories = Directory::where('name', 'Academics')->whereNotNull('area_dependent')->get();
+        foreach($directories as $directory) {
+            Directory::create([
+                'name' => $request->institute_name,
+                'parent_id' => $directory->id
+            ]);
+        }
+
         return redirect()->route('admin-area-page')->with('success', 'Institute added successfully');
     }
 

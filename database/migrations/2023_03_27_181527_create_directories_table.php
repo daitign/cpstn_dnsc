@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('parent_id')->nullable();
             $table->foreignId('user_id')->nullable();
+            $table->boolean('area_dependent')->nullable();
             $table->softDeletesTz();
             $table->timestamps();
         });

@@ -24,16 +24,10 @@ class RoleSeeder extends Seeder
                 'role_name'=> 'Process Owner',
             ],
             [
+                'role_name'=>'Internal Auditor',
+            ],
+            [
                 'role_name'=>'Internal Lead Auditor',
-            ],
-            [
-                'role_name'=>'Internal Quality Auditor',
-            ],
-            [
-                'role_name'=>'External Lead Auditor',
-            ],
-            [
-                'role_name'=>'External Quality Auditor',
             ],
             [
                 'role_name'=>'Quality Assurance Director',

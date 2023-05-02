@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\HR;
 
+use App\Models\Directory;
 use App\Models\Office;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -21,6 +22,14 @@ class OfficeController extends Controller
             'office_description' => $request->office_description,
             'area_id' => 1,
         ]);
+
+        $directories = Directory::where('name', 'Administration')->whereNotNull('area_dependent')->get();
+        foreach($directories as $directory) {
+            Directory::create([
+                'name' => $request->office_name,
+                'parent_id' => $directory->id
+            ]);
+        }
 
         return redirect()->route('hr-offices-page')->with('success', 'Office created successfully');
     }

@@ -15,14 +15,14 @@ class AreaSeeder extends Seeder
     {
         Area::insert([
             [
-                'area_name'=>'Administration',
-                'area_description'=>'Administration',
+                'area_name'=> 'Administration',
+                'area_description' => 'Administration',
                 'created_at'=>now(),
                 'updated_at'=>now()
             ],
             [
-                'area_name'=>'Academics',
-                'area_description'=>'Academics',
+                'area_name'=> 'Academics',
+                'area_description' => 'Academics',
                 'created_at'=>now(),
                 'updated_at'=>now()
             ],
