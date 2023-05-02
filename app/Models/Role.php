@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Directory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,6 +32,6 @@ class Role extends Model
             $directories = ['Audit Reports', 'Survey Reports'];
         }
 
-        return Directory::whereIn('name', $directories);
+        return $directories;
     }
 }

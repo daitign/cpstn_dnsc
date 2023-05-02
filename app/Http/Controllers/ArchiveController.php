@@ -36,7 +36,9 @@ class ArchiveController extends Controller
                         ->where('user_id', $current_user->id)
                         ->get();
         }else {
-            $directories = Directory::whereNull('parent_id')->get();
+            $directories = Directory::whereNull('parent_id')
+                    ->whereIn('name', $user->directories)
+                    ->get();
         }
         
         return view('archives.index', compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user'));
