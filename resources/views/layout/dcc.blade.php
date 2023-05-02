@@ -238,6 +238,7 @@
     <li class="nav-item dropdown"><a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-book mx-3"></i><span class="text-nowrap" style="margin-left: 11px;">Manuals</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
         <div class="dropdown-menu border-0 animated fadeIn"><a class="dropdown-item" href="#"><span>Pending</span></a></div>
     </li> -->
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-shared') ? 'active' : '' }}" href="{{ route('archives-shared') }}"><i class="fas fa-share mx-3 mx-3"></i><span class="text-nowrap mx-2">Shared with me</span></a></li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-page') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
 </ul>
 

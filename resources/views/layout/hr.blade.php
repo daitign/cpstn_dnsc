@@ -197,6 +197,7 @@
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('hr-dashboard-page') ? 'active' : '' }}" href="{{ route('hr-dashboard-page') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('hr-offices-page') ? 'active' : '' }}" href="{{ route('hr-offices-page') }}"><i class="fas fa-building mx-3"></i><span class="text-nowrap mx-2">Offices</span></a></li>
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('hr-survey-page') ? 'active' : '' }}" href="{{ route('hr-survey-page') }}"><i class="fas fa-chart-bar mx-3"></i><span class="text-nowrap mx-2">Surveys</span></a></li>
+  <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-shared') ? 'active' : '' }}" href="{{ route('archives-shared') }}"><i class="fas fa-share mx-3 mx-3"></i><span class="text-nowrap mx-2">Shared with me</span></a></li>
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-page') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
 </ul>
 

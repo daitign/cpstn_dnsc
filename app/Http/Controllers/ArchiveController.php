@@ -6,6 +6,7 @@ use Storage;
 use Carbon\Carbon;
 use App\Models\File;
 use App\Models\User;
+use App\Models\FileUser;
 use App\Models\Directory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,12 +19,9 @@ class ArchiveController extends Controller
         $files = [];
         $parents = [];
         $current_directory = $request->directory;
+        $users = User::get();
 
         $current_user = !empty($request->user) ? User::findOrFail($request->user) : Auth::user();
-        if(in_array(Auth::user()->role->role_name, config('app.manage_archive'))) {
-            $users = User::get();
-        }
-
         if(!empty($current_directory)) {
             $current_directory = Directory::find($current_directory);
             $parents = collect($current_directory->parents())->reverse();
@@ -36,9 +34,12 @@ class ArchiveController extends Controller
                         ->where('user_id', $current_user->id)
                         ->get();
         }else {
-            $directories = Directory::whereNull('parent_id')
-                    ->whereIn('name', $current_user->role->directories)
-                    ->get();
+            $directories = Directory::whereNull('parent_id');
+            if($current_user->role->role_name !== 'Administrator') {
+                $directories = $directories->whereIn('name', $current_user->role->directories);
+            }
+                    
+            $directories = $directories->get();
         }
         
         return view('archives.index', compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user'));
@@ -49,22 +50,41 @@ class ArchiveController extends Controller
         $users = [];
         $current_user = !empty($request->userSearch) ? User::findOrFail($request->userSearch) : Auth::user();
         if(in_array(Auth::user()->role->role_name, config('app.manage_archive'))) {
-            $users = User::get();
-            $current_user = !empty($request->userSearch) ? $current_user->id : '';
+           $current_user = !empty($request->userSearch) ? $current_user->id : '';
         }
         $fileSearch = $request->fileSearch;
         $files = File::where('file_name', 'LIKE', "%$request->fileSearch%");
 
         if(!empty($current_user)) {
             $files = $files->where(function($q) use($current_user){
-                $q->where('user_id', $current_user->id)
-                    ->orWhere('share', true);
+                $q->where('user_id', $current_user->id);
             });
         }
 
         $files = $files->get();
 
         return view('archives.search', compact('users', 'files', 'current_user', 'fileSearch'));
+    }
+
+    public function sharedWithMe(Request $request)
+    {
+        $current_user = Auth::user();
+        $users = User::get();
+
+        $fileSearch = $request->fileSearch;
+        $files = File::where(function($q) use($current_user){
+                    $q->where('user_id', $current_user->id)
+                        ->orWhereHas('file_users', function($q2) use($current_user){
+                            $q2->where('user_id', $current_user->id);
+                        });
+                });
+        if(!empty($fileSearch)) {
+            $files = $files->where('file_name', 'LIKE', "%$fileSearch%");
+        }
+
+        $files = $files->get();
+        
+        return view('archives.shared', compact('users', 'files', 'current_user', 'fileSearch'));
     }
 
     public function storeDirectory(Request $request)
@@ -142,8 +162,7 @@ class ArchiveController extends Controller
                 'user_id' => $user->id,
                 'file_name' => $file_name,
                 'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'share' => $request->share ? true : false
+                'container_path' => $path
             ]);
         }
 
@@ -186,22 +205,19 @@ class ArchiveController extends Controller
         if($file->user_id !== $user->id && !in_array($user->role->role_name, config('app.manage_archive'))) {
             return back()->withError("You don't have permission to share the file");
         }
-
-        $file->share = true;
-        $file->save();
-        return back()->withMessage('File shared successfully');
-    }
-
-    public function unshareFile(Request $request, $id)
-    {
-        $file = File::findOrFail($id);
-        $user = Auth::user();
-        if($file->user_id !== $user->id && !in_array($user->role->role_name, config('app.manage_archive'))) {
-            return back()->withError("You don't have permission to unshare the file");
+        
+        FileUser::where('file_id', $id)->delete(); // Remove exitsting
+        if(!empty($request->userShare)) {
+            foreach($request->userShare as $user) {
+                FileUser::create([
+                    'file_id' => $id,
+                    'user_id' => $user
+                ]);
+            }
+        }else {
+           return back()->withMessage('File unshared successfully');
         }
 
-        $file->share = false;
-        $file->save();
-        return back()->withMessage('File unshared successfully');
+        return back()->withMessage('File shared successfully');
     }
 }

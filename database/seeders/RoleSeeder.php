@@ -15,7 +15,7 @@ class RoleSeeder extends Seeder
     {
         Role::insert([
             [
-                'role_name'=>'Administrator',
+                'role_name'=> 'Administrator',
             ],
             [
                 'role_name'=>'Staff',

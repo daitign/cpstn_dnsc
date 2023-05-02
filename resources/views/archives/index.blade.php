@@ -12,7 +12,8 @@
                     >
                     <a href="{{ route('archives-page') }}?directory={{ $parent->id }}&user={{ $current_user->id }}">{{ $parent->name }}</a>
                 @endforeach
-            @endif
+       
+                @endif
         </h5>
     </div>
     <div class="container">
@@ -42,6 +43,7 @@
                 @foreach($users as $user)
                     <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
                 @endforeach
+          
             </select>
         @endif
         <div class="mb-4 row">
@@ -54,7 +56,8 @@
                     <ul class="dropdown-menu text-center">
                         <li><a href="{{ route('archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
                         <li><a href="#" class="text-decoration-none btn-property"
-                            data-bs-toggle="modal" data-bs-target="#propertyModal"
+                            data-bs-toggle="modal" data-bs-target="#pro
+                            pertyModal"
                             data-name="{{ $directory->name }}"
                             data-type="Directory"
                             data-created-by="{{ $directory->user->username ?? 'Admin' }}"
@@ -92,8 +95,8 @@
                         <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid w-75">
                         <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                     </button>
-                    <ul class="dropdown-menu text-center">
-                        <li><a href="{{ route('archives-download-file', $file->id) }}" class="text-decoration-none">Download</a></li>
+                    <ul class="dropdown-menu text-left px-3">
+                        <li><a href="{{ route('archives-download-file', $file->id) }}" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>
                         <li>
                             <a href="#" class="text-decoration-none btn-property"
                                 data-bs-toggle="modal" data-bs-target="#propertyModal"
@@ -102,28 +105,20 @@
                                 data-created-by="{{ $file->user->username }}"
                                 data-created-at="{{ $file->created_at->format('M d, Y h:i A') }}"
                                 data-updated-at="{{ $file->created_at->format('M d, Y h:i A') }}"
-                            >Properties</a>
+                            ><i class="fa fa-cog"></i> Properties</a>
                         </li>
-                        @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
+                        @if($file->user_id == Auth::user()->id)
                         <li>
-                            @if(!empty($file->share) && $file->share == true)
-                                <a href="#" class="text-decoration-none btn-confirm" data-message="Are you sure you wan't to unshare the file" data-target="#unshare_file_{{ $file->id }}">Unshare</button>
-                                    <form id="unshare_file_{{ $file->id }}" action="{{ route('archives-unshare-file', $file->id) }}" class="d-none" method="POST">
-                                        @csrf
-                                    </form>
-                                </a>
-                            @else
-                                <a href="#" class="text-decoration-none btn-confirm" data-message="Are you sure you wan't to share the file" data-target="#share_file_{{ $file->id }}">Share</button>
-                                    <form id="share_file_{{ $file->id }}" action="{{ route('archives-share-file', $file->id) }}" class="d-none" method="POST">
-                                        @csrf
-                                    </form>
-                                </a>
-                            @endif
+                            <a href="#" class="text-decoration-none btn-share" data-bs-toggle="modal" data-bs-target="#shareModal" data-users="{{ $file->shared_users }}" data-route="{{ route('archives-share-file', $file->id) }}"><i class="fa fa-share"></i> Share</button>
+                                <form id="unshare_file_{{ $file->id }}" action="{{ route('archives-unshare-file', $file->id) }}" class="d-none" method="POST">
+                                    @csrf
+                                </form>
+                            </a>
                         </li>
                         @endif
                         @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
                         <li>
-                            <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}">Delete</button>
+                            <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i>Delete</button>
                                 <form id="delete_file_{{ $file->id }}" action="{{ route('archives-delete-file', $file->id) }}" class="d-none" method="POST">
                                     @csrf
                                     @method('DELETE')
@@ -178,10 +173,6 @@
                         <div class="mb-3">
                             <label for="file_name" class="form-label">Name</label>
                             <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Enter Filename" required>
-                        </div>
-                        <div class="mb-3">
-                            <input type="checkbox" class="form-check-input" name="share" id="share">
-                            <label for="share" class="form-label">Share with Everyone</label>
                         </div>
                         <div class="mb-3">
                             <label for="file_attachment" class="form-label">Attachment</label>
@@ -257,10 +248,44 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Share File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="#" id="shareModalForm">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="search" class="form-label">Share File With:</label>
+                            <select class="form-control" name="userShare[]" id="userShare" multiple>
+                                @foreach($users as $user)
+                                    @if($user->id !== $current_user->id)
+                                        <option value="{{ $user->id }}">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-share"></i> Share</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
 <script>
+    var userShare = $('#userShare').select2({
+        dropdownParent: $('#shareModal'),
+        width: '100%'
+    });
 
     $('.toggleDirectoryModal').on('click', function(){
         $('#directoryModalForm').attr('action', $(this).data('route'));
@@ -300,5 +325,17 @@
         $('#propertyCreated').html($(this).data('created-at'));
         $('#propertyUpdated').html($(this).data('updated-at'));
     });
+
+    $('.btn-share').on('click', function(){
+        var users = "" + $(this).data('users') + "";
+        $('#shareModalForm').prop('action', $(this).data('route'));
+        $("#userShare option:selected").removeAttr("selected");
+
+        if(users != '') {
+            users = users.includes(', ') ? users.split(', ') : [users];
+            
+            userShare.val(users).trigger('change');
+        }
+    })
 </script>
 @endsection
