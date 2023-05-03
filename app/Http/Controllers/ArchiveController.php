@@ -13,15 +13,24 @@ use Illuminate\Support\Facades\Auth;
 
 class ArchiveController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $directory_name = '')
     {
         $users = [];
         $files = [];
         $parents = [];
         $current_directory = $request->directory;
         $users = User::get();
-
         $current_user = !empty($request->user) ? User::findOrFail($request->user) : Auth::user();
+
+        $directory_name = ucwords($directory_name);
+        if(!empty($directory_name)) {
+            if(!in_array($directory_name, $current_user->role->directories)) {
+                return abort(404);
+            }else{
+                $current_directory = Directory::where('name', $directory_name)->first()->id ?? '';
+            }
+        }
+
         if(!empty($current_directory)) {
             $current_directory = Directory::find($current_directory);
             $parents = collect($current_directory->parents())->reverse();

@@ -198,14 +198,9 @@
     </li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('staff-dashboard') ? 'active' : '' }}" href="{{ route('staff.dashboard') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-shared') ? 'active' : '' }}" href="{{ route('archives-shared') }}"><i class="fas fa-share mx-3 mx-3"></i><span class="text-nowrap mx-2">Shared with me</span></a></li>
-    <!-- <li class="nav-item"><a class="nav-link text-start py-1 px-0" href="{{ route('staff.template.index') }}"><i class="fas fa-newspaper mx-3 mx-3"></i><span class="text-nowrap mx-2">Templates</span></a></li>
-    <li class="nav-item dropdown {{ request()->routeIs('po-evidence-page') ? 'show' : '' }}">
-        <a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative {{request()->routeIs('po-evidence-page') ? 'active' : '' }}" aria-expanded="true" data-bs-toggle="dropdown" href="#"><i class="fas fa-user-alt mx-3"></i><span class="text-nowrap mx-2">Evidence</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
-        <div class="dropdown-menu drop-menu border-0 animated fadeIn {{request()->routeIs('po-evidence-page') ? 'show' : '' }}" data-bs-popper="none">
-            <a class="dropdown-item {{request()->routeIs('po-evidence-page') ? 'active' : '' }}" href="{{ route('po-evidence-page') }}"><span>Show</span></a>
-        </div>
-    </li> -->
-    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-page') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->is('directories/templates') ? 'active' : '' }}" href="{{ route('directories', 'templates') }}"><i class="fas fa-newspaper mx-3 mx-3"></i><span class="text-nowrap mx-2">Templates</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->is('directories/manuals') ? 'active' : '' }}" href="{{ route('directories', 'manuals') }}"><i class="fas fa-book mx-3"></i><span class="text-nowrap mx-2">Manuals</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->is('archives') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
 </ul>
 
   
