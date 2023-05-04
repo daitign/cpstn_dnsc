@@ -6,7 +6,6 @@
     <div class="page-header">
         <h1>Archives</h1>
         <h5 class="text-decoration-none">
-            <a href="{{ route('archives-page') }}">Root</a>
             @if(!empty($parents))
                 @foreach($parents as $parent) 
                     >
@@ -17,7 +16,7 @@
         </h5>
     </div>
     <div class="container">
-        <div style="text-align:right">
+        <!-- <div style="text-align:right">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
             @if(!empty($parents) || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
                 <button class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-plus"></i> New</button>
@@ -34,16 +33,15 @@
                     </li>
                 </ul>
             @endif
-        </div>
+        </div> -->
         @include('layout.alert')
         @if(!empty($users) && in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
             <h5>User:</h5>
             <select class="form-control userSelection">
                 <option value="">Select User</option>
                 @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                    <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s - ", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
                 @endforeach
-          
             </select>
         @endif
         <div class="mb-4 row">
@@ -264,7 +262,7 @@
                             <select class="form-control" name="userShare[]" id="userShare" multiple>
                                 @foreach($users as $user)
                                     @if($user->id !== $current_user->id)
-                                        <option value="{{ $user->id }}">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                                        <option value="{{ $user->id }}">{{ sprintf("%s %s - ", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
                                     @endif
                                 @endforeach
                             </select>

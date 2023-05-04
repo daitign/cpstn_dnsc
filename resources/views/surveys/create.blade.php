@@ -50,7 +50,7 @@
                                     </div> 
                                     <div class="mt-3">
                                         <label>Contact Number</label>
-                                        <input type="text" class="form-control" name="contact_number" placeholder="Enter Contact Number" required value="{{ old('contact_number') }}">
+                                        <input type="text" class="form-control" name="contact_number" placeholder="Enter Contact Number" value="{{ old('contact_number') }}">
                                         @error('contact_number')
                                             <span class="text-danger error_contact_number">{{ $message }}</span>
                                         @enderror

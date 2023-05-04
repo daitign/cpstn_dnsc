@@ -21,7 +21,7 @@
                         <select class="form-control userSelection">
                             <option value="">All Users</option>
                             @foreach($users as $user)
-                                <option value="{{ $user->id }}" {{ $current_user == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                                <option value="{{ $user->id }}" {{ $current_user == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s - ", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
                             @endforeach
                         </select>
                     </div>

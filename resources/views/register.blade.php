@@ -89,7 +89,7 @@
                             </div>
                             <div class="mt-3">
                                 <span>Image</span>
-                                <input type="file" class="form-control" name="img" placeholder="image" accept="image/png,image/jpg,image/jpeg" required>
+                                <input type="file" class="form-control" name="img" placeholder="image" accept="image/png,image/jpg,image/jpeg">
                                 @error('img')
                                     <span class="text-danger error_username">{{ $message }}</span>
                                 @enderror
