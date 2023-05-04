@@ -196,14 +196,23 @@
                 class="text-decoration-none" href="#"><strong>DNSC</strong></a><a class="float-end text-white"
                 id="sidebarToggleHolder" href="#"><i class="fas fa-bars" id="sidebarToggle"></i></a></div>
     </li>
-    <!-- <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('po-dashboard-page') ? 'active' : '' }}" href="{{ route('dcc-dashboard-page') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
-    <li class="nav-item"><a class="nav-link text-start py-1 px-0" href="#"><i class="fas fa-newspaper mx-3 mx-3"></i><span class="text-nowrap mx-2">Templates</span></a></li>
-    <li class="nav-item dropdown {{ request()->routeIs('po-evidence-page') ? 'show' : '' }}">
-        <a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative {{request()->routeIs('po-evidence-page') ? 'active' : '' }}" aria-expanded="true" data-bs-toggle="dropdown" href="#"><i class="fas fa-user-alt mx-3"></i><span class="text-nowrap mx-2">Evidence</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
-        <div class="dropdown-menu drop-menu border-0 animated fadeIn {{request()->routeIs('po-evidence-page') ? 'show' : '' }}" data-bs-popper="none">
-            <a class="dropdown-item {{request()->routeIs('po-evidence-page') ? 'active' : '' }}" href="{{ route('po-evidence-page') }}"><span>Show</span></a>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('po-dashboard-page') ? 'active' : '' }}" href="{{ route('dcc-dashboard-page') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
+    
+    <li class="nav-item dropdown {{ request()->is('po/manual*') ? 'show' : '' }}">
+        <a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative {{request()->routeIs('po-manual-page') ? 'active' : '' }}" aria-expanded="true" data-bs-toggle="dropdown" href="#"><i class="fas fa-user-alt mx-3"></i><span class="text-nowrap mx-2">Manuals</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
+        <div class="dropdown-menu drop-menu border-0 animated fadeIn {{request()->is('po/manual') ? 'show' : '' }}" data-bs-popper="none">
+            <a class="dropdown-item {{request()->routeIs('po.manual.index') ? 'active' : '' }}" href="{{ route('po.manual.index') }}"><span>Manual List</span></a>
+            <a class="dropdown-item {{request()->routeIs('po.manual.create') ? 'active' : '' }}" href="{{ route('po.manual.create') }}"><span>Add Manual</span></a>
         </div>
-    </li> -->
+    </li>
+
+    <li class="nav-item dropdown {{ request()->is('po/evidence*') ? 'show' : '' }}">
+        <a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative {{request()->routeIs('po-evidence-page') ? 'active' : '' }}" aria-expanded="true" data-bs-toggle="dropdown" href="#"><i class="fas fa-user-alt mx-3"></i><span class="text-nowrap mx-2">Evidences</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
+        <div class="dropdown-menu drop-menu border-0 animated fadeIn {{request()->is('po/evidence') ? 'show' : '' }}" data-bs-popper="none">
+            <a class="dropdown-item {{request()->routeIs('po.evidence.index') ? 'active' : '' }}" href="{{ route('po.evidence.index') }}"><span>Evidence List</span></a>
+            <a class="dropdown-item {{request()->routeIs('po.evidence.create') ? 'active' : '' }}" href="{{ route('po.evidence.create') }}"><span>Add Evidence</span></a>
+        </div>
+    </li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-shared') ? 'active' : '' }}" href="{{ route('archives-shared') }}"><i class="fas fa-share mx-3 mx-3"></i><span class="text-nowrap mx-2">Shared with me</span></a></li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-page') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
 </ul>

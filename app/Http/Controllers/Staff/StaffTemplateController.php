@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
+
+use App\Models\User;
+use App\Models\Directory;
+use App\Models\File;
 use App\Models\Office;
 use App\Models\Process;
 use App\Models\Program;
@@ -11,23 +15,10 @@ use App\Models\Template;
 use App\Rules\NoSameTemplateFolder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class StaffTemplateController extends Controller
 {
-    public function index()
-    {
-        return view('staff.template.index');
-        // $programs = Program::get();
-        // $offices = Office::get();
-        // $roles = Role::get();
-
-        // return view('staff.template.program',[
-        //     'programs'=>$programs,
-        //     'offices'=>$offices,
-        //     'roles'=>$roles
-        // ]);
-    }
-
     // Roles
     public function allRoles()
     {

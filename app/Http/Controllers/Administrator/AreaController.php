@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use Illuminate\Database\Query\Builder;

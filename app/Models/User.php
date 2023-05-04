@@ -59,4 +59,15 @@ class User extends Authenticatable
         return $this->belongsToMany(Program::class);
     }
 
+    public function assigned_office()
+    {
+        return $this->hasOneThrough(
+            Office::class,
+            OfficeUser::class,
+            'user_id',
+            'id',
+            'id',
+            'office_id'
+        );
+    }
 }

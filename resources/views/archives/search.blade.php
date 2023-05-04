@@ -53,6 +53,7 @@
                                 data-created-by="{{ $file->user->username }}"
                                 data-created-at="{{ $file->created_at->format('M d, Y h:i A') }}"
                                 data-updated-at="{{ $file->created_at->format('M d, Y h:i A') }}"
+                                data-description="{{ $file->description ?? ''}}"
                             >Properties</a>
                         </li>
                         @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
@@ -80,11 +81,17 @@
                 </div>
                     <div class="modal-body">
                         <table class="table">
-                            <tr><td><strong>Name:</strong><td><td id="propertyName"></td></tr>
-                            <tr><td><strong>Type:</strong><td><td id="propertyType"></td></tr>
-                            <tr><td><strong>Created By:</strong><td><td id="propertyCreatedBy"></td></tr>
-                            <tr><td><strong>Created:</strong><td><td id="propertyCreated"></td></tr>
-                            <tr><td><strong>Updated:</strong><td><td id="propertyUpdated"></td></tr>
+                            <tr><td><strong>Name:</strong></td><td id="propertyName"></td></tr>
+                            <tr><td><strong>Type:</strong></td><td id="propertyType"></td></tr>
+                            <tr><td><strong>Created By:</strong></td><td id="propertyCreatedBy"></td></tr>
+                            <tr><td><strong>Created:</strong></td><td id="propertyCreated"></td></tr>
+                            <tr><td><strong>Updated:</strong></td><td id="propertyUpdated"></td></tr>
+                            <tr><td colspan="2"><strong>Description:</strong></td></tr>
+                            <tr>
+                                <td colspan="2">
+                                    <textarea class="form-control" row="5" readonly id="propertyDescription"></textarea>
+                                </td>
+                            </tr>
                         </table>
                     </div>
                     <div class="modal-footer">
@@ -104,6 +111,7 @@
         $('#propertyCreatedBy').html($(this).data('created-by'));
         $('#propertyCreated').html($(this).data('created-at'));
         $('#propertyUpdated').html($(this).data('updated-at'));
+        $('#propertyDescription').html($(this).data('description'));
     });
 </script>
 @endsection

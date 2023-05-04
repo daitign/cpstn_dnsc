@@ -22,15 +22,6 @@ class ArchiveController extends Controller
         $users = User::get();
         $current_user = !empty($request->user) ? User::findOrFail($request->user) : Auth::user();
 
-        $directory_name = ucwords($directory_name);
-        if(!empty($directory_name)) {
-            if(!in_array($directory_name, $current_user->role->directories)) {
-                return abort(404);
-            }else{
-                $current_directory = Directory::where('name', $directory_name)->first()->id ?? '';
-            }
-        }
-
         if(!empty($current_directory)) {
             $current_directory = Directory::find($current_directory);
             $parents = collect($current_directory->parents())->reverse();
@@ -52,6 +43,35 @@ class ArchiveController extends Controller
         }
         
         return view('archives.index', compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user'));
+    }
+
+    public function directory(Request $request, $directory_name = '')
+    {
+        $directory_name = ucwords($directory_name);
+        $current_user = Auth::user();
+        $users = User::get();
+        
+        $directory_name = ucwords($directory_name);
+        if(!in_array($directory_name, $current_user->role->directories)) {
+            return abort(404);
+        }else{
+            $parent_directory = Directory::where('name', $directory_name)->first()->id ?? '';
+        }
+
+        $directory = Directory::where('parent_id', $parent_directory->id)
+                        ->where('name', $current_user->assigned_office->office_name)->first();
+        if(!$directory) {
+            $directory = Directory::create([
+                'parent_id' => $parent_directory->id,
+                'name' =>  $current_user->assigned_office->office_nam
+            ]);
+        }
+
+        $files = File::where('directory_id', $directory->id)
+                    ->where('user_id', $current_user->id)
+                    ->get();
+        
+        return view('archives.index', compact('files', 'user', 'users'));
     }
 
     public function search(Request $request)

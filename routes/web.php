@@ -16,7 +16,7 @@ use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\DCC\DCCDashboardController;
 use App\Http\Controllers\DCC\DCCEvidenceController;
 use App\Http\Controllers\DCC\DCCRemarkController;
-use App\Http\Controllers\DCC\TemplateController;
+use App\Http\Controllers\DCC\TemplateController as DCCTemplate;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\OfficeUserController;
 use App\Http\Controllers\PO\PODashboardController;
@@ -26,6 +26,11 @@ use App\Http\Controllers\ProgramUserController;
 use App\Http\Controllers\Staff\StaffDashboardController;
 use App\Http\Controllers\Staff\StaffTemplateController;
 use App\Http\Controllers\UserController;
+
+use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\ManualController;
+
 
 use App\Http\Controllers\HR\HRDashboardController;
 use App\Http\Controllers\HR\SurveyController as HRSurveyController;
@@ -111,7 +116,7 @@ Route::middleware(['auth'])->group(function(){
             return redirect()->route('dcc-dashboard-page');
         });
         Route::get('/dashboard',[DCCDashboardController::class,'dashboard'])->name('dcc-dashboard-page');
-        Route::get('/template',[TemplateController::class,'index'])->name('dcc-template-page');
+        Route::get('/template',[DCCTemplate::class,'index'])->name('dcc-template-page');
         Route::get('/evidence',[DCCEvidenceController::class,'showProgramEvidence'])->name('dcc-show-evidence');
         Route::get('/evidence/office/{office}',[DCCEvidenceController::class,'showOfficeProcess'])->name('dcc-show-office-process');
         Route::get('/evidence/office/{office}/{process}',[DCCEvidenceController::class,'evidenceProcess'])->name('dcc-show-evidence-directory-office');
@@ -129,20 +134,19 @@ Route::middleware(['auth'])->group(function(){
             return redirect()->route('po-dashboard-page');
         });
         Route::get('/dashboard',[PODashboardController::class,'dashboard'])->name('po-dashboard-page');
-        Route::get('/evidence',[POEvidenceController::class,'index'])->name('po-evidence-page');
-        Route::prefix('office')->group(function(){
-            Route::get('/{office}',[POEvidenceController::class,'office_process'])->name('po-office-process');
-            Route::get('/{office}/{process}',[POEvidenceController::class,'root_office_folder'])->name('po-office-root-process');
+        
+        Route::prefix('evidence')->group(function(){
+            Route::get('/', [EvidenceController::class, 'index'])->name('po.evidence.index');
+            Route::get('/create', [EvidenceController::class, 'create'])->name('po.evidence.create');
+            Route::post('/', [EvidenceController::class, 'store'])->name('po.evidence.store');
         });
-        Route::prefix('program')->group(function(){
-            Route::get('/{program}',[POEvidenceController::class,'program_process'])->name('po-program-process');
-            Route::get('/{program}/{process}',[POEvidenceController::class,'root_program_folder'])->name('po-program-root-process');
-            Route::get('/{program}/{process}/{parent}',[POEvidenceController::class,'parent_program_folder'])->name('po-program-parent-process');
+
+        Route::prefix('manuals')->group(function(){
+            Route::get('/', [ManualController::class, 'index'])->name('po.manual.index');
+            Route::get('/create', [ManualController::class, 'create'])->name('po.manual.create');
+            Route::post('/', [ManualController::class, 'store'])->name('po.manual.store');
         });
-        Route::post('/upload-evidence',[POEvidenceController::class,'uploadEvidence'])->name('upload-evidence');
-        Route::post('/update-evidence',[POEvidenceController::class,'updateName'])->name('rename-evidence');
-        Route::post('/update-file-evidence',[POEvidenceController::class,'updateFile'])->name('update-file-evidence');
-        Route::post('/delete-file-evidence/',[POEvidenceController::class,'deleteFile'])->name('delete-file-evidence');
+
     });
 
     Route::prefix('hr')->middleware('hr')->group(function(){
@@ -163,21 +167,14 @@ Route::middleware(['auth'])->group(function(){
     Route::middleware('staff')->prefix('staff')->group(function () {
         // Sidebar
         Route::get('/dashboard', [StaffDashboardController::class, 'dashboard'])->name('staff.dashboard');
-        Route::get('/template', [StaffTemplateController::class, 'index'])->name('staff.template.index');
         
-        // Template Part
-        Route::get('/template/roles', [StaffTemplateController::class, 'allRoles'])->name('staff.template.roles');
-        Route::get('/template/roles/{role}', [StaffTemplateController::class, 'roleTemplate'])->name('staff.template.roles.root');
-
+        Route::prefix('templates')->group(function(){
+            Route::get('/', [TemplateController::class, 'index'])->name('staff.template.index');
+            Route::get('/create', [TemplateController::class, 'create'])->name('staff.template.create');
+            Route::post('/', [TemplateController::class, 'store'])->name('staff.template.store');
+        });
         
-        Route::get('/template/program', [StaffTemplateController::class, 'showProgramTemplate'])->name('staff.template.program');
-        Route::get('/template/office/{office}', [StaffTemplateController::class, 'showOfficeProcess'])->name('staff.template.office.process');
-        Route::get('/template/program/{program}', [StaffTemplateController::class, 'showProgramProcess'])->name('staff.template.program.process');
-        Route::get('/template/process/{program}/{process}', [StaffTemplateController::class, 'templateProcess'])->name('staff.template.process');
-        Route::get('/template/directories/{program}/{process}/{parent?}', [StaffTemplateController::class, 'templateDirectories'])->name('staff.template.directories');
-        Route::post('/template/folder/add', [StaffTemplateController::class, 'addTemplateFolder'])->name('staff.template.folder.add');
-        Route::post('/template/folder/rename/', [StaffTemplateController::class, 'renameTemplateFolder'])->name('staff.template.folder.rename');
-        Route::post('/template/folder/remove', [StaffTemplateController::class, 'removeTemplateFolder'])->name('staff.template.folder.remove');
+        Route::get('/manuals', [ManualController::class, 'index'])->name('staff.manual.index');
     });
 
     Route::post('add-remark',[DCCRemarkController::class,'addRemark'])->name('add-remark');

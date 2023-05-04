@@ -1,49 +1,14 @@
 @extends('layout.sidebar')
 @section('title')
-<title>Archives</title>
+<title>{{ $parent_directory->name }} - {{ $directory->name }}</title>
 @endsection
 @section('page')
     <div class="page-header">
-        <h1>Archives</h1>
-        <h5 class="text-decoration-none">
-            @if(!empty($parents))
-                @foreach($parents as $parent) 
-                    >
-                    <a href="{{ route('archives-page') }}?directory={{ $parent->id }}&user={{ $current_user->id }}">{{ $parent->name }}</a>
-                @endforeach
-       
-                @endif
-        </h5>
+        <h1>{{ $parent_directory->name }} > {{ $directory->name }}</h1>
     </div>
     <div class="container">
-        <!-- <div style="text-align:right">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
-            @if(!empty($parents) || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-                <button class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-plus"></i> New</button>
-                <ul class="dropdown-menu text-left">
-                    @if(!empty($parents))
-                        <li><button class="btn" data-bs-toggle="modal" data-bs-target="#fileModal">File</button></li>
-                    @endif
-                    <li>
-                        <button class="btn toggleDirectoryModal"
-                            data-route="{{ route('archives-store-directory') }}" 
-                            data-bs-toggle="modal" data-bs-target="#directoryModal">
-                                Directory
-                        </button>
-                    </li>
-                </ul>
-            @endif
-        </div> -->
         @include('layout.alert')
-        @if(!empty($users) && in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-            <h5>User:</h5>
-            <select class="form-control userSelection">
-                <option value="">Select User</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s - ", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
-                @endforeach
-            </select>
-        @endif
+        
         <div class="mb-4 row">
             @foreach($directories as $directory)
                 <div class="col-2 text-center">
@@ -62,29 +27,11 @@
                             data-created-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
                             data-updated-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
                         >Properties</a></li>
-                        
-                        @if($directory->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-                        <li>
-                            <a href="#" class="text-decoration-none toggleDirectoryModal"
-                                data-name="{{ $directory->name }}" 
-                                data-route="{{ route('archives-update-directory', $directory->id) }}" 
-                                data-bs-toggle="modal" data-bs-target="#directoryModal">
-                                    Rename
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_directory_{{ $directory->id }}">Delete</button>
-                                <form id="delete_directory_{{ $directory->id }}" action="{{ route('archives-delete-directory', $directory->id) }}" class="d-none" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </a>
-                        </li>
-                        @endif
                     </ul>
                 </div>
             @endforeach
         </div>
+
 
         <div class="mt-3 row">
             @foreach($files as $file)
@@ -130,99 +77,6 @@
             @endforeach
         </div>
     </div>
-
-
-    <div class="modal fade" id="directoryModal" tabindex="-1" aria-labelledby="directoryModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="directoryModalLabel">Add Directory</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="POST" action="{{ route('archives-store-directory') }}" id="directoryModalForm">
-                    @csrf
-                    <input type="hidden" value="{{ $current_directory->id ?? '' }}" name="parent_directory">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="directory" class="form-label">Name</label>
-                            <input type="text" class="form-control" name="directory" id="directory" placeholder="Enter Directory Name" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="fileModalLabel">Upload File</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="POST" action="{{ route('archives-store-file') }}" enctype="multipart/form-data" id="fileModalForm">
-                    @csrf
-                    <input type="hidden" value="{{ $current_directory->id ?? '' }}" name="parent_directory">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="file_name" class="form-label">Name</label>
-                            <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Enter Filename" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="file_attachment" class="form-label">Attachment</label>
-                            <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="searchModalLabel">Search File</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="POST" action="{{ route('archives-search') }}" id="searchModalForm">
-                    @csrf
-                    <input type="hidden" value="{{ $current_search->id ?? '' }}" name="parent_search">
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="fileSearch" class="form-label">File Name</label>
-                            <input type="text" class="form-control" name="fileSearch" id="fileSearch" placeholder="Enter File Name" required>
-                        </div>
-                        @if(!empty($users) && in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-                            <div class="mb-3">
-                                <label for="search" class="form-label">User</label>
-                                <select class="form-control" name="userSearch">
-                                    <option value="">All Users</option>
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success"><i class="fa fa-search"></i> Search</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
 
     <div class="modal fade" id="propertyModal" tabindex="-1" aria-labelledby="propertyModalLabel" aria-hidden="true">
         <div class="modal-dialog">

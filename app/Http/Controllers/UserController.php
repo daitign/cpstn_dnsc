@@ -134,10 +134,10 @@ class UserController extends Controller
     public function listDccPo()
     {
         $data = User::query()
-        ->whereIn('role_id',[10,3])
-        ->join('roles','roles.id','users.role_id')
-        ->select('users.*','roles.role_name')
-        ->get();
+            ->whereIn('role_id',[10,3,2])
+            ->join('roles','roles.id','users.role_id')
+            ->select('users.*','roles.role_name')
+            ->get();
         return view('administrators.assign',[
             'data'=>$data,
             'areas'=>Area::with(['institutes.programs.processes', 'offices.processes'])->get()

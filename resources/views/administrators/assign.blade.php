@@ -98,7 +98,6 @@
                             <select id="dcc_category" required class="form-control">
                                 <option value="" disabled selected>Select a category</option>
                                 <option value="0">Administration</option>
-                                <option value="1">Academics</option>
                             </select>
                         </div>
                         <div class="mb-1" id="dcc_office">
@@ -135,7 +134,6 @@
                             <select id="po_category" required class="form-control">
                                 <option value="" disabled selected>Select a category</option>
                                 <option value="0">Administration</option>
-                                <option value="1">Academics</option>
                             </select>
                         </div>
                         <div class="mb-1" id="po_office">
@@ -354,30 +352,30 @@
                 let sel = $(this).val();
                 sel = data[0].offices.findIndex(item=>item.id === parseInt(sel));
                 console.log(sel);
-                var office_label = $('<span>', {
-                    'text':'Process'
-                });
-                $('#po_office').append(office_label);
-                var process_list = $('<select>', {
-                    'class':'form-control',
-                    'id':'po_office_process_list',
-                    'required':true,
-                    'name':'process_id'
-                });
-                var po_office_process_option = $('<option>', {
-                    'value':'',
-                    'text':'Select a Process',
-                    'disabled':true,
-                    'selected':true
-                });
-                process_list.append(po_office_process_option);
-                for (const key in data[0].offices[sel].processes) {
-                    var po_process_option = $('<option>', {
-                        'value':data[0].offices[sel].processes[key].id,
-                        'text':data[0].offices[sel].processes[key].process_name,
-                    });
-                    process_list.append(po_process_option);
-                }
+                // var office_label = $('<span>', {
+                //     'text':'Process'
+                // });
+                // $('#po_office').append(office_label);
+                // var process_list = $('<select>', {
+                //     'class':'form-control',
+                //     'id':'po_office_process_list',
+                //     'required':true,
+                //     'name':'process_id'
+                // });
+                // var po_office_process_option = $('<option>', {
+                //     'value':'',
+                //     'text':'Select a Process',
+                //     'disabled':true,
+                //     'selected':true
+                // });
+                // process_list.append(po_office_process_option);
+                // for (const key in data[0].offices[sel].processes) {
+                //     var po_process_option = $('<option>', {
+                //         'value':data[0].offices[sel].processes[key].id,
+                //         'text':data[0].offices[sel].processes[key].process_name,
+                //     });
+                //     process_list.append(po_process_option);
+                // }
                 var container = $('<div>', {
                     'class':'text-center mt-2',
                 });
@@ -387,7 +385,7 @@
                     'text':'Save Changes'
                 });
                 container.append(po_submit)
-                $('#po_office').append(process_list,container);
+                $('#po_office').append(container);
             });
             var i;
             $(document).on('change','#po_institute_list', function () {
@@ -424,32 +422,32 @@
 
             $(document).on('change','#po_program_list', function () {
                 $('#po_process').empty();
-                var process_label = $('<span>', {
-                    'text':'Process'
-                });
-                $('#po_process').append(process_label);
-                var process_list = $('<select>', {
-                    'class':'form-control',
-                    'id':'po_process_list',
-                    'required':true,
-                    'name':'process_id'
-                });
-                var po_process_option = $('<option>', {
-                    'value':'',
-                    'text':'Select a process',
-                    'disabled':true,
-                    'selected':true
-                });
-                process_list.append(po_process_option);
-                var index = data[1].institutes[i].programs.findIndex(item => item.id === parseInt($(this).val()));
-                for (const key in data[1].institutes[i].programs[index].processes) {
-                    var po_process_option = $('<option>', {
-                        'value':data[1].institutes[i].programs[index].processes[key].id,
-                        'text':data[1].institutes[i].programs[index].processes[key].process_name,
-                    });
-                    process_list.append(po_process_option);
-                }
-                $('#po_process').append(process_list);
+                // var process_label = $('<span>', {
+                //     'text':'Process'
+                // });
+                // $('#po_process').append(process_label);
+                // var process_list = $('<select>', {
+                //     'class':'form-control',
+                //     'id':'po_process_list',
+                //     'required':true,
+                //     'name':'process_id'
+                // });
+                // var po_process_option = $('<option>', {
+                //     'value':'',
+                //     'text':'Select a process',
+                //     'disabled':true,
+                //     'selected':true
+                // });
+                // process_list.append(po_process_option);
+                // var index = data[1].institutes[i].programs.findIndex(item => item.id === parseInt($(this).val()));
+                // for (const key in data[1].institutes[i].programs[index].processes) {
+                //     var po_process_option = $('<option>', {
+                //         'value':data[1].institutes[i].programs[index].processes[key].id,
+                //         'text':data[1].institutes[i].programs[index].processes[key].process_name,
+                //     });
+                //     process_list.append(po_process_option);
+                // }
+                // $('#po_process').append(process_list);
 
                 var container = $('<div>', {
                     'class':'text-center mt-2',
