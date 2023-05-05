@@ -40,7 +40,7 @@
             <select class="form-control userSelection">
                 <option value="">Select User</option>
                 @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s - ", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
+                    <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s - %s", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
                 @endforeach
             </select>
         @endif
@@ -208,7 +208,7 @@
                                 <select class="form-control" name="userSearch">
                                     <option value="">All Users</option>
                                     @foreach($users as $user)
-                                        <option value="{{ $user->id }}">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                                        <option value="{{ $user->id }}">{{ sprintf("%s %s - %s", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -269,7 +269,7 @@
                             <select class="form-control" name="userShare[]" id="userShare" multiple>
                                 @foreach($users as $user)
                                     @if($user->id !== $current_user->id)
-                                        <option value="{{ $user->id }}">{{ sprintf("%s %s - ", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
+                                        <option value="{{ $user->id }}">{{ sprintf("%s %s - %s", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
                                     @endif
                                 @endforeach
                             </select>

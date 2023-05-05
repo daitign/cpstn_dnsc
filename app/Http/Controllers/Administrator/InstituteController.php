@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Models\Directory;
 use App\Http\Controllers\Controller;
 use App\Models\Institute;
 use Illuminate\Http\Request;

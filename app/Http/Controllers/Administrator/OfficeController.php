@@ -22,7 +22,7 @@ class OfficeController extends Controller
         $office->area_id = 1;
         $office->save();
 
-        $directories = Directory::where('name', 'Administration')->whereNotNull('area_dependent')->get();
+        $directories = Directory::where('name', 'Administration')->whereNotNull('area_dependent')->firstOrFail();
         foreach($directories as $directory) {
             Directory::create([
                 'name' => $request->office_name,
