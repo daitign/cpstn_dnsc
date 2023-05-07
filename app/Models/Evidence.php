@@ -9,14 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Evidence extends Model
 {
     use HasFactory,SoftDeletes;
-
-    public $fillable = [
-        'directory_id',
-        'user_id',
-        'folder_name',
-        'evidence_id',
-        'process_id'
-    ];
+   
+    protected $guarded = [];
 
     public function directory()
     {

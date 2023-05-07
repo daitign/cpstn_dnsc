@@ -19,8 +19,10 @@ class ArchiveController extends Controller
         $files = [];
         $parents = [];
         $current_directory = $request->directory;
-        $users = User::get();
+
         $current_user = !empty($request->user) ? User::findOrFail($request->user) : Auth::user();
+        
+        $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
 
         if(!empty($current_directory)) {
             $current_directory = Directory::find($current_directory);

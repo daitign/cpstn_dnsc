@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreignId('directory_id')->nullable()->constrained();
             $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained();
+            $table->date('date')->nullable();
+            $table->foreignId('file_id')->nullable();
             $table->softDeletesTz();
             $table->timestamps();
         });

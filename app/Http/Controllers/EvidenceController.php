@@ -18,9 +18,8 @@ class EvidenceController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $current_user = Auth::user();
-        $users = User::get();
+        $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
         $parent_directory = Directory::where('name', 'Evidences')->whereNull('parent_id')->firstOrFail();
-        
 
         $directory = Directory::where('parent_id', $parent_directory->id)
                         ->where('name', $current_user->assigned_office->office_name)
@@ -61,14 +60,8 @@ class EvidenceController extends Controller
                 'name' =>  $user->assigned_office->office_name
             ]);
         }
-
-        Evidence::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'user_id' => $user->id,
-            'directory_id' => $directory->id
-        ]);
-
+        
+        $file_id = null;
         if ($request->hasFile('file_attachment')) {
             $now = Carbon::now();
             $file = $request->file('file_attachment');
@@ -77,7 +70,7 @@ class EvidenceController extends Controller
             $path = Storage::put($target_path, $file);
             $file_name = $request->name.".".$file->getClientOriginalExtension();
 
-            File::create([
+            $file = File::create([
                 'directory_id' => $directory->id,
                 'user_id' => $user->id,
                 'file_name' => $file_name,
@@ -85,7 +78,19 @@ class EvidenceController extends Controller
                 'container_path' => $path,
                 'description' => $request->description
             ]);
+            $file_id = $file->id;
         }
+        
+
+        Evidence::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => $user->id,
+            'directory_id' => $directory->id,
+            'date' => $request->date,
+            'file_id' => $file_id
+        ]);
+
 
         
         return back()->withMessage('Evidence created successfully');

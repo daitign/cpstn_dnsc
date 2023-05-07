@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Storage;
 use Carbon\Carbon;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\File;
 use App\Models\Office;
@@ -18,19 +19,22 @@ class TemplateController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $current_user = Auth::user();
-        $users = User::get();
+        $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
         $parent_directory = Directory::where('name', 'Templates')->whereNull('parent_id')->firstOrFail();
         
-
-        $directory = Directory::where('parent_id', $parent_directory->id)
-                        ->where('name', $current_user->assigned_office->office_name)
-                        ->first();
-
-        if(!$directory) {
+        if($current_user->role->role_name !== 'Staff') {
+            $directory = Directory::where('parent_id', $parent_directory->id)
+            ->where('name', $current_user->assigned_office->office_name)
+            ->first();
+            if(!$directory) {
             $directory = Directory::create([
                 'parent_id' => $parent_directory->id,
                 'name' =>  $current_user->assigned_office->office_name
             ]);
+            }
+        }else {
+            $directory = $parent_directory;
+            $parent_directory = null;
         }
 
         $directories = Directory::where('parent_id', $directory->id)->get();
@@ -44,31 +48,29 @@ class TemplateController extends Controller
 
     public function create()
     {
-        return view('templates.create');
+        $roles = Role::get();
+        return view('templates.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        $template_directory = Directory::where('name', 'Templates')->whereNull('parent_id')->firstOrFail();
+        $parent_directory = Directory::where('name', 'Templates')->whereNull('parent_id')->firstOrFail();
 
-        $directory = Directory::where('parent_id', $template_directory->id)
-                        ->where('name', $user->assigned_office->office_name)->first();
+        $role = Role::findOrFail($request->role);
+        $directory = Directory::where('parent_id', $parent_directory->id)
+            ->where('name', $role->role_name)
+            ->first();
+
         if(!$directory) {
             $directory = Directory::create([
-                'parent_id' => $template_directory->id,
-                'name' =>  $user->assigned_office->office_name
+                'parent_id' => $parent_directory->id,
+                'name' =>  $role->role_name
             ]);
         }
 
-        Template::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'user_id' => $user->id,
-            'directory_id' => $directory->id
-        ]);
-
+        $file_id = null;
         if ($request->hasFile('file_attachment')) {
             $now = Carbon::now();
             $file = $request->file('file_attachment');
@@ -77,7 +79,7 @@ class TemplateController extends Controller
             $path = Storage::put($target_path, $file);
             $file_name = $request->name.".".$file->getClientOriginalExtension();
 
-            File::create([
+            $file = File::create([
                 'directory_id' => $directory->id,
                 'user_id' => $user->id,
                 'file_name' => $file_name,
@@ -85,7 +87,18 @@ class TemplateController extends Controller
                 'container_path' => $path,
                 'description' => $request->description
             ]);
+
+            $file_id = $file->id;
         }
+
+        Template::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => $user->id,
+            'directory_id' => $directory->id,
+            'date' => $request->date,
+            'file_id' => $file_id
+        ]);
 
         
         return back()->withMessage('Template created successfully');

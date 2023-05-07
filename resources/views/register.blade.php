@@ -54,7 +54,7 @@
                             </div>
                             <div class="mt-3">
                                 <span>Surname</span>
-                                <input type="text" class="form-control" name="surname" placeholder="Enter surname" required value="{{ old('surname') }}">
+                                <input type="text" class="form-control" name="surname" placeholder="Enter surname" value="{{ old('surname') }}">
                                 @error('surname')
                                     <span class="text-danger error_surname">{{ $message }}</span>
                                 @enderror

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('templates', function (Blueprint $table) {
+        Schema::create('manual_histories', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
+            $table->foreignId('manual_id')->constrained();
             $table->foreignId('process_id')->nullable()->constrained();
             $table->foreignId('program_id')->nullable()->constrained();
             $table->foreignId('role_id')->nullable()->constrained();
@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->date('date')->nullable();
             $table->foreignId('file_id')->nullable();
-            $table->softDeletesTz();
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('templates');
+        Schema::dropIfExists('manual_histories');
     }
 };

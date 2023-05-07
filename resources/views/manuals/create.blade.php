@@ -16,6 +16,10 @@
                         <input type="text" class="form-control" name="name" id="name" placeholder="Enter Manual Name" required>
                     </div>
                     <div class="mb-3">
+                        <label for="date" class="form-label">Date:</label>
+                        <input type="date" id="date" class="form-control" name="date" max="{{ date('Y-m-d') }}"/>
+                    </div>
+                    <div class="mb-3">
                         <label for="search" class="form-label">Description:</label>
                         <textarea name="description" class="form-control" rows="5"></textarea>
                     </div>
@@ -33,4 +37,12 @@
 @endsection
 
 @section('js')
+<script>
+    $("#date").flatpickr({
+        altInput: true,
+        altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
+        maxDate: "{{ date('Y-m-d') }}"
+    });
+</script>
 @endsection

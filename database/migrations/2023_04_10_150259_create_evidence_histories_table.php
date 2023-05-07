@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('evidence_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('evidence_id')->constrained();
-            $table->string('location');
-            $table->string('filename');
-            $table->string('original_name');
-            $table->string('extension');
+            $table->string('name')->nullable();
+            $table->foreignId('process_id')->nullable()->constrained();
+            $table->foreignId('directory_id')->nullable()->constrained();
+            $table->foreignId('user_id')->constrained();
+            $table->text('description')->nullable();
+            $table->date('date')->nullable();
+            $table->foreignId('file_id')->nullable();
             $table->timestamps();
         });
     }

@@ -1,10 +1,10 @@
 @extends('layout.sidebar')
 @section('title')
-<title>{{ $parent_directory->name }} - {{ $directory->name }}</title>
+<title>{{ !empty($parent_directory->name) ? $parent_directory->name.' > ' : '' }}{{ $directory->name }}</title>
 @endsection
 @section('page')
     <div class="page-header">
-        <h1>{{ $parent_directory->name }} > {{ $directory->name }}</h1>
+        <h1>{{ !empty($parent_directory->name) ? $parent_directory->name.' > ' : '' }}{{ $directory->name }}</h1>
     </div>
     <div class="container">
         @include('layout.alert')
@@ -13,7 +13,7 @@
             @foreach($directories as $directory)
                 <div class="col-2 text-center">
                     <button class="btn align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $directory->id }}">
-                        <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid w-75">
+                        <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
                         <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
                     </button>
                     <ul class="dropdown-menu text-center">
@@ -37,7 +37,7 @@
             @foreach($files as $file)
                 <div class="col-2 text-center">
                     <button class="btn align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $file->id }}">
-                        <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid w-75">
+                        <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
                         <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                     </button>
                     <ul class="dropdown-menu text-left px-3">

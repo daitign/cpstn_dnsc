@@ -8,13 +8,7 @@ class Template extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = [
-        'process_id',
-        'directory_id',
-        'user_id',
-        'folder_name',
-        'template_id',
-    ];
+    protected $guarded = [];
 
     protected $dates = [
         'deleted_at',
