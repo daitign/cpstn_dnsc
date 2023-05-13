@@ -18,14 +18,7 @@ class UserController extends Controller
     {
         $this->middleware('auth')->except(['create','store']);
     }
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -59,88 +52,5 @@ class UserController extends Controller
         User::create($validatedData);
 
         return redirect()->route('login-page')->with('success', 'Account has been registered successfully');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        User::where('id',$id)->delete();
-
-        return redirect()->route('admin-pending-users-page')->with('success', 'User removed successfully');
-    }
-
-    public function pending()
-    {
-        $data = User::whereNull('role_id')->get();
-        return view('administrators.pending',[
-            'data' => $data,
-            'data2'=>Role::get()
-        ]);
-    }
-
-    public function approve(Request $request)
-    {
-        $validatedData = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'role_id' => 'required|exists:roles,id',
-        ]);
-
-        User::where('id',$request->user_id)
-        ->withTrashed()
-        ->update([
-            'role_id'=>$request->role_id,
-            'deleted_at'=>null
-        ]);
-
-        return redirect(URL::previous())->with('success', 'User approved successfully');
-    }
-
-    public function rejected()
-    {
-        $data = User::onlyTrashed()->get();
-        return view('administrators.rejected',[
-            'data' => $data,
-            'data2'=>Role::get()
-        ]);
-    }
-    
-
-    public function listDccPo()
-    {
-        $data = User::query()
-            ->whereIn('role_id',[10,3])
-            ->join('roles','roles.id','users.role_id')
-            ->select('users.*','roles.role_name')
-            ->get();
-        return view('administrators.assign',[
-            'data'=>$data,
-            'areas'=>Area::with(['institutes.programs.processes', 'offices.processes'])->get()
-        ]);
     }
 }

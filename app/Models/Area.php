@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Area extends Model
 {
@@ -15,13 +16,33 @@ class Area extends Model
         'area_description',
     ];
 
-    public function institutes()
+    public function parent()
     {
-        return $this->hasMany(Institute::class);
+        return $this->belongsTo(Area::class, 'parent_area');
     }
 
-    public function offices()
+    public function children()
     {
-        return $this->hasMany(Office::class);
+        return $this->hasMany(Area::class, 'parent_area');
+    }
+
+    public function scopeOffices(Builder $query): void
+    {
+        $query->where('type', 'office');
+    }
+
+    public function scopeInstitutes(Builder $query): void
+    {
+        $query->where('type', 'institution');
+    }
+
+    public function scopeProcess(Builder $query): void
+    {
+        $query->where('type', 'process');
+    }
+
+    public function scopeProgram(Builder $query): void
+    {
+        $query->where('type', 'program');
     }
 }

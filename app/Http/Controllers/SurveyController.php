@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Office;
+use App\Models\Area;
 use App\Models\Survey;
 use App\Models\SurveyOffice;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ class SurveyController extends Controller
     //
     public function create()
     {
-        $offices = Office::get();
+        $offices = Area::offices()->get();
         return view('surveys.create', compact('offices'));
     }
 
@@ -22,6 +22,7 @@ class SurveyController extends Controller
             'name' => $request->fullname,
             'contact_number' => $request->contact_number,
             'type' => $request->type,
+            'course' => $request->course,
             'course_year' => $request->course_year ?? '',
             'occupation' => $request->occupation ?? '',
             'suggestions' => $request->suggestions ?? '',
@@ -29,7 +30,7 @@ class SurveyController extends Controller
 
         SurveyOffice::create([
             'survey_id' => $survey->id,
-            'office_id' => $request->office,
+            'area_id' => $request->office,
             'promptness' => $request->promptness,
             'engagement' => $request->engagement,
             'cordiality' => $request->cordiality,

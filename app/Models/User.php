@@ -44,30 +44,15 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function process_user()
-    {
-        return $this->belongsToMany(Process::class);
-    }
-
-    public function office_user()
-    {
-        return $this->belongsToMany(Office::class);
-    }
-
-    public function program_user()
-    {
-        return $this->belongsToMany(Program::class);
-    }
-
-    public function assigned_office()
+    public function assigned_area()
     {
         return $this->hasOneThrough(
-            Office::class,
-            OfficeUser::class,
+            Area::class,
+            AreaUser::class,
             'user_id',
             'id',
             'id',
-            'office_id'
+            'area_id'
         );
     }
 }

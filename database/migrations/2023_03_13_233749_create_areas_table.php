@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('parent_area')->unsigned()->nullable();
+            $table->foreign('parent_area')->references('id')->on('areas')->onUpdate('cascade');
             $table->string('area_name');
             $table->string('area_description');
+            $table->string('type')->nullable();
             $table->softDeletesTz();
             $table->timestamps();
         });

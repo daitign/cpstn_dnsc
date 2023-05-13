@@ -57,8 +57,8 @@
                     <div class="row">
                         <div class="col-6">
                             <h4>{{ $survey->name ?? ''}}</h4>
-                            <h6>{{ sprintf('%s: %s',$survey->type ?? '', $survey->type == 'Student' ? $survey->course_year : $survey->occupation) }}<h6>
-                            <h5>Office: {{ $survey->score->office->office_name ?? ''}}<h5>
+                            <h6>{{ sprintf('%s: %s',$survey->type ?? '', $survey->type == 'Student' ? $survey->course .' '.$survey->course_year : $survey->occupation) }}<h6>
+                            <h5>Office: {{ $survey->score->area->area_name ?? ''}}<h5>
                             <h5>Ratings:<h5>
                             <h6>Promptness of Service: <input class="input-grade" type="text" value="{{ $survey->score->promptness }}" disabled><h6>
                             <h6>Quality of Engagement: <input class="input-grade" type="text" value="{{ $survey->score->engagement }}" disabled><h6>

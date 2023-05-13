@@ -33,6 +33,7 @@ use App\Http\Controllers\ManualController;
 
 
 use App\Http\Controllers\HR\HRDashboardController;
+use App\Http\Controllers\HR\SurveyReportController;
 use App\Http\Controllers\HR\SurveyController as HRSurveyController;
 use App\Http\Controllers\HR\OfficeController as HROfficeController;
 use Illuminate\Support\Facades\Route;
@@ -94,14 +95,14 @@ Route::middleware(['auth'])->group(function(){
         Route::put('/edit-process',[ProcessController::class,'editProcess'])->name('edit-process');
         Route::post('/add-office',[OfficeController::class,'addOffice'])->name('add-office');
         Route::put('/edit-office',[OfficeController::class,'editOffice'])->name('edit-office');
-        Route::get('/pending-users',[UserController::class,'pending'])->name('admin-pending-users-page');
-        Route::get('/rejected-users',[UserController::class,'rejected'])->name('admin-rejected-users-page');
-        Route::get('/list-dcc-po',[UserController::class,'listDccPo'])->name('list-dcc-po');
-        Route::put('/approve-user',[UserController::class,'approve'])->name('admin-approve-user');
-        Route::post('/add-program-user',[ProgramUserController::class,'addProgramUser'])->name('add-program-user');
-        Route::post('/add-office-user',[OfficeUserController::class,'addOfficeUser'])->name('add-office-user');
-        Route::post('/add-process-user',[ProcessUserController::class,'addProcessUser'])->name('add-process-user');
+        Route::get('/pending-users',[AdminUserController::class,'pending'])->name('admin-pending-users-page');
+        Route::get('/rejected-users',[AdminUserController::class,'rejected'])->name('admin-rejected-users-page');
         
+        Route::put('/approve-user',[AdminUserController::class,'approve'])->name('admin-approve-user');
+        
+        Route::get('/assign_users',[AdminUserController::class, 'assignUserList'])->name('admin-assign-users');
+        Route::post('/assign_users',[AdminUserController::class, 'assignUser'])->name('admin-assign-user');
+
         Route::get('/users',[AdminUserController::class,'index'])->name('admin-user-list');
         // Route::prefix('roles')->group(function(){
         //     Route::get('/',[RoleController::class,'index'])->name('admin-role-page');
@@ -155,6 +156,12 @@ Route::middleware(['auth'])->group(function(){
         });
         Route::get('/dashboard',[HRDashboardController::class,'dashboard'])->name('hr-dashboard-page');
         Route::get('/survey',[HRSurveyController::class,'index'])->name('hr-survey-page');
+
+        Route::prefix('survey_reports')->group(function(){
+            Route::get('/', [SurveyReportController::class, 'index'])->name('hr.survey_report.index');
+            Route::get('/create', [SurveyReportController::class, 'create'])->name('hr.survey_report.create');
+            Route::post('/', [SurveyReportController::class, 'store'])->name('hr.survey_report.store');
+        });
 
         Route::prefix('offices')->group(function(){
             Route::get('/',[HROfficeController::class,'index'])->name('hr-offices-page');

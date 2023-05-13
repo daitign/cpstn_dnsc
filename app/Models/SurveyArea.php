@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Survey extends Model
+class SurveyArea extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function score()
+    public function area()
     {
-        return $this->hasOne(SurveyArea::class);
+        return $this->hasOne(Area::class);
     }
 }

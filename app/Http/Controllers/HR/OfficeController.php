@@ -2,25 +2,37 @@
 
 namespace App\Http\Controllers\HR;
 
-use App\Models\Directory;
-use App\Models\Office;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+use App\Models\Area;
+use App\Models\Directory;
+
+use App\Repositories\DirectoryRepository;
 
 class OfficeController extends Controller
 {
+    private $dr;
+
+    public function __construct() 
+    {
+        $this->dr = new DirectoryRepository;
+
+    }
+
     public function index(Request $request)
     {
-        $offices = Office::get();
+        $offices = Area::offices()->get();
         return view('HR.offices', compact('offices'));
     }
 
     public function store(Request $request)
     {
-        Office::create([
-            'office_name' => $request->office_name,
-            'office_description' => $request->office_description,
-            'area_id' => 1,
+        $office_area = Area::where('name', 'Administration')->whereNull('parent_id')->firstOrFail();
+        Area::create([
+            'area_name' => $request->office_name,
+            'area_description' => $request->office_description,
+            'parent_area' => $office_area->id,
         ]);
 
         $directories = Directory::where('name', 'Administration')->whereNotNull('area_dependent')->get();
@@ -36,7 +48,7 @@ class OfficeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $office = Office::find($id);
+        $office = Area::offices()->find($id);
         $office->office_name = $request->office_name;
         $office->office_description = $request->office_description;
         $office->save();
@@ -46,7 +58,7 @@ class OfficeController extends Controller
 
     public function delete(Request $request, $id)
     {
-        $office = Office::find($id);
+        $office = Area::offices()->find($id);
         $office->delete();
 
         return redirect()->route('hr-offices-page')->with('success', 'Office deleted successfully');

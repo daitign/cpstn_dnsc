@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('evidence_id')->constrained();
             $table->string('name')->nullable();
-            $table->foreignId('process_id')->nullable()->constrained();
+            $table->foreignId('area_id')->nullable()->constrained();
             $table->foreignId('directory_id')->nullable()->constrained();
             $table->foreignId('user_id')->constrained();
             $table->text('description')->nullable();

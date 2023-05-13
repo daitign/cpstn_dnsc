@@ -202,7 +202,7 @@
         <div class="dropdown-menu drop-menu border-0 animated fadeIn {{ request()->routeIs('admin-user-list') || request()->routeIs('admin-pending-users-page') || request()->routeIs('admin-rejected-users-page') || request()->routeIs('list-dcc-po') || request()->routeIs('admin-role-page') ? 'show' : '' }}" data-bs-popper="none">
             <a class="dropdown-item {{ request()->routeIs('admin-pending-users-page') ? 'active' : '' }}" href="{{ route('admin-pending-users-page') }}"><span>Pending</span></a>
             <a class="dropdown-item {{ request()->routeIs('admin-rejected-users-page') ? 'active' : '' }}" href="{{ route('admin-rejected-users-page') }}"><span>Rejected</span></a>
-            <a class="dropdown-item {{ request()->routeIs('list-dcc-po') ? 'active' : '' }}" href="{{ route('list-dcc-po') }}"><span>Assign Area</span></a>
+            <a class="dropdown-item {{ request()->routeIs('admin-assign-users') ? 'active' : '' }}" href="{{ route('admin-assign-users') }}"><span>Assign Area</span></a>
             <a class="dropdown-item {{ request()->routeIs('admin-user-list') ? 'active' : '' }}" href="{{ route('admin-user-list') }}"><span>User List</span></a>
         </div>
   </li>

@@ -68,8 +68,20 @@
                                     </div>
                                     <div class="type Student">
                                         <div class="mt-3">
-                                            <label>Course & Year</label>
-                                            <input type="text" class="form-control" name="course_year" placeholder="Enter course" value="{{ old('course_year') }}" required>
+                                            <label>Course</label>
+                                            <input type="text" class="form-control" name="course" placeholder="Enter course" value="{{ old('course') }}" required>
+                                            @error('course')
+                                                <span class="text-danger error_course">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="mt-3">
+                                            <label>Year</label>
+                                            <select name="course_year" class="form-control select-type" required>
+                                                <option value="">Select Year</option>
+                                                @for($y = date('Y'); $y >= 1950; $y--)
+                                                    <option value="{{ $y }}">{{ $y }}</option>
+                                                @endfor
+                                            </select>
                                             @error('course_year')
                                                 <span class="text-danger error_course_year">{{ $message }}</span>
                                             @enderror
@@ -93,7 +105,7 @@
                                         <select name="office" class="form-control" required>
                                             <option value="">Select Office</option>
                                             @foreach($offices as $office)
-                                                <option value="{{ $office->id }}">{{ $office->office_name }}</option>
+                                                <option value="{{ $office->id }}">{{ $office->area_name }}</option>
                                             @endforeach
                                         </select>
                                         @error('office')

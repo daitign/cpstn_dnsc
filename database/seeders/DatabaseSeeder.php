@@ -16,12 +16,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             AreaSeeder::class,
-            InstituteSeeder::class,
-            OfficeSeeder::class,
-            DirectorySeeder::class,
-            ProgramSeeder::class,
-            ProgramUserSeeder::class,
-            ProcessSeeder::class,
+            DirectorySeeder::class
         ]);
     }
 }

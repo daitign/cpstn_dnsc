@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('contact_number');
             $table->string('type');
+            $table->string('course')->nullable();
             $table->string('course_year')->nullable();
             $table->string('occupation')->nullable();
             $table->text('suggestions')->nullable();

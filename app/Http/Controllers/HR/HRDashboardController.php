@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\HR;
 
-use App\Models\Office;
+use App\Models\Area;
 use App\Models\Survey;
 use App\Models\User;
 use App\Models\File;
@@ -14,7 +14,7 @@ class HRDashboardController extends Controller
     public function dashboard()
     {
         $data = (object) [
-            'office' => Office::count(),
+            'office' => Area::offices()->count(),
             'surveys' => Survey::count(),
             'users' => User::count(),
             'files' => File::count(),

@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('programs', function (Blueprint $table) {
+        Schema::create('survey_offices', function (Blueprint $table) {
             $table->id();
-            $table->string('program_name');
-            $table->string('program_description');
-            $table->foreignId('institute_id')->constrained();
-            $table->softDeletesTz();
+            $table->foreignId('survey_id')->nullable()->constrained();
+            $table->foreignId('area_id')->nullable()->constrained();
+            $table->integer('promptness')->nullable();
+            $table->integer('engagement')->nullable();
+            $table->integer('cordiality')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('programs');
+        Schema::dropIfExists('survey_offices');
     }
 };

@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('template_id')->constrained();
             $table->string('name')->nullable();
-            $table->foreignId('process_id')->nullable()->constrained();
-            $table->foreignId('program_id')->nullable()->constrained();
+            $table->foreignId('area_id')->nullable()->constrained();
             $table->foreignId('role_id')->nullable()->constrained();
             $table->foreignId('directory_id')->nullable()->constrained();
             $table->text('description')->nullable();

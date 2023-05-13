@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
+use App\Models\Area;
 use App\Models\Directory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -25,12 +27,7 @@ class DirectorySeeder extends Seeder
             ],
             [
                 'name' => 'Templates',
-                'sub_directory' => [
-                    'Process Owner',
-                    'Auditor',
-                    'Lead Auditor',
-                    'Human Resources'
-                ]
+                'sub_directory' => Role::get()->pluck('role_name')
             ],
             [
                 'name' => 'Audit Reports', 
@@ -41,25 +38,7 @@ class DirectorySeeder extends Seeder
             ],
         ];
 
-        $sub_directory = [
-            [
-                'name' => 'Administration',
-                'child_directories' => [
-                    'Library',
-                    'Clinic',
-                    'Registrar',
-                    'Cashier'
-                ]
-            ],
-            [
-                'name' => 'Academics',
-                'child_directories' => [
-                    'IC',
-                ]
-            ],
-        ];
-
-        $years = ['2021', '2022', '2023'];
+        $sub_directory = Area::whereNull('parent_area')->get();
 
         foreach($directories as $item) {
             $directory = Directory::where('name', $item['name'])->first();
@@ -83,38 +62,59 @@ class DirectorySeeder extends Seeder
             if(!empty($item['automatic_child'])) {
                 foreach($sub_directory as $child) {
                     $dir = Directory::create([
-                        'name' => $child['name'],
+                        'name' => $child->area_name,
                         'parent_id' => $directory->id,
                         'area_dependent' => true
                     ]);
-                    foreach($child['child_directories'] as $child) {
-                        $child = Directory::create([
-                            'name' => $child,
-                            'parent_id' => $dir->id
-                        ]);
 
-                        foreach($years as $year) {
-                            $year = Directory::create([
-                                'name' => $year,
-                                'parent_id' => $child->id
-                            ]);
-
-                            if($dir->name == 'Academics')
-                            {
-                                Directory::create([
-                                    'name' => '1st Semester',
-                                    'parent_id' => $year->id
-                                ]);
-
-                                Directory::create([
-                                    'name' => '2nd Semester',
-                                    'parent_id' => $year->id
-                                ]);
-                            }
+                    if(!empty($child->children)) {
+                        foreach($child->children as $row) {
+                            $this->saveAreaDirectory($row, $row->area_name, $dir->id);
                         }
                     }
                 }
             }
         }
+    }
+
+    private function saveAreaDirectory($data, $parent_area, $parent_id) {
+        $area_name = $data->area_name;
+        $years = ['2021', '2022', '2023'];
+        $dir = Area::where('area_name', $area_name)->where('parent_area', $parent_id)->first();
+        if(empty($dir)) {
+            $dir = Directory::create([
+                'name' => $area_name,
+                'parent_id' => $parent_id,
+                'area_dependent' => true
+            ]);
+
+            foreach($years as $year) {
+                $year = Directory::create([
+                    'name' => $year,
+                    'parent_id' => $dir->id
+                ]);
+
+                if($parent_area == 'Academics')
+                {
+                    Directory::create([
+                        'name' => '1st Semester',
+                        'parent_id' => $year->id
+                    ]);
+
+                    Directory::create([
+                        'name' => '2nd Semester',
+                        'parent_id' => $year->id
+                    ]);
+                }
+            }
+        }
+
+        if(!empty($data->children)) {
+            foreach($data->children as $child) {
+                $this->saveAreaDirectory($child, $parent_area, $dir->id);
+            }
+        }
+
+        return $dir->id;
     }
 }
