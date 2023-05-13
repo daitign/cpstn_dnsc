@@ -17,7 +17,6 @@ class EvidenceController extends Controller
 {
     public function index(Request $request, $directory_name = '')
     {
-
         $current_user = Auth::user();
         if(empty($current_user->assigned_area->area_name)) {
             return redirect(route('unassigned'));
