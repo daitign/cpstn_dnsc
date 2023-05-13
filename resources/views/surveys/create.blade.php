@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="mt-3">
                                             <label>Year</label>
-                                            <select name="course_year" class="form-control select-type" required>
+                                            <select name="course_year" class="form-control" required>
                                                 <option value="">Select Year</option>
                                                 @for($y = date('Y'); $y >= 1950; $y--)
                                                     <option value="{{ $y }}">{{ $y }}</option>
