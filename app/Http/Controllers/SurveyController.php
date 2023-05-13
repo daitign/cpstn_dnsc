@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Area;
 use App\Models\Survey;
-use App\Models\SurveyOffice;
+use App\Models\SurveyArea;
 use Illuminate\Http\Request;
 
 class SurveyController extends Controller
@@ -28,7 +28,7 @@ class SurveyController extends Controller
             'suggestions' => $request->suggestions ?? '',
         ]);
 
-        SurveyOffice::create([
+        SurveyArea::create([
             'survey_id' => $survey->id,
             'area_id' => $request->office,
             'promptness' => $request->promptness,

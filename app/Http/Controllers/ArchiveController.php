@@ -61,11 +61,11 @@ class ArchiveController extends Controller
         }
 
         $directory = Directory::where('parent_id', $parent_directory->id)
-                        ->where('name', $current_user->assigned_office->office_name)->first();
+                        ->where('name', $current_user->assigned_area->area_name)->first();
         if(!$directory) {
             $directory = Directory::create([
                 'parent_id' => $parent_directory->id,
-                'name' =>  $current_user->assigned_office->office_nam
+                'name' =>  $current_user->assigned_area->area_name
             ]);
         }
 

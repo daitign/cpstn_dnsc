@@ -60,6 +60,8 @@ Route::middleware(['guest'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function(){
+    Route::get('/unassigned',[AuthController::class,'unassigned'])->name('unassigned');
+    
     Route::get('/directories/{name}',[ArchiveController::class,'index'])->name('directories');
     Route::prefix('archives')->group(function() {
         Route::get('/',[ArchiveController::class,'index'])->name('archives-page');

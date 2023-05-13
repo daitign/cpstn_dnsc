@@ -62,4 +62,9 @@ class AuthController extends Controller
     
         return redirect()->route('login-page');
     }
+
+    public function unassigned()
+    {
+        return view('errors.unassigned');
+    }
 }

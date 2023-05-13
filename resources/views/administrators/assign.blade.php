@@ -109,7 +109,7 @@
                         </div>
                         <div class="mt-3 d-none" id="sub_area_container">
                             <label for="sub_area" id="sub_label">Process</label>
-                            <select id="sub_area" name="sub_area" required class="form-control">
+                            <select id="sub_area" name="sub_area" class="form-control">
                                 <option value=''>Select Option</option>
                             </select>
                         </div>

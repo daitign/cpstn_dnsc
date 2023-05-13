@@ -19,17 +19,21 @@ class TemplateController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $current_user = Auth::user();
+        if(empty($current_user->assigned_area->area_name)) {
+            return redirect(route('unassigned'));
+        };
+
         $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
         $parent_directory = Directory::where('name', 'Templates')->whereNull('parent_id')->firstOrFail();
         
         if($current_user->role->role_name !== 'Staff') {
             $directory = Directory::where('parent_id', $parent_directory->id)
-            ->where('name', $current_user->assigned_office->office_name)
+            ->where('name', $current_user->assigned_area->area_name)
             ->first();
             if(!$directory) {
             $directory = Directory::create([
                 'parent_id' => $parent_directory->id,
-                'name' =>  $current_user->assigned_office->office_name
+                'name' =>  $current_user->assigned_area->area_name
             ]);
             }
         }else {
