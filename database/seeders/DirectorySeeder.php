@@ -64,12 +64,13 @@ class DirectorySeeder extends Seeder
                     $dir = Directory::create([
                         'name' => $child->area_name,
                         'parent_id' => $directory->id,
-                        'area_dependent' => true
+                        'area_dependent' => true,
+                        'area_id' => $child->id
                     ]);
 
                     if(!empty($child->children)) {
                         foreach($child->children as $row) {
-                            $this->saveAreaDirectory($row, $row->area_name, $dir->id);
+                            $this->saveAreaDirectory($row, $dir->id);
                         }
                     }
                 }
@@ -77,7 +78,7 @@ class DirectorySeeder extends Seeder
         }
     }
 
-    private function saveAreaDirectory($data, $parent_area, $parent_id) {
+    private function saveAreaDirectory($data, $parent_id) {
         $area_name = $data->area_name;
         $years = ['2021', '2022', '2023'];
         $dir = Area::where('area_name', $area_name)->where('parent_area', $parent_id)->first();
@@ -85,17 +86,18 @@ class DirectorySeeder extends Seeder
             $dir = Directory::create([
                 'name' => $area_name,
                 'parent_id' => $parent_id,
-                'area_dependent' => true
+                'area_dependent' => true,
+                'area_id' => $data->id
             ]);
 
-            foreach($years as $year) {
-                $year = Directory::create([
-                    'name' => $year,
-                    'parent_id' => $dir->id
-                ]);
+            if(!empty($data->type) && $data->type == 'program')
+            {
+                foreach($years as $year) {
+                    $year = Directory::create([
+                        'name' => $year,
+                        'parent_id' => $dir->id
+                    ]);
 
-                if($parent_area == 'Academics')
-                {
                     Directory::create([
                         'name' => '1st Semester',
                         'parent_id' => $year->id
@@ -111,7 +113,7 @@ class DirectorySeeder extends Seeder
 
         if(!empty($data->children)) {
             foreach($data->children as $child) {
-                $this->saveAreaDirectory($child, $parent_area, $dir->id);
+                $this->saveAreaDirectory($child, $dir->id);
             }
         }
 

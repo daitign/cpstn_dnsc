@@ -9,10 +9,7 @@ class Directory extends Model
 {
     use HasFactory;
 
-    public $fillable = [
-        'name',
-        'parent_id'
-    ];
+    protected $guarded = [];
 
     protected $dates = [
         'created_at',

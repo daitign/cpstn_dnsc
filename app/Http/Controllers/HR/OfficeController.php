@@ -17,7 +17,6 @@ class OfficeController extends Controller
     public function __construct() 
     {
         $this->dr = new DirectoryRepository;
-
     }
 
     public function index(Request $request)
@@ -29,7 +28,7 @@ class OfficeController extends Controller
     public function store(Request $request)
     {
         $office_area = Area::where('name', 'Administration')->whereNull('parent_id')->firstOrFail();
-        Area::create([
+        $area = Area::create([
             'area_name' => $request->office_name,
             'area_description' => $request->office_description,
             'parent_area' => $office_area->id,
@@ -39,7 +38,8 @@ class OfficeController extends Controller
         foreach($directories as $directory) {
             Directory::create([
                 'name' => $request->office_name,
-                'parent_id' => $directory->id
+                'parent_id' => $directory->id,
+                'area_id' => $area->id
             ]);
         }
 
@@ -48,10 +48,12 @@ class OfficeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $office = Area::offices()->find($id);
-        $office->office_name = $request->office_name;
-        $office->office_description = $request->office_description;
+        $office = Area::offices()->findOrFail($id);
+        $office->area_name = $request->office_name;
+        $office->area_description = $request->office_description;
         $office->save();
+
+        Directory::where('area_id', $id)->update(['name' => $request->office_name]);
 
         return redirect()->route('hr-offices-page')->with('success', 'Office updated successfully');
     }

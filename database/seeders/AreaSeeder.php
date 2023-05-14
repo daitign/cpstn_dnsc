@@ -26,7 +26,7 @@ class AreaSeeder extends Seeder
             ],
             [
                 'name'=> 'Academics',
-                'type' => 'institution',
+                'type' => 'institute',
                 'children' => [
                     [
                         'name' => 'IAAS',

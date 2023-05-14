@@ -88,15 +88,13 @@ Route::middleware(['auth'])->group(function(){
             return redirect()->route('admin-dashboard-page');
         });
         Route::get('/dashboard',[DashboardController::class,'adminDashboardPage'])->name('admin-dashboard-page');
-        Route::get('/area',[AreaController::class,'adminAreaPage'])->name('admin-area-page');
-        Route::post('/add-institute',[InstituteController::class,'addInstitute'])->name('add-institute');
-        Route::put('/edit-institute',[InstituteController::class,'editInstitute'])->name('edit-institute');
-        Route::post('/add-program',[ProgramController::class,'addProgram'])->name('add-program');
-        Route::put('/edit-program',[ProgramController::class,'editProgram'])->name('edit-program');
-        Route::post('/add-process',[ProcessController::class,'addProcess'])->name('add-process');
-        Route::put('/edit-process',[ProcessController::class,'editProcess'])->name('edit-process');
-        Route::post('/add-office',[OfficeController::class,'addOffice'])->name('add-office');
-        Route::put('/edit-office',[OfficeController::class,'editOffice'])->name('edit-office');
+       
+        Route::prefix('area')->group(function(){
+            Route::get('/',[AreaController::class, 'index'])->name('admin-area-page');
+            Route::post('/',[AreaController::class, 'store'])->name('admin-area-store');
+            Route::post('/edit',[AreaController::class, 'update'])->name('admin-area-update');
+        });
+
         Route::get('/pending-users',[AdminUserController::class,'pending'])->name('admin-pending-users-page');
         Route::get('/rejected-users',[AdminUserController::class,'rejected'])->name('admin-rejected-users-page');
         

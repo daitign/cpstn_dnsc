@@ -10,12 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Area extends Model
 {
     use HasFactory, SoftDeletes;
-
-    protected $fillable = [
-        'area_name',
-        'area_description',
-    ];
-
+    
+    protected $guarded = [];
+    
     public function parent()
     {
         return $this->belongsTo(Area::class, 'parent_area');
@@ -33,7 +30,7 @@ class Area extends Model
 
     public function scopeInstitutes(Builder $query): void
     {
-        $query->where('type', 'institution');
+        $query->where('type', 'institute');
     }
 
     public function scopeProcess(Builder $query): void
