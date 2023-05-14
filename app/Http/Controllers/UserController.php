@@ -39,7 +39,7 @@ class UserController extends Controller
             'suffix'=>['nullable','max:255'],
             'username'=>['required','max:255','unique:users,username'],
             'password'=>['required','confirmed','max:255'],
-            'img'=>['file','mimes:jpg,jpeg,png','max:10000']
+            'img'=>['nullable', 'file','mimes:jpg,jpeg,png','max:10000']
         ]);
         $validatedData['password'] = Hash::make($validatedData['password']);
         $file_name = Uuid::uuid4()->toString();
