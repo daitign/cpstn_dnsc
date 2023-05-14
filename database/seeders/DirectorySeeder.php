@@ -92,9 +92,9 @@ class DirectorySeeder extends Seeder
 
             if(!empty($data->type) && $data->type == 'program')
             {
-                foreach($years as $year) {
+                for($y = 2021; $y <= date('Y'); $y++) {
                     $year = Directory::create([
-                        'name' => $year,
+                        'name' => $y,
                         'parent_id' => $dir->id
                     ]);
 
