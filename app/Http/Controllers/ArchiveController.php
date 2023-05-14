@@ -21,8 +21,7 @@ class ArchiveController extends Controller
         $current_directory = $request->directory;
 
         $current_user = !empty($request->user) ? User::findOrFail($request->user) : Auth::user();
-        
-        $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
+        $users = $current_user->role->role_name == 'Administrator' ? User::whereHas('role', function($q) { $q->where('role_name', '!=', 'Administrator'); })->get() : User::where('role_id', $current_user->role_id)->get();
 
         if(!empty($current_directory)) {
             $current_directory = Directory::find($current_directory);
@@ -51,7 +50,7 @@ class ArchiveController extends Controller
     {
         $directory_name = ucwords($directory_name);
         $current_user = Auth::user();
-        $users = User::get();
+        $users = $current_user->role->role_name == 'Administrator' ? User::whereHas('role', function($q) { $q->where('role_name', '!=', 'Administrator'); })->get() : User::where('role_id', $current_user->role_id)->get();
         
         $directory_name = ucwords($directory_name);
         if(!in_array($directory_name, $current_user->role->directories)) {
@@ -100,7 +99,7 @@ class ArchiveController extends Controller
     public function sharedWithMe(Request $request)
     {
         $current_user = Auth::user();
-        $users = User::get();
+        $users = $current_user->role->role_name == 'Administrator' ? User::whereHas('role', function($q) { $q->where('role_name', '!=', 'Administrator'); })->get() : User::where('role_id', $current_user->role_id)->get();
 
         $fileSearch = $request->fileSearch;
         $files = File::where(function($q) use($current_user){

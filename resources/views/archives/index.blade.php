@@ -6,13 +6,15 @@
     <div class="page-header">
         <h1>Archives</h1>
         <h5 class="text-decoration-none">
+            @if(in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
+                <a href="{{ route('archives-page') }}">Archives</a>
+            @endif
             @if(!empty($parents))
                 @foreach($parents as $parent) 
                     >
                     <a href="{{ route('archives-page') }}?directory={{ $parent->id }}&user={{ $current_user->id }}">{{ $parent->name }}</a>
                 @endforeach
-       
-                @endif
+            @endif
         </h5>
     </div>
     <div class="container">
@@ -38,16 +40,21 @@
         @if(!empty($users) && in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
             <h5>User:</h5>
             <select class="form-control userSelection">
-                <option value="">Select User</option>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s - %s", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
+                <option value="">All Users</option>
+                @php $roles = $users->groupBy('role.role_name'); @endphp
+                @foreach($roles as $role => $users)
+                    <optgroup label="{{ $role }}">
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                    @endforeach
+                    </optgroup>
                 @endforeach
             </select>
         @endif
         <div class="mb-4 row">
             @foreach($directories as $directory)
                 <div class="col-2 text-center">
-                    <button class="btn align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $directory->id }}">
+                    <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $directory->id }}">
                         <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
                         <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
                     </button>
@@ -64,22 +71,22 @@
                         >Properties</a></li>
                         
                         @if($directory->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-                        <li>
+                        <!-- <li>
                             <a href="#" class="text-decoration-none toggleDirectoryModal"
                                 data-name="{{ $directory->name }}" 
                                 data-route="{{ route('archives-update-directory', $directory->id) }}" 
                                 data-bs-toggle="modal" data-bs-target="#directoryModal">
                                     Rename
                             </a>
-                        </li>
-                        <li>
+                        </li> -->
+                        <!-- <li>
                             <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_directory_{{ $directory->id }}">Delete</button>
                                 <form id="delete_directory_{{ $directory->id }}" action="{{ route('archives-delete-directory', $directory->id) }}" class="d-none" method="POST">
                                     @csrf
                                     @method('DELETE')
                                 </form>
                             </a>
-                        </li>
+                        </li> -->
                         @endif
                     </ul>
                 </div>
@@ -342,6 +349,10 @@
             
             userShare.val(users).trigger('change');
         }
-    })
+    });
+
+    $('.btn-directory').on('dblclick', function(){
+        location.href = $(this).data('route')
+    });
 </script>
 @endsection

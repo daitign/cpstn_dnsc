@@ -22,7 +22,7 @@ class EvidenceController extends Controller
             return redirect(route('unassigned'));
         };
 
-        $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
+        $users = User::where('role_id', $current_user->role_id)->get();
         $parent_directory = Directory::where('name', 'Evidences')->whereNull('parent_id')->firstOrFail();
 
         $directory = Directory::where('parent_id', $parent_directory->id)

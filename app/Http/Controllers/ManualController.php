@@ -22,7 +22,7 @@ class ManualController extends Controller
             return redirect(route('unassigned'));
         };
 
-        $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
+        $users = User::where('role_id', $current_user->role_id)->get();
         $parent_directory = Directory::where('name', 'Manuals')->whereNull('parent_id')->firstOrFail();
         
         if($current_user->role->role_name !== 'Staff') {

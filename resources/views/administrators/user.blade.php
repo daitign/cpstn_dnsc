@@ -52,7 +52,7 @@
             @foreach ($users as $user)
                 <div class="col-3">
                     <div class="card">
-                        <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top maxed" alt="User Image">
+                        <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top form-control" alt="User Image">
                         <div class="card-body text-center">
                             <h5>
                                 {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}

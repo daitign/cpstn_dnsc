@@ -20,8 +20,13 @@
                         <label for="fileSearch" class="form-label">User</label>
                         <select class="form-control userSelection">
                             <option value="">All Users</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}" {{ $current_user == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s - %s", $user->firstname ?? '', $user->surname ?? '', $user->role->role_name ?? '') }}</option>
+                            @php $roles = $users->groupBy('role.role_name'); @endphp
+                            @foreach($roles as $role => $users)
+                                <optgroup label="{{ $role }}">
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}" {{ $current_user->id == $user->id ? 'selected' : ''}}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                                @endforeach
+                                </optgroup>
                             @endforeach
                         </select>
                     </div>
