@@ -76,7 +76,9 @@ class UserController extends Controller
     public function assignUserList()
     {
         $all_areas = Area::get();
-        $areas = Area::with('children')->whereNull('parent_area')->get();
+        $main_areas = Area::with(['children'])->whereNull('parent_area')->get();
+        
+        $areas = Area::with(['children'])->get();
         $data = User::query()
                 ->whereHas('role', function($q){
                     $q->whereIn('role_name', ['Process Owner', 'Document Control Custodian']);
@@ -85,17 +87,18 @@ class UserController extends Controller
                 ->select('users.*','roles.role_name')
                 ->get();
                 
-        return view('administrators.assign', compact('data', 'areas', 'all_areas'));
+        return view('administrators.assign', compact('data', 'areas', 'main_areas'));
     }
 
     public function assignUser(Request $request)
     {
-        $area_id = !empty($request->sub_area) ? $request->sub_area : $request->area;
+        $area_id = $request->assign_area;
+        $area = Area::findOrFail($area_id);
         AreaUser::where('user_id', $request->user_id)->delete();
         
         AreaUser::firstOrCreate([
             'user_id' => $request->user_id,
-            'area_id' => $area_id,
+            'area_id' => $area->id,
         ]);
 
         return redirect(URL::previous())->with('success', 'User has been assigned successfully');

@@ -38,7 +38,7 @@
             <div class="col-8 px-3">
                 @php $roles = ['Document Control Custodian', 'Process Owner'] @endphp
                 @foreach($roles as $role)
-                    <button type="button" class="btn btn-design btn-role me-2 {{ $loop->index == 0 ? 'active' : ''}}" data-role="{{ $role }}"><span class="mdi mdi-domain"></span> {{ $role }}</button>
+                    <button type="button" class="btn btn-design btn-role me-2 {{ $loop->index == 1 ? 'active' : ''}}" data-role="{{ $role }}"><span class="mdi mdi-domain"></span> {{ $role }}</button>
                 @endforeach
             </div>
         </div>
@@ -74,7 +74,16 @@
                             {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}
                         </h5>
                         <h6><Strong>{{ $user->role_name ?? ''}}</strong></h6>
-                        <h6><small>Assigned on: {{ $user->assigned_area->area_name ?? 'None'}}</small></h6>
+                        <h6><small>
+                            Assigned on: 
+                            @if(!empty($user->assigned_area) && $user->assigned_area->type == 'process')
+                                {{ sprintf("%s > %s", $user->assigned_area->parent->area_name ?? '', $user->assigned_area->area_name ?? 'None') }}
+                            @else
+                                {{ $user->assigned_area->area_name ?? 'None' }}
+                            @endif
+                            </small>
+                        </h6>
+                        
                         <hr>
                         <div class="text-center">
                             <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assign_modal" class="btn btn-outline-success btn-assign" value="{{ $user->id }}">Assign</button>
@@ -102,28 +111,10 @@
                     <div class="modal-body">
                         <input type="hidden" name="user_type" id="user_type">
                         <input type="hidden" name="user_id" id="user_id">
-                        <div class="mb-1">
-                            <label for="area">Area</label>
-                            <select id="area" name="area" required class="form-control">
-                                <option value=''>Select Area</option>
-                                @foreach($areas as $area)
-                                    <optgroup label="{{ $area->area_name }}">
-                                        @foreach($area->children as $child)
-                                            <option value="{{ $child->id }}">{{ $child->area_name }}</option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mt-3 d-none" id="sub_area_container">
-                            <label for="sub_area" id="sub_label">Process</label>
-                            <select id="sub_area" name="sub_area" class="form-control">
-                                <option value=''>Select Option</option>
-                            </select>
-                        </div>
+                        <div class="select-container"></div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="btn-submit" class="btn btn-success" disabled="true">Save</button>
+                        <button type="submit" id="btn-submit" class="btn btn-success">Save</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -135,34 +126,43 @@
 @section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var areas = {!! json_encode($all_areas) !!};
+            var areas = {!! json_encode($areas) !!};
+            var main_areas = {!! json_encode($main_areas) !!};
+
             $('.btn-assign').on('click',function () {
+                var user_type = $(this).data('type');
                 $('#user_id').val($(this).data('user-id'));
-                $('#user_type').val($(this).data('type'));
+                $('#user_type').val(user_type);
 
                 $('#area').val('');
-                $('#btn-submit').prop('disabled', true);
                 $('#sub_area_container').addClass('d-none');
-            });
 
-            $('#area').on('change', function(){
-                var area_id = parseInt($(this).val());
-                $('#sub_area_container').addClass('d-none');
-                $('#btn-submit').prop('disabled', true);
-                if($('#user_type').val() == 'Document Control Custodian') {
-                    var area = areas.find(item => item.id === area_id);
-                    var child_areas = areas.filter(item => item.parent_area == area_id);
-
-                    if(child_areas.length > 0) {
-                        $('#sub_area').html("<option value=''>Select Option</option>");
-                        child_areas.forEach(function(i){
-                            $('#sub_area').append("<option value='" + i.id + "'>" + i.area_name + "</option>");
+                $('.select-container').html('');
+                if(user_type == 'Document Control Custodian') {
+                    $('.select-container').html(`<div class="mb-1">
+                            <label for="area">Area</label>
+                        <select id="area" name="area" required class="form-control"><option value="">Select Area</option></select></div>`);
+                    
+                    main_areas.forEach(function(main){
+                        var options = `<optgroup label="` + main.area_name + `">`;
+                        var child = areas.filter(c => c.parent_area == main.id);
+                        child.forEach(function(c){
+                            options += `<option value="` + c.id + `">` + c.area_name +`</option>`;
                         });
-                        $('#sub_area_container').removeClass('d-none');
-                        $('#sub_label').html(area.type == 'institution' ? 'Program' : 'Process');
-                    }
+                        $('#area').append(options);
+                    });
+                }else{
+                    $('.select-container').html(`<div class="mb-1">
+                            <label for="area">Area</label>
+                        <select id="main_area" required class="form-control"><option value="">Select Area</option></select></div>`);
+                    
+                    main_areas.forEach(function(main) {
+                        var options = `<option value="` + main.id + `">` + main.area_name +`</option>`;
+                        $('#main_area').append(options);
+                    });
+                    
+                    $('.select-container').append('<div class="sub-select-container"></div>');
                 }
-                $('#btn-submit').prop('disabled', false);
             });
 
             function displayUser(user_role){
@@ -174,11 +174,83 @@
                 });
             }
 
-            displayUser('Document Control Custodian');
+            displayUser('Process Owner');
             $('.btn-role').on('click', function(){
                 $('.btn-role').removeClass('active');
                 $(this).addClass('active');
                 displayUser($(this).data('role'));
+            });
+
+            $('.select-container').on('change', '#main_area', function(){
+                area_id = parseInt($(this).val());
+                var area = areas.find(item => item.id === area_id);
+                $('.sub-select-container').html('');
+                var label = area.area_name == 'Administration' ? 'Office' : 'Institute';
+
+                if(label == 'Office') {
+                    $('.sub-select-container').append(`<div class="mt-3">
+                        <label for="office" class="form-label">Select ` + label + `</label>
+                        <select class="form-control sub-select" id="office" name="office" required><option value=''>Select Office</option></select>
+                    </div><div class="mt-3 process-select">`);
+                } else {
+                    $('.sub-select-container').append(`<div class="mt-3">
+                        <label for="institute" class="form-label">Select ` + label + `</label>
+                        <select class="form-control sub-select" id="institute" name="institute" required><option value=''>Select Institute</option></select>
+                    </div><div class="mt-3 program-select">`);
+                }
+
+                var parent_areas = areas.filter(i => i.parent_area == area.id);
+                parent_areas.forEach(function(i){
+                    $('.sub-select-container .sub-select').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+                });
+            });
+
+            $('.select-container').on('change', '#institute', function(){
+                area_id = parseInt($(this).val());
+                var area = areas.find(item => item.id === area_id);
+                $('.program-select').html('');
+
+                $('.program-select').append(`<div class="mb-3">
+                    <label for="program_area" class="form-label">Select Program</label>
+                    <select class="form-control" id="program_area" name="program_area" required><option value=''>Select Program</option></select>
+                </div><div class="mt-3 process-select">`);
+
+                var parent_areas = areas.filter(i => i.parent_area == area.id);
+                parent_areas.forEach(function(i){
+                    $('#program_area').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+                });
+            });
+
+            $('.select-container').on('change', '#program_area', function(){
+                area_id = parseInt($(this).val());
+                var area = areas.find(item => item.id === area_id);
+                $('.process-select').html('');
+
+                $('.process-select').append(`<div class="mb-3">
+                    <label for="assign_area" class="form-label">Select Process</label>
+                    <select class="form-control" id="assign_area" name="assign_area" required><option value=''>Select Process</option></select>
+                </div>`);
+
+                var parent_areas = areas.filter(i => i.parent_area == area.id);
+                parent_areas.forEach(function(i){
+                    $('#assign_area').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+                });
+            });
+
+            $('.select-container').on('change', '#office', function(){
+                area_id = parseInt($(this).val());
+                var area = areas.find(item => item.id === area_id);
+                $('.process-select').html('');
+
+                $('.process-select').append(`<div class="mb-3">
+                    <label for="assign_area" class="form-label">Select Process</label>
+                    <select class="form-control" id="assign_area" name="assign_area" required><option value=''>Select Process</option></select>
+                </div>`);
+
+                var parent_areas = areas.filter(i => i.parent_area == area.id);
+                parent_areas.forEach(function(i){
+                    $('#assign_area').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+                });
             });
         });
     </script>
