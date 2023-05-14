@@ -62,7 +62,11 @@
                 
             </div>
 
-            <div class="col-8 mt-3 row sub-area-container">
+            <div class="col-8 mt-3 row program-container">
+
+            </div>
+
+            <div class="col-8 mt-3 row process-container">
 
             </div>
         </div>
@@ -109,6 +113,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             var area_container = $('.area-container');
             var sub_area_container = $('.sub-area-container');
+            var process_container = $('.process-container');
+            var program_container = $('.program-container');
 
             function loadArea(area_id) {
                 area_id = parseInt(area_id);
@@ -145,15 +151,32 @@
             function loadSubArea(area_id) {
                 area_id = parseInt(area_id);
                 var area = areas.find(item => item.id === area_id);
-                sub_area_container.html('');
-                
-                var child_areas = areas.filter(i => i.parent_area == area_id);
-                if(child_areas.length > 0) {
-                    var type = area.area_name == 'office' ? 'Process' : 'Program';
-                    sub_area_container.html('<h2 class="my-3">' + type + '</h2>');
+                program_container.html('');
+                process_container.html('');
 
-                    child_areas.forEach(function(i){
-                        sub_area_container.append(`<div class="col-2 text-center">
+                var program_areas = areas.filter(i => i.parent_area == area_id && i.type == 'program');
+                if(program_areas.length > 0) {
+                    program_container.html('<h2 class="my-3">Program</h2>');
+
+                    program_areas.forEach(function(i){
+                        program_container.append(`<div class="col-2 text-center">
+                            <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa fa-book fa-2x"></i>
+                                <p style="text-overflow: ellipsis"><small>` + i.area_name + `</small></p>
+                            </button>
+                            <ul class="dropdown-menu text-left">
+                                <li><button type="button" class="dropdown-item btn-edit" data-area-id="` + i.id + `" data-type="` + i.type + `" data-bs-toggle="modal" data-bs-target="#areaModal">Edit</button></li>
+                            </ul>
+                        </div>`);
+                    });
+                }
+
+                var process_areas = areas.filter(i => i.parent_area == area_id && i.type == 'process');
+                if(process_areas.length > 0) {
+                    process_container.html('<h2 class="my-3">Process</h2>');
+
+                    process_areas.forEach(function(i){
+                        process_container.append(`<div class="col-2 text-center">
                             <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa fa-book fa-2x"></i>
                                 <p style="text-overflow: ellipsis"><small>` + i.area_name + `</small></p>
@@ -171,10 +194,28 @@
                 loadSubArea($(this).data('area-id'));
             });
 
-            $('.area-container').on('click', '.btn-sub-area', function(){
+            $('.program-container').on('click', '.btn-sub-area', function(){
+                area_id = parseInt($(this).data('area-id'));
                 $('.btn-sub-area').removeClass('active');
                 $(this).addClass('active');
-                loadSubArea($(this).data('area-id'));
+
+                process_container.html('');
+                var process_areas = areas.filter(i => i.parent_area == area_id && i.type == 'process');
+                if(process_areas.length > 0) {
+                    process_container.html('<h2 class="my-3">Process</h2>');
+
+                    process_areas.forEach(function(i){
+                        process_container.append(`<div class="col-2 text-center">
+                            <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa fa-book fa-2x"></i>
+                                <p style="text-overflow: ellipsis"><small>` + i.area_name + `</small></p>
+                            </button>
+                            <ul class="dropdown-menu text-left">
+                                <li><button type="button" class="dropdown-item btn-edit" data-area-id="` + i.id + `" data-type="` + i.type + `" data-bs-toggle="modal" data-bs-target="#areaModal">Edit</button></li>
+                            </ul>
+                        </div>`);
+                    });
+                }
             });
 
             function initModal(type, area = null)
@@ -184,7 +225,6 @@
                 $('#areaModalLabel').html('Add ' + type);
                 $('.select-container').html('');
                 $('#areaModal .form-control').val('');
-                var parent_area = '';
 
                 if(area) {
                     $('#areaModalLabel').html('Edit ' + type);
@@ -194,16 +234,15 @@
                 }else{
                     if(type == 'process') {
                         $('.select-container').append(`<div class="mb-3">
-                            <label for="parent_area" class="form-label">Office</label>
-                            <select class="form-control area-select" id="parent_area" name="parent_area" required></select>
+                            <label for="main_area" class="form-label">Select Area</label>
+                            <select class="form-control" id="main_area" required><option value="">Select Area</option></select>
                         </div>`);
-                        var parent_areas = areas.filter(i => i.type == 'office');
-                        parent_areas.forEach(function(i){
-                            var selected = parent_area == i.id ? ' selected' : '';
-                            $('.area-select').append(`<option value="` + i.id + `"`+ selected +`>` + i.area_name + `</option`);
+                        main_areas.forEach(function(m){
+                            $('#main_area').append(`<option value="` + m.id + `">` + m.area_name + `</option>`);
                         });
+                        
+                        $('.select-container').append('<div class="sub-select-container"></div>');
                     }
-
                     if(type == 'program') {
                         $('.select-container').append(`<div class="mb-3">
                             <label for="parent_area" class="form-label">Institute</label>
@@ -211,8 +250,7 @@
                         </div>`);
                         var parent_areas = areas.filter(i => i.type == 'institute');
                         parent_areas.forEach(function(i){
-                            var selected = parent_area == i.id ? ' selected' : '';
-                            $('.area-select').append(`<option value="` + i.id + `"`+ selected +`>` + i.area_name + `</option`);
+                            $('.area-select').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
                         });
                     }
                 }
@@ -231,6 +269,46 @@
                 var area = areas.find(item => item.id === area_id);
                 $('#areaForm').prop('action', "{{ route('admin-area-update') }}");
                 initModal(type, area);
+            });
+
+            $('.select-container').on('change', '#main_area', function(){
+                area_id = parseInt($(this).val());
+                var area = areas.find(item => item.id === area_id);
+                $('.sub-select-container').html('');
+                var label = area.area_name == 'Administration' ? 'Office' : 'Institute';
+
+                if(label == 'Office') {
+                    $('.sub-select-container').append(`<div class="mb-3">
+                        <label for="parent_area" class="form-label">Select ` + label + `</label>
+                        <select class="form-control sub-select" id="parent_area" name="parent_area" required><option value=''>Select Office</option></select>
+                    </div>`);
+                } else {
+                    $('.sub-select-container').append(`<div class="mb-3">
+                        <label for="institute" class="form-label">Select ` + label + `</label>
+                        <select class="form-control sub-select" id="institute" name="institute" required><option value=''>Select Institute</option></select>
+                    </div><div class="program-select">`);
+                }
+
+                var parent_areas = areas.filter(i => i.parent_area == area.id);
+                parent_areas.forEach(function(i){
+                    $('.sub-select-container .sub-select').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+                });
+            });
+
+            $('.select-container').on('change', '#institute', function(){
+                area_id = parseInt($(this).val());
+                var area = areas.find(item => item.id === area_id);
+                $('.program-select').html('');
+
+                $('.program-select').append(`<div class="mb-3">
+                    <label for="parent_area" class="form-label">Select Program</label>
+                    <select class="form-control" id="parent_area" name="parent_area" required><option value=''>Select Program</option></select>
+                </div>`);
+
+                var parent_areas = areas.filter(i => i.parent_area == area.id);
+                parent_areas.forEach(function(i){
+                    $('#parent_area').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+                });
             });
         });
     </script>

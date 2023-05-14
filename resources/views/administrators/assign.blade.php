@@ -1,6 +1,6 @@
 @extends('layout.sidebar')
 @section('title')
-    <title>Area</title>
+    <title>User - Assign Area</title>
 @endsection
 @section('css-page')
     <style>
