@@ -39,7 +39,9 @@ class ArchiveController extends Controller
                     ->orWhereNull('user_id');
             })->get();
 
-            if($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) {
+            if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
+                ($current_user->role->role_name == 'Staff' && $this->dr->getGrandParent($current_directory) == 'Manuals')
+            ) {
                 $files = File::where('directory_id', $current_directory->id)
                             ->get();
             }else{
