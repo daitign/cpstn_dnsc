@@ -50,7 +50,7 @@
             </form>
             <div style="overflow-y: auto;height:60vh;">
             @if(count($surveys) == 0)
-                <h3 class="text-center mt-4">No Survey Submitted Yet</h3>
+                <h3 class="mt-4">No Survey Submitted Yet</h3>
             @endif
             @foreach ($surveys as $survey)
                 <div class="card p-3">

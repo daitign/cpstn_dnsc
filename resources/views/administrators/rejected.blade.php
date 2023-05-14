@@ -73,7 +73,7 @@
             </div>
             @endforeach
             @if (count($data) == 0)
-                <marquee><h1>No rejected users</h1></marquee>
+                <h1>No rejected users</h1>
             @endif
         </div>
     </div>

@@ -33,6 +33,15 @@
 @section('page')
     <div class="page-header pb-2">
         <h1>Assign Area</h1>
+        
+        <div class="row">
+            <div class="col-8 px-3">
+                @php $roles = ['Document Control Custodian', 'Process Owner'] @endphp
+                @foreach($roles as $role)
+                    <button type="button" class="btn btn-design btn-role me-2 {{ $loop->index == 0 ? 'active' : ''}}" data-role="{{ $role }}"><span class="mdi mdi-domain"></span> {{ $role }}</button>
+                @endforeach
+            </div>
+        </div>
     </div>
     {{-- Transaction Messages --}}
     <div class="container">
@@ -54,11 +63,10 @@
             </div>
         @endif
     </div>
-
     <div class="container mt-3">
         <div class="row">
             @foreach ($data as $user)
-            <div class="col-3">
+            <div class="col-3 user-item" data-user-role="{{ $user->role->role_name }}">
                 <div class="card">
                     <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top maxed" alt="User Image">
                     <div class="card-body text-center">
@@ -76,7 +84,7 @@
             </div>
             @endforeach
             @if (count($data) == 0)
-                <marquee><h1>No DCC/PO users</h1></marquee>
+                <h1>No DCC/PO users</h1>
             @endif
         </div>
     </div>
@@ -155,6 +163,22 @@
                     }
                 }
                 $('#btn-submit').prop('disabled', false);
+            });
+
+            function displayUser(user_role){
+                $('.user-item').addClass('d-none');
+                $('.user-item').each(function() {
+                    if($(this).data('user-role') == user_role) {
+                        $(this).removeClass('d-none');
+                    }
+                });
+            }
+
+            displayUser('Document Control Custodian');
+            $('.btn-role').on('click', function(){
+                $('.btn-role').removeClass('active');
+                $(this).addClass('active');
+                displayUser($(this).data('role'));
             });
         });
     </script>
