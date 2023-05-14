@@ -12,37 +12,27 @@ use App\Models\Office;
 use App\Models\Evidence;
 use App\Models\Directory;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\DirectoryRepository;
 
 class EvidenceController extends Controller
 {
+    private $parent = 'Evidences';
+    private $dr;
+
+    public function __construct() 
+    {
+        $this->dr = new DirectoryRepository;
+    }
+
     public function index(Request $request, $directory_name = '')
     {
-        $current_user = Auth::user();
-        if(empty($current_user->assigned_area->area_name)) {
+        $user = Auth::user();
+        $data = $this->dr->getDirectoryFiles($this->parent);
+        if($data == 'unassigned') {
             return redirect(route('unassigned'));
-        };
-
-        $users = User::where('role_id', $current_user->role_id)->get();
-        $parent_directory = Directory::where('name', 'Evidences')->whereNull('parent_id')->firstOrFail();
-
-        $directory = Directory::where('parent_id', $parent_directory->id)
-                        ->where('name', $current_user->assigned_area->area_name)
-                        ->first();
-
-        if(!$directory) {
-            $directory = Directory::create([
-                'parent_id' => $parent_directory->id,
-                'name' =>  $current_user->assigned_area->area_name
-            ]);
         }
 
-        $directories = Directory::where('parent_id', $directory->id)->get();
-        
-        $files = File::where('directory_id', $directory->id)
-                    ->where('user_id', $current_user->id)
-                    ->get();
-        
-        return view('archives.files', compact('files', 'current_user', 'users', 'directories', 'directory', 'parent_directory'));
+        return view('archives.files', $data);
     }
 
     public function create()
@@ -54,16 +44,13 @@ class EvidenceController extends Controller
     {
         $user = Auth::user();
 
-        $parent_directory = Directory::where('name', 'Evidences')->whereNull('parent_id')->firstOrFail();
+        $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
 
-        $directory = Directory::where('parent_id', $parent_directory->id)
-                        ->where('name', $user->assigned_area->area_name)->first();
-        if(!$directory) {
-            $directory = Directory::create([
-                'parent_id' => $parent_directory->id,
-                'name' =>  $user->assigned_area->area_name
-            ]);
-        }
+        $user = Auth::user();
+        $dir = $this->dr->makeDirectory($user->assigned_area, $parent_directory->id);
+
+        $year = Carbon::parse($request->date)->format('Y');
+        $directory = $this->dr->getDirectory($year, $dir->id);
         
         $file_id = null;
         if ($request->hasFile('file_attachment')) {

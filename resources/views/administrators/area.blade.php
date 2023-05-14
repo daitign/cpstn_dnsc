@@ -85,9 +85,7 @@
                     <div class="modal-body">
                         <input type="hidden" name="area_id" id="area_id">
                         <input type="hidden" name="area_type" id="area_type">
-                        <div class="select-container">
-
-                        </div>
+                        <div class="select-container"></div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Name</label>
                             <input type="text" class="form-control" id="area_name" name="area_name" placeholder="Enter name" required>

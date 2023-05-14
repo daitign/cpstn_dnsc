@@ -10,9 +10,17 @@ use App\Models\FileUser;
 use App\Models\Directory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\DirectoryRepository;
 
 class ArchiveController extends Controller
 {
+    private $dr;
+
+    public function __construct() 
+    {
+        $this->dr = new DirectoryRepository;
+    }
+
     public function index(Request $request, $directory_name = '')
     {
         $users = [];
@@ -30,17 +38,29 @@ class ArchiveController extends Controller
                 $q->where('user_id', $current_user->id)
                     ->orWhereNull('user_id');
             })->get();
-            
-            $files = File::where('directory_id', $current_directory->id)
-                        ->where('user_id', $current_user->id)
-                        ->get();
-        }else {
-            $directories = Directory::whereNull('parent_id');
-            if($current_user->role->role_name !== 'Administrator') {
-                $directories = $directories->whereIn('name', $current_user->role->directories);
+
+            if($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) {
+                $files = File::where('directory_id', $current_directory->id)
+                            ->get();
+            }else{
+                $files = File::where('directory_id', $current_directory->id)
+                            ->where('user_id', $current_user->id)
+                            ->get();
             }
-                    
-            $directories = $directories->get();
+        }else {
+            if($current_user->role->role_name !== 'Administrator') {
+                if(in_array($current_user->role->role_name, ['Document Control Custodian', 'Process Owner'])) {
+                    $directories = Directory::where('area_id', $current_user->assigned_area->id);
+                    $directories = $directories->get();
+                    foreach($directories as $key => $directory) {
+                        $directory->name = $this->dr->getGrandParent($directory);
+                    }
+                }else{
+                    $directories = Directory::whereNull('parent_id');
+                    $directories = $directories->whereIn('name', $current_user->role->directories);
+                    $directories = $directories->get();
+                }
+            }
         }
         
         return view('archives.index', compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user'));

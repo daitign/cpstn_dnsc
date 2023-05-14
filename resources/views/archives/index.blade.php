@@ -6,13 +6,10 @@
     <div class="page-header">
         <h1>Archives</h1>
         <h5 class="text-decoration-none">
-            @if(in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
                 <a href="{{ route('archives-page') }}">Archives</a>
-            @endif
             @if(!empty($parents))
                 @foreach($parents as $parent) 
-                    >
-                    <a href="{{ route('archives-page') }}?directory={{ $parent->id }}&user={{ $current_user->id }}">{{ $parent->name }}</a>
+                    > {{ $parent->name }}
                 @endforeach
             @endif
         </h5>

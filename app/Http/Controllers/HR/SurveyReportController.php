@@ -46,7 +46,10 @@ class SurveyReportController extends Controller
         $parent_directory = $this->dr->getDirectory($this->parent, null);
 
         $area = Area::findOrFail($request->area);
-        $directory = $this->dr->getDirectory($area->area_name, $parent_directory->id);
+        $survey = $this->dr->getDirectory($area->area_name, $parent_directory->id, $area->id);
+        
+        $year = Carbon::parse($request->date)->format('Y');
+        $directory = $this->dr->getDirectory($year, $survey->id);
 
         $file_id = null;
         if ($request->hasFile('file_attachment')) {

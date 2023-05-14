@@ -42,4 +42,9 @@ class Area extends Model
     {
         $query->where('type', 'program');
     }
+
+    public function survey()
+    {
+        return $this->hasMany(SurveyArea::class);
+    }
 }

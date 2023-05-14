@@ -56,15 +56,16 @@
                     <div class="card p-3 text-center">
                         <div class="card-body pt-2">
                             <i class="fa fa-building fa-2x"></i>
-                            <h4>{{ $office->office_name ?? '' }}</h4>
-                            <p>{{ $office->office_description ?? '' }}</p>
+                            <h4>{{ $office->area_name ?? '' }}</h4>
+                            <p>{{ $office->area_description ?? '' }}</p>
+                            <p>Rating: </p>
                         </div>
                         <div class="card-footer">
                             <button class="btn btn-primary btn-office-modal" 
                                 data-bs-toggle="modal" data-bs-target="#officeModal"
                                 data-route="{{ route('hr-offices-update', $office->id) }}" 
-                                data-name="{{ $office->office_name ?? '' }}" 
-                                data-description="{{ $office->office_description ?? '' }}">
+                                data-name="{{ $office->area_name ?? '' }}" 
+                                data-description="{{ $office->area_description ?? '' }}">
                                     Update
                             </button>
                             

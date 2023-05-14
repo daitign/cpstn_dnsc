@@ -19,7 +19,7 @@ class TemplateController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $current_user = Auth::user();
-        if(empty($current_user->assigned_area->area_name)) {
+        if($current_user->role->role_name !== 'Staff' && empty($current_user->assigned_area->area_name)) {
             return redirect(route('unassigned'));
         };
 

@@ -12,7 +12,7 @@
         <div class="mb-4 row">
             @foreach($directories as $directory)
                 <div class="col-2 text-center">
-                    <button class="btn align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $directory->id }}">
+                    <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $directory->id }}">
                         <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
                         <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
                     </button>
@@ -196,6 +196,10 @@
             
             userShare.val(users).trigger('change');
         }
-    })
+    });
+
+    $('.btn-directory').on('dblclick', function(){
+        location.href = $(this).data('route')
+    });
 </script>
 @endsection
