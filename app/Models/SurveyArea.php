@@ -13,6 +13,6 @@ class SurveyArea extends Model
 
     public function area()
     {
-        return $this->hasOne(Area::class);
+        return $this->hasOne(Area::class, 'id', 'area_id');
     }
 }
