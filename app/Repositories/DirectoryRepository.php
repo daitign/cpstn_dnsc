@@ -84,4 +84,21 @@ class DirectoryRepository {
             return $directory->name;
         }
     }
+
+    public function getAreaFamilyTree($areas) {
+        $tree_areas = [];
+        foreach($areas as $area) {
+            $tree_area = [
+                'id' => $area->id,
+                'text' => $area->area_name,
+                'selectable' => !empty($area->parent_area)
+            ];
+            if(count($area->children) > 0) {
+                $tree_area['nodes'] = $this->getAreaFamilyTree($area->children);
+            }
+            $tree_areas[] = $tree_area;
+        }
+
+        return $tree_areas;
+    }
 }
