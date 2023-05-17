@@ -66,15 +66,15 @@
                             data-updated-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
                         >Properties</a></li>
                         
-                        @if($directory->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-                        <!-- <li>
+                        @if(Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
+                        <li>
                             <a href="#" class="text-decoration-none toggleDirectoryModal"
                                 data-name="{{ $directory->name }}" 
                                 data-route="{{ route('archives-update-directory', $directory->id) }}" 
                                 data-bs-toggle="modal" data-bs-target="#directoryModal">
                                     Rename
                             </a>
-                        </li> -->
+                        </li>
                         <!-- <li>
                             <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_directory_{{ $directory->id }}">Delete</button>
                                 <form id="delete_directory_{{ $directory->id }}" action="{{ route('archives-delete-directory', $directory->id) }}" class="d-none" method="POST">
