@@ -21,51 +21,11 @@ class ArchiveController extends Controller
         $this->dr = new DirectoryRepository;
     }
 
-    public function index(Request $request, $directory_name = '')
+    public function index(Request $request)
     {
-        $users = [];
-        $files = [];
-        $parents = [];
-        $current_directory = $request->directory;
-
-        $current_user = !empty($request->user) ? User::findOrFail($request->user) : Auth::user();
-        $users = $current_user->role->role_name == 'Administrator' ? User::whereHas('role', function($q) { $q->where('role_name', '!=', 'Administrator'); })->get() : User::where('role_id', $current_user->role_id)->get();
-
-        if(!empty($current_directory)) {
-            $current_directory = Directory::find($current_directory);
-            $parents = collect($current_directory->parents())->reverse();
-            $directories = Directory::where('parent_id', $current_directory->id)->where(function($q) use($current_user) {
-                $q->where('user_id', $current_user->id)
-                    ->orWhereNull('user_id');
-            })->get();
-
-            if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
-                ($current_user->role->role_name == 'Staff' && $this->dr->getGrandParent($current_directory) == 'Manuals')
-            ) {
-                $files = File::where('directory_id', $current_directory->id)
-                            ->get();
-            }else{
-                $files = File::where('directory_id', $current_directory->id)
-                            ->where('user_id', $current_user->id)
-                            ->get();
-            }
-        }else {
-            if($current_user->role->role_name !== 'Administrator') {
-                if(in_array($current_user->role->role_name, ['Document Control Custodian', 'Process Owner'])) {
-                    $directories = Directory::where('area_id', $current_user->assigned_area->id);
-                    $directories = $directories->get();
-                    foreach($directories as $key => $directory) {
-                        $directory->name = $this->dr->getGrandParent($directory);
-                    }
-                }else{
-                    $directories = Directory::whereNull('parent_id');
-                    $directories = $directories->whereIn('name', $current_user->role->directories);
-                    $directories = $directories->get();
-                }
-            }
-        }
+        $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory, $request->user);
         
-        return view('archives.index', compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user'));
+        return view('archives.index', $data);
     }
 
     public function directory(Request $request, $directory_name = '')
@@ -155,7 +115,7 @@ class ArchiveController extends Controller
         Directory::create([
             'parent_id' => $request->parent_directory ?? null,
             'name' => $request->directory,
-            'user_id' => $user->id ?? null
+            'user_id' => $user->id ?? null,
         ]);
 
         return back()->withMessage('Directory created successfully');

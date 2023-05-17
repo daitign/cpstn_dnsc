@@ -28,29 +28,35 @@ class EvidenceController extends Controller
     {
         $user = Auth::user();
         $data = $this->dr->getDirectoryFiles($this->parent);
-        if($data == 'unassigned') {
-            return redirect(route('unassigned'));
-        }
 
         return view('archives.files', $data);
     }
 
     public function create()
     {
-        return view('evidences.create');
+        $directories = [];
+        if(Auth::user()->role->role_name == 'Process Owner') {
+            $directories = $this->dr->getDirectoryAssignedByGrandParent($this->parent);
+        }
+
+        return view('evidences.create', compact('directories'));
     }
 
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
+        if(Auth::user()->role->role_name == 'Process Owner') {
+            $directories = $this->dr->getDirectoryAssignedByGrandParent($this->parent);
+            $directory = $directories->where('id', $request->directory)->firstOrFail();
+        }else{
+            $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
 
-        $user = Auth::user();
-        $dir = $this->dr->makeDirectory($user->assigned_area, $parent_directory->id);
-
-        $year = Carbon::parse($request->date)->format('Y');
-        $directory = $this->dr->getDirectory($year, $dir->id);
+            $user = Auth::user();
+            $dir = $this->dr->makeDirectory($user->assigned_area, $parent_directory->id);
+            $year = Carbon::parse($request->date)->format('Y');
+            $directory = $this->dr->getDirectory($year, $dir->id);    
+        }
         
         $file_id = null;
         if ($request->hasFile('file_attachment')) {

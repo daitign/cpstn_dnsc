@@ -141,7 +141,7 @@
                 if(user_type == 'Document Control Custodian') {
                     $('.select-container').html(`<div class="mb-1">
                             <label for="area">Area</label>
-                        <select id="area" name="area" required class="form-control"><option value="">Select Area</option></select></div>`);
+                        <select id="assign_area" name="assign_area" required class="form-control"><option value="">Select Area</option></select></div>`);
                     
                     main_areas.forEach(function(main){
                         var options = `<optgroup label="` + main.area_name + `">`;
@@ -149,7 +149,7 @@
                         child.forEach(function(c){
                             options += `<option value="` + c.id + `">` + c.area_name +`</option>`;
                         });
-                        $('#area').append(options);
+                        $('#assign_area').append(options);
                     });
                 }else{
                     $('.select-container').html(`<div class="mb-1">

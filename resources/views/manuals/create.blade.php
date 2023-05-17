@@ -23,12 +23,23 @@
                         <label for="search" class="form-label">Description:</label>
                         <textarea name="description" class="form-control" rows="5"></textarea>
                     </div>
+                    @if(Auth::user()->role->role_name == 'Process Owner')
+                        <div class="mb-3">
+                            <label for="directory" class="form-label">Directory (If empty, coordinate with DCC):</label>
+                            <select id="directory" name="directory" class="form-control" required>
+                                <option value="">Select Directory</option>
+                                @foreach($directories as $directory)
+                                    <option value="{{ $directory->id }}">{{ $directory->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div class="mb-3">
                         <label for="file_attachment" class="form-label">Attachment</label>
                         <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     </div>
                 </div>
-                <div style="text-align: right">
+                <div style="text-align: right" class="pb-3">
                     <button type="submit" class="btn btn-success">Submit</button>
                 </div>
             </form>

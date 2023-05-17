@@ -1,12 +1,14 @@
 @extends('layout.sidebar')
 @section('title')
-<title>Archives</title>
+<title>{{ $page_title ?? 'Archives' }}</title>
 @endsection
 @section('page')
     <div class="page-header">
-        <h1>Archives</h1>
+        <h1>{{ $page_title ?? 'Archives' }}</h1>
         <h5 class="text-decoration-none">
+            @if(empty($page_title))
                 <a href="{{ route('archives-page') }}">Archives</a>
+            @endif
             @if(!empty($parents))
                 @foreach($parents as $parent) 
                     > {{ $parent->name }}
@@ -15,14 +17,11 @@
         </h5>
     </div>
     <div class="container">
-        <!-- <div style="text-align:right">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
-            @if(!empty($parents) || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
+        <div style="text-align:right">
+            <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button> -->
+            @if(Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
                 <button class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-plus"></i> New</button>
                 <ul class="dropdown-menu text-left">
-                    @if(!empty($parents))
-                        <li><button class="btn" data-bs-toggle="modal" data-bs-target="#fileModal">File</button></li>
-                    @endif
                     <li>
                         <button class="btn toggleDirectoryModal"
                             data-route="{{ route('archives-store-directory') }}" 
@@ -32,7 +31,7 @@
                     </li>
                 </ul>
             @endif
-        </div> -->
+        </div>
         @include('layout.alert')
         @if(!empty($users) && in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
             <h5>User:</h5>

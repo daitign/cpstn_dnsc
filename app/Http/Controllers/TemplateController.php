@@ -29,9 +29,6 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
         $data = $this->dr->getDirectoryFiles($this->parent);
-        if($data == 'unassigned') {
-            return redirect(route('unassigned'));
-        }
 
         return view('archives.files', $data);
     }
