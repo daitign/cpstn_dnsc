@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Dcc
+class LeadAuditor
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class Dcc
     public function handle(Request $request, Closure $next, $guard = null): Response
     {
         if (Auth::guard($guard)->check() && 
-            (Auth::user()->role->role_name == 'Document Control Custodian')
+            (Auth::user()->role->role_name == 'Internal Lead Auditor')
         ){
             return $next($request);
         }

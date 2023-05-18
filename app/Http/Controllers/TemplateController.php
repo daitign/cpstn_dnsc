@@ -35,7 +35,7 @@ class TemplateController extends Controller
 
     public function create()
     {
-        $tree_areas = $this->dr->getAreaFamilyTree(Area::whereNull('parent_area')->get());
+        $tree_areas = $this->dr->getAreaFamilyTree();
         return view('templates.create', compact('tree_areas'));
     }
 

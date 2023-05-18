@@ -4,8 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
-
 class Po
 {
     /**
@@ -13,8 +13,12 @@ class Po
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $guard = null): Response
     {
-        return $next($request);
+        if (Auth::guard($guard)->check() && 
+            (Auth::user()->role->role_name == 'Process Owner')
+        ){
+            return $next($request);
+        }
     }
 }

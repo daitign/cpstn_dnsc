@@ -44,6 +44,9 @@ class AuthController extends Controller
             if ($role == 'Human Resources') {# code...
                 return redirect()->route('hr-dashboard-page');
             }
+            if ($role == 'Internal Lead Auditor') {# code...
+                return redirect()->route('lead-auditor.dashboard');
+            }
         }
  
         return back()->withErrors([

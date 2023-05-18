@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use Storage;
 use Carbon\Carbon;
+use App\Models\Area;
 use App\Models\File;
 use App\Models\User;
 use App\Models\FileUser;
@@ -69,7 +70,8 @@ class DirectoryRepository {
     {
         $current_user = Auth::user();
         $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
-        
+        $parent_directory = Directory::where('name', $parent_directory)->whereNull('parent_id')->firstOrFail();
+
         if(in_array($current_user->role->role_name, ['Process Owner', 'Document Control Custodian'])) {
             $directories = Directory::where('area_id', Auth::user()->assigned_area->id)->get();
             foreach($directories as $key => $directory) {
@@ -78,8 +80,8 @@ class DirectoryRepository {
             $directory = $directories->whereIn('grand_parent', $parent_directory)->first();
             $parent_directory = $directory->parent;
         } else {
-            $parent_directory = null;
             $directory = $parent_directory;
+            $parent_directory = null;
         }
         
         $directories = Directory::where('parent_id', $directory->id)->get();
@@ -149,16 +151,27 @@ class DirectoryRepository {
         }
     }
 
-    public function getAreaFamilyTree($areas) {
+    public function getAreaFamilyTree($areas = null, $selectable_type = null) {
+        $areas = empty($areas) ? Area::whereNull('parent_area')->get() : $areas;
+        return $this->getAreaGrandTree($areas, $selectable_type);
+    }
+
+    private function getAreaGrandTree($areas, $selectable_type)
+    {
         $tree_areas = [];
         foreach($areas as $area) {
+            $selectable =  !empty($area->parent_area);
+            if(!empty($selectable_type)) {
+               $selectable = $selectable_type == $area->type;
+            }
+
             $tree_area = [
                 'id' => $area->id,
                 'text' => $area->area_name,
-                'selectable' => !empty($area->parent_area)
+                'selectable' => $selectable
             ];
             if(count($area->children) > 0) {
-                $tree_area['nodes'] = $this->getAreaFamilyTree($area->children);
+                $tree_area['nodes'] = $this->getAreaFamilyTree($area->children, $selectable_type);
             }
             $tree_areas[] = $tree_area;
         }

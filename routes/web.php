@@ -23,6 +23,8 @@ use App\Http\Controllers\ProgramUserController;
 use App\Http\Controllers\Staff\StaffDashboardController;
 use App\Http\Controllers\Staff\StaffTemplateController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuditController;
+
 
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\EvidenceController;
@@ -177,6 +179,23 @@ Route::middleware(['auth'])->group(function(){
         
         Route::get('/manuals', [ManualController::class, 'index'])->name('staff.manual.index');
     });
+
+    Route::middleware('lead-auditor')->prefix('lead-auditor')->name('lead-auditor.')->group(function () {
+        Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+        Route::prefix('templates')->group(function(){
+            Route::get('/', [TemplateController::class, 'index'])->name('template.index');
+            Route::get('/create', [TemplateController::class, 'create'])->name('template.create');
+            Route::post('/', [TemplateController::class, 'store'])->name('template.store');
+        });
+        
+        Route::prefix('audit-plan')->group(function () {
+            Route::get('/', [AuditController::class, 'index'])->name('audit.index');
+            Route::get('/create', [AuditController::class, 'createAuditPlan'])->name('audit.create');
+            // Route::get('/previous', [AuditController::class, 'getPrevious'])->name('audit.previous');
+            Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
+        });
+    });
+    
 
     Route::post('add-remark',[DCCRemarkController::class,'addRemark'])->name('add-remark');
     Route::get('logout',[AuthController::class,'lg'])->name('logout');

@@ -17,7 +17,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="search" class="form-label">Description:</label>
-                        <textarea name="description" class="form-control" rows="5"></textarea>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="date" class="form-label">Date:</label>
