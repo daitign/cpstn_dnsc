@@ -21,5 +21,7 @@ class Dcc
         ){
             return $next($request);
         }
+        
+        return redirect('/');
     }
 }

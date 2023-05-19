@@ -20,5 +20,7 @@ class Po
         ){
             return $next($request);
         }
+        
+        return redirect('/');
     }
 }

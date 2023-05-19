@@ -21,5 +21,7 @@ class LeadAuditor
         ){
             return $next($request);
         }
+        
+        return redirect('/');
     }
 }
