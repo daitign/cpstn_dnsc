@@ -6,14 +6,25 @@ use App\Models\Area;
 use App\Models\ProcessUser;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+    public function dashboard()
+    {
+        $data = (object) [
+            'files' => File::where('user_id', Auth::user()->id)->count(),
+        ];
+
+        return view('Dcc.dashboard', compact('data'));
+    }
+
     public function __construct()
     {
         $this->middleware('auth')->except(['create','store']);

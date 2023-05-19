@@ -24,19 +24,19 @@ class RoleSeeder extends Seeder
                 'role_name'=> 'Process Owner',
             ],
             [
-                'role_name'=>'Internal Auditor',
+                'role_name'=> 'Internal Auditor',
             ],
             [
-                'role_name'=>'Internal Lead Auditor',
+                'role_name'=> 'Internal Lead Auditor',
             ],
             [
-                'role_name'=>'Quality Assurance Director',
+                'role_name'=> 'Quality Assurance Director',
             ],
             [
-                'role_name'=>'Human Resources',
+                'role_name'=> 'Human Resources',
             ],
             [
-                'role_name'=>'Document Control Custodian',
+                'role_name'=> 'Document Control Custodian',
             ],
             [
                 'role_name'=>'College Management Team',

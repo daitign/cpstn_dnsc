@@ -6,73 +6,50 @@ use Illuminate\Http\Request;
 
 use Storage;
 use Carbon\Carbon;
+use App\Models\Area;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\File;
-use App\Models\Office;
 use App\Models\Template;
 use App\Models\Directory;
 use Illuminate\Support\Facades\Auth;
+use App\Repositories\DirectoryRepository;
 
 class TemplateController extends Controller
 {
+    private $parent = 'Templates';
+    private $dr;
+
+    public function __construct() 
+    {
+        $this->dr = new DirectoryRepository;
+    }
+
     public function index(Request $request, $directory_name = '')
     {
-        $current_user = Auth::user();
-        if($current_user->role->role_name !== 'Staff' && empty($current_user->assigned_area->area_name)) {
-            return redirect(route('unassigned'));
-        };
+        $user = Auth::user();
+        $data = $this->dr->getDirectoryFiles($this->parent);
 
-        $users = User::where('role_id', $current_user->role_id)->get();
-        $parent_directory = Directory::where('name', 'Templates')->whereNull('parent_id')->firstOrFail();
-        
-        if($current_user->role->role_name !== 'Staff') {
-            $directory = Directory::where('parent_id', $parent_directory->id)
-            ->where('name', $current_user->assigned_area->area_name)
-            ->first();
-            if(!$directory) {
-            $directory = Directory::create([
-                'parent_id' => $parent_directory->id,
-                'name' =>  $current_user->assigned_area->area_name
-            ]);
-            }
-        }else {
-            $directory = $parent_directory;
-            $parent_directory = null;
-        }
-
-        $directories = Directory::where('parent_id', $directory->id)->get();
-        
-        $files = File::where('directory_id', $directory->id)
-                    ->where('user_id', $current_user->id)
-                    ->get();
-        
-        return view('archives.files', compact('files', 'current_user', 'users', 'directories', 'directory', 'parent_directory'));
+        return view('archives.files', $data);
     }
 
     public function create()
     {
-        $roles = Role::get();
-        return view('templates.create', compact('roles'));
+        $tree_areas = $this->dr->getAreaFamilyTree();
+        return view('templates.create', compact('tree_areas'));
     }
 
     public function store(Request $request)
     {
         $user = Auth::user();
 
-        $parent_directory = Directory::where('name', 'Templates')->whereNull('parent_id')->firstOrFail();
+        $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
+        $area = Area::findOrFail($request->area);
 
-        $role = Role::findOrFail($request->role);
-        $directory = Directory::where('parent_id', $parent_directory->id)
-            ->where('name', $role->role_name)
-            ->first();
-
-        if(!$directory) {
-            $directory = Directory::create([
-                'parent_id' => $parent_directory->id,
-                'name' =>  $role->role_name
-            ]);
-        }
+        $dir = $this->dr->makeDirectory($area, $parent_directory->id);
+        
+        $year = Carbon::parse($request->date)->format('Y');
+        $directory = $this->dr->getDirectory($year, $dir->id);
 
         $file_id = null;
         if ($request->hasFile('file_attachment')) {
@@ -99,7 +76,6 @@ class TemplateController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'user_id' => $user->id,
-            'directory_id' => $directory->id,
             'date' => $request->date,
             'file_id' => $file_id
         ]);

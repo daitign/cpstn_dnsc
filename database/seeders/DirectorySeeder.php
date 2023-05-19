@@ -27,7 +27,7 @@ class DirectorySeeder extends Seeder
             ],
             [
                 'name' => 'Templates',
-                'sub_directory' => Role::get()->pluck('role_name')
+                'automatic_child' => true,
             ],
             [
                 'name' => 'Audit Reports', 

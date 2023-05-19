@@ -13,10 +13,7 @@ use App\Http\Controllers\Administrator\UserController as AdminUserController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SurveyController;
-use App\Http\Controllers\DCC\DCCDashboardController;
-use App\Http\Controllers\DCC\DCCEvidenceController;
-use App\Http\Controllers\DCC\DCCRemarkController;
-use App\Http\Controllers\DCC\TemplateController as DCCTemplate;
+use App\Http\Controllers\DCCController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\OfficeUserController;
 use App\Http\Controllers\PO\PODashboardController;
@@ -26,6 +23,8 @@ use App\Http\Controllers\ProgramUserController;
 use App\Http\Controllers\Staff\StaffDashboardController;
 use App\Http\Controllers\Staff\StaffTemplateController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuditController;
+
 
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\EvidenceController;
@@ -63,7 +62,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/unassigned',[AuthController::class,'unassigned'])->name('unassigned');
     
     Route::get('/directories/{name}',[ArchiveController::class,'index'])->name('directories');
-    Route::prefix('archives')->group(function() {
+    Route::prefix('archives')->middleware('area_assigned')->group(function() {
         Route::get('/',[ArchiveController::class,'index'])->name('archives-page');
         Route::post('/search',[ArchiveController::class,'search'])->name('archives-search');
         Route::post('/directory',[ArchiveController::class,'storeDirectory'])->name('archives-store-directory');
@@ -116,18 +115,14 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/',function(){
             return redirect()->route('dcc-dashboard-page');
         });
-        Route::get('/dashboard',[DCCDashboardController::class,'dashboard'])->name('dcc-dashboard-page');
-        Route::get('/template',[DCCTemplate::class,'index'])->name('dcc-template-page');
-        Route::get('/evidence',[DCCEvidenceController::class,'showProgramEvidence'])->name('dcc-show-evidence');
-        Route::get('/evidence/office/{office}',[DCCEvidenceController::class,'showOfficeProcess'])->name('dcc-show-office-process');
-        Route::get('/evidence/office/{office}/{process}',[DCCEvidenceController::class,'evidenceProcess'])->name('dcc-show-evidence-directory-office');
-        Route::get('/evidence/office/{office}/{process}/{parent}',[DCCEvidenceController::class,'evidenceDirectories'])->name('dcc-show-evidence-directory-office-parent');
-        Route::get('/evidence/program/{program}',[DCCEvidenceController::class,'showProgramProcess'])->name('dcc-show-program-process');
-        Route::get('/evidence/program/{program}/{process}',[DCCEvidenceController::class,'evidenceProcess'])->name('dcc-show-evidence-directory-program');
-        Route::get('/evidence/program/{program}/{process}/{parent}',[DCCEvidenceController::class,'evidenceDirectories'])->name('dcc-show-evidence-directory-program-parent');
-        Route::post('/evidence-add-folder',[DCCEvidenceController::class,'addEvidenceFolder'])->name('dcc-add-folder-evidence');
-        Route::post('/evidence-rename-folder',[DCCEvidenceController::class,'renameEvidenceFolder'])->name('dcc-rename-folder-evidence');
-        Route::post('/evidence-remove-folder',[DCCEvidenceController::class,'removeEvidenceFolder'])->name('dcc-remove-folder-evidence');
+        Route::get('/dashboard',[DCCController::class,'dashboard'])->name('dcc-dashboard-page');
+        
+        Route::middleware('area_assigned')->name('dcc.')->group(function(){
+            Route::middleware('area_assigned')->group(function(){
+                Route::get('evidence', [DCCController::class, 'evidences'])->name('evidence.index');
+                Route::get('manual', [DCCController::class, 'manuals'])->name('manual.index');
+            });
+        });
     });
 
     Route::prefix('po')->middleware('po')->group(function(){
@@ -136,18 +131,19 @@ Route::middleware(['auth'])->group(function(){
         });
         Route::get('/dashboard',[PODashboardController::class,'dashboard'])->name('po-dashboard-page');
         
-        Route::prefix('evidence')->group(function(){
-            Route::get('/', [EvidenceController::class, 'index'])->name('po.evidence.index');
-            Route::get('/create', [EvidenceController::class, 'create'])->name('po.evidence.create');
-            Route::post('/', [EvidenceController::class, 'store'])->name('po.evidence.store');
-        });
+        Route::middleware('area_assigned')->name('po.')->group(function(){
+            Route::prefix('evidence')->group(function(){
+                Route::get('/', [EvidenceController::class, 'index'])->name('evidence.index');
+                Route::get('/create', [EvidenceController::class, 'create'])->name('evidence.create');
+                Route::post('/', [EvidenceController::class, 'store'])->name('evidence.store');
+            });
 
-        Route::prefix('manuals')->group(function(){
-            Route::get('/', [ManualController::class, 'index'])->name('po.manual.index');
-            Route::get('/create', [ManualController::class, 'create'])->name('po.manual.create');
-            Route::post('/', [ManualController::class, 'store'])->name('po.manual.store');
+            Route::prefix('manual')->group(function(){
+                Route::get('/', [ManualController::class, 'index'])->name('manual.index');
+                Route::get('/create', [ManualController::class, 'create'])->name('manual.create');
+                Route::post('/', [ManualController::class, 'store'])->name('manual.store');
+            });
         });
-
     });
 
     Route::prefix('hr')->middleware('hr')->group(function(){
@@ -183,6 +179,23 @@ Route::middleware(['auth'])->group(function(){
         
         Route::get('/manuals', [ManualController::class, 'index'])->name('staff.manual.index');
     });
+
+    Route::middleware('lead-auditor')->prefix('lead-auditor')->name('lead-auditor.')->group(function () {
+        Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+        Route::prefix('templates')->group(function(){
+            Route::get('/', [TemplateController::class, 'index'])->name('template.index');
+            Route::get('/create', [TemplateController::class, 'create'])->name('template.create');
+            Route::post('/', [TemplateController::class, 'store'])->name('template.store');
+        });
+        
+        Route::prefix('audit-plan')->group(function () {
+            Route::get('/', [AuditController::class, 'index'])->name('audit.index');
+            Route::get('/create', [AuditController::class, 'createAuditPlan'])->name('audit.create');
+            // Route::get('/previous', [AuditController::class, 'getPrevious'])->name('audit.previous');
+            Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
+        });
+    });
+    
 
     Route::post('add-remark',[DCCRemarkController::class,'addRemark'])->name('add-remark');
     Route::get('logout',[AuthController::class,'lg'])->name('logout');

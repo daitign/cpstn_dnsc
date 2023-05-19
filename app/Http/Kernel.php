@@ -7,6 +7,8 @@ use App\Http\Middleware\Dcc;
 use App\Http\Middleware\Po;
 use App\Http\Middleware\Staff;
 use App\Http\Middleware\Hr;
+use App\Http\Middleware\LeadAuditor;
+use App\Http\Middleware\UserAssignedArea;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,6 +70,8 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'area_assigned' => UserAssignedArea::class,
+        'lead-auditor' => LeadAuditor::class,
         'admin' => Admin::class,
         'dcc' => Dcc::class,
         'po' => Po::class,
