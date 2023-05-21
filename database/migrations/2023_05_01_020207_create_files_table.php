@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('file_mime', 100)->nullable(false);
             $table->string('container_path', 250)->nullable(false);
             $table->text('description')->nullable(false);
+            
             $table->timestamps();
             $table->softDeletes();
         });

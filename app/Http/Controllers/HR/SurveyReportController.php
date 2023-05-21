@@ -66,7 +66,8 @@ class SurveyReportController extends Controller
                 'file_name' => $file_name,
                 'file_mime' => $file->getClientMimeType(),
                 'container_path' => $path,
-                'description' => $request->description
+                'description' => $request->description,
+                'type' => 'survey_reports'
             ]);
 
             $file_id = $file->id;

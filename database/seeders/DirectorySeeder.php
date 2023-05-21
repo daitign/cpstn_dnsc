@@ -80,7 +80,7 @@ class DirectorySeeder extends Seeder
 
     private function saveAreaDirectory($data, $parent_id) {
         $area_name = $data->area_name;
-        $years = ['2021', '2022', '2023'];
+        // $years = ['2021', '2022', '2023'];
         $dir = Area::where('area_name', $area_name)->where('parent_area', $parent_id)->first();
         if(empty($dir)) {
             $dir = Directory::create([
@@ -90,25 +90,25 @@ class DirectorySeeder extends Seeder
                 'area_id' => $data->id
             ]);
 
-            if(!empty($data->type) && $data->type == 'program')
-            {
-                for($y = 2021; $y <= date('Y'); $y++) {
-                    $year = Directory::create([
-                        'name' => $y,
-                        'parent_id' => $dir->id
-                    ]);
+            // if(!empty($data->type) && $data->type == 'program')
+            // {
+            //     for($y = 2021; $y <= date('Y'); $y++) {
+            //         $year = Directory::create([
+            //             'name' => $y,
+            //             'parent_id' => $dir->id
+            //         ]);
 
-                    Directory::create([
-                        'name' => '1st Semester',
-                        'parent_id' => $year->id
-                    ]);
+            //         Directory::create([
+            //             'name' => '1st Semester',
+            //             'parent_id' => $year->id
+            //         ]);
 
-                    Directory::create([
-                        'name' => '2nd Semester',
-                        'parent_id' => $year->id
-                    ]);
-                }
-            }
+            //         Directory::create([
+            //             'name' => '2nd Semester',
+            //             'parent_id' => $year->id
+            //         ]);
+            //     }
+            // }
         }
 
         if(!empty($data->children)) {

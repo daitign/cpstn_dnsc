@@ -29,23 +29,20 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $role = Auth::user()->role->role_name;
-            if ($role == 'Administrator') {
-                return redirect()->route('admin-dashboard-page');
-            }
-            if ($role == 'Document Control Custodian') {# code...
-                return redirect()->route('dcc-dashboard-page');
-            }
-            if ($role == 'Process Owner') {# code...
-                return redirect()->route('dcc-dashboard-page');
-            }
-            if ($role == 'Staff') {# code...
-                return redirect()->route('staff.dashboard');
-            }
-            if ($role == 'Human Resources') {# code...
-                return redirect()->route('hr-dashboard-page');
-            }
-            if ($role == 'Internal Lead Auditor') {# code...
-                return redirect()->route('lead-auditor.dashboard');
+            if(in_array($role, [
+                'Administrator', 
+                'Document Control Custodian', 
+                'Process Owner', 
+                'Staff',
+                'Human Resources',
+                'Internal Lead Auditor',
+                'Internal Auditor'
+            ])){
+                return redirect()->route('user.dashboard');
+            }else{
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
             }
         }
  

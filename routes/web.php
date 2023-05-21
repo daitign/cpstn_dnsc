@@ -61,6 +61,9 @@ Route::middleware(['guest'])->group(function(){
 Route::middleware(['auth'])->group(function(){
     Route::get('/unassigned',[AuthController::class,'unassigned'])->name('unassigned');
     
+    Route::get('/dashboard',[UserController::class,'dashboard'])->name('user.dashboard');
+    Route::get('/profile',[UserController::class, 'profile'])->name('user.profile');
+
     Route::get('/directories/{name}',[ArchiveController::class,'index'])->name('directories');
     Route::prefix('archives')->middleware('area_assigned')->group(function() {
         Route::get('/',[ArchiveController::class,'index'])->name('archives-page');
@@ -180,6 +183,11 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/manuals', [ManualController::class, 'index'])->name('staff.manual.index');
     });
 
+    Route::middleware(['auditor', 'area_assigned'])->prefix('auditor')->name('auditor.')->group(function () {
+        Route::get('/templates', [TemplateController::class, 'index'])->name('template.index');
+        Route::get('/evidences', [EvidenceController::class, 'index'])->name('evidence.index');
+    });
+
     Route::middleware('lead-auditor')->prefix('lead-auditor')->name('lead-auditor.')->group(function () {
         Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
         Route::prefix('templates')->group(function(){
@@ -195,9 +203,7 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
         });
     });
-    
-
-    Route::post('add-remark',[DCCRemarkController::class,'addRemark'])->name('add-remark');
+    Route::post('save-remarks/{file_id}',[UserController::class,'saveRemarks'])->name('save-remarks');
     Route::get('logout',[AuthController::class,'lg'])->name('logout');
     Route::get('download-evidence/{id}',[DownloadController::class,'evidenceDownload'])->name('download-evidence');
     

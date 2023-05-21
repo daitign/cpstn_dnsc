@@ -7,6 +7,7 @@ use App\Models\ProcessUser;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\File;
+use App\Models\FileRemark;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -63,5 +64,31 @@ class UserController extends Controller
         User::create($validatedData);
 
         return redirect()->route('login-page')->with('success', 'Account has been registered successfully');
+    }
+
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('user.profile', compact('user'));
+    }
+
+    public function saveRemarks(Request $request, $file_id)
+    {
+        $file = File::findOrFail($file_id);
+
+        if(!in_array(Auth::user()->role->role_name, [
+            'Staff',
+            'Internal Lead Auditor',
+            'Internal Auditor'
+        ])){
+            return redirect()->back()->with('error', 'You are not authorized');
+        }
+
+        FileRemark::updateOrCreate(
+            ['type' => $request->type, 'comments' => $request->comments],
+            ['file_id' => $file_id, 'user_id' => Auth::user()->id]
+        );
+        
+        return redirect()->back()->with('success', 'Your remarks has been saved successfully');
     }
 }

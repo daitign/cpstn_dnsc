@@ -38,7 +38,7 @@ class AuditController extends Controller
 
     public function createAuditPlan()
     {
-        $auditors = User::whereDoesntHave('assigned_area')->whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
         $tree_areas = $this->dr->getAreaFamilyTree(null, 'process');
         return view('audits.create', compact('tree_areas', 'auditors'));
     }
@@ -46,19 +46,16 @@ class AuditController extends Controller
     public function saveAuditPlan(Request $request)
     {
         $area = Area::where('id', $request->area)->where('type', 'process')->firstOrFail();
-        $audit_plan = AuditPlan::where('process_id', $area->id)->first();
+        $audit_plan = AuditPlan::where('area_id', $area->id)->first();
         if(empty($audit_plan)) {
-            $audit_plan = AuditPlan::create(['process_id' => $area->id]);
+            $audit_plan = AuditPlan::create(['area_id' => $area->id]);
         }
         
-        // Remove existing auditors from area
-        AreaUser::where('area_id', $area->id)->whereHas('user', function($q) {
-            $q->whereHas('role', function($sql){
-                $sql->where('role_name', 'Internal Auditor');
-            });
-        })->delete();
 
         foreach($request->auditors as $auditor) {
+            // Remove existing auditors from area
+            AreaUser::where('user_id', $auditor)->delete();
+
             AreaUser::create([
                 'user_id' => $auditor,
                 'area_id' => $area->id,

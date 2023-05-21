@@ -5,7 +5,7 @@
                 class="text-decoration-none" href="#"><strong>DNSC</strong></a><a class="float-end text-white"
                 id="sidebarToggleHolder" href="#"><i class="fas fa-bars" id="sidebarToggle"></i></a></div>
     </li>
-    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('dcc-dashboard-page') ? 'active' : '' }}" href="{{ route('dcc-dashboard-page') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('user.dashboard') ? 'active' : '' }}" href="{{ route('user.dashboard') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
 
     <li class="nav-item">
         <a class="nav-link text-start py-1 px-0 {{ request()->routeIs('dcc.manual.index') ? 'active' : '' }}" href="{{ route('dcc.manual.index') }}">

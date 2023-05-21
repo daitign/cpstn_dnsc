@@ -11,7 +11,7 @@ class File extends Model
 
     protected $guarded = [];
 
-    protected $with = ['file_users'];
+    protected $with = ['file_users', 'remarks'];
 
     protected $appends = ['shared_users'];
 
@@ -28,5 +28,10 @@ class File extends Model
     public function getSharedUsersAttribute()
     {
         return implode(', ', $this->file_users->pluck('user_id')->toArray() ?? []);
+    }
+
+    public function remarks()
+    {
+        return $this->hasMany(FileRemark::class);
     }
 }

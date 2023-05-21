@@ -30,7 +30,8 @@ class DirectoryRepository {
             $directories = Directory::where('parent_id', $current_directory->id)->get();
 
             if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
-                ($current_user->role->role_name == 'Staff' && $this->getGrandParent($current_directory) == 'Manuals')
+                ($current_user->role->role_name == 'Staff' && $this->getGrandParent($current_directory) == 'Manuals') ||
+                (in_array($current_user->role->role_name, ['Internal Auditor', 'Internal Lead Auditor']))
             ) {
                 $files = File::where('directory_id', $current_directory->id)
                             ->get();
@@ -41,7 +42,8 @@ class DirectoryRepository {
             }
         }else {
             if($current_user->role->role_name !== 'Administrator') {
-                if(in_array($current_user->role->role_name, ['Document Control Custodian', 'Process Owner'])) {
+                dd($current_user->role->role_name);
+                if(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
                     $directories = Directory::where('area_id', $current_user->assigned_area->id);
                     $directories = $directories->get();
                     foreach($directories as $key => $directory) {
@@ -72,7 +74,7 @@ class DirectoryRepository {
         $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
         $parent_directory = Directory::where('name', $parent_directory)->whereNull('parent_id')->firstOrFail();
 
-        if(in_array($current_user->role->role_name, ['Process Owner', 'Document Control Custodian'])) {
+        if(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
             $directories = Directory::where('area_id', Auth::user()->assigned_area->id)->get();
             foreach($directories as $key => $directory) {
                 $directory->grand_parent = $this->getGrandParent($directory);

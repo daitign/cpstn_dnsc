@@ -208,6 +208,8 @@
         @include('layout.hr')
     @elseif (auth()->user()->role->role_name == 'Internal Lead Auditor')
         @include('layout.lead-auditor')
+    @elseif (auth()->user()->role->role_name == 'Internal Auditor')
+        @include('layout.auditor')
     @endif
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: #37a87f;">
         <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
@@ -216,12 +218,12 @@
                 <p class="navbar-text text-white ms-5" style="margin-bottom: 0;">Office of the Director for Quality
                     Assurance ({{ auth()->user()->role->role_name }})</p>
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item me-2"><a class="nav-link active" href="#"><i
+                    <!-- <li class="nav-item me-2"><a class="nav-link active" href="#"><i
                                 class="fas fa-comment-alt text-warning" title="10"></i><span class="text-warning"
                                 style="font-size: 10px;margin: 0px;margin-top: 0px;position: absolute;">10</span></a></li>
                     <li class="nav-item me-2"><a class="nav-link" href="#"><i class="fas fa-bell text-white"></i></a>
-                    </li>
-                    <li class="nav-item me-2"><a class="nav-link" href="#"><i class="fas fa-user text-white"></i></a>
+                    </li> -->
+                    <li class="nav-item me-2"><a class="nav-link" href="{{ route('user.profile') }}" href="#"><i class="fas fa-user text-white"></i></a>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}"><i class="fas fa-power-off text-white"></i></a>
                     </li>

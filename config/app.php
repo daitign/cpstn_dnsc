@@ -145,6 +145,8 @@ return [
 
     'manage_archive' => ['Administrator'],
 
+    'role_with_assigned_area' => ['Document Control Custodian', 'Process Owner', 'Internal Auditor'],
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

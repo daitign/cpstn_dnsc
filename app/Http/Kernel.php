@@ -7,6 +7,7 @@ use App\Http\Middleware\Dcc;
 use App\Http\Middleware\Po;
 use App\Http\Middleware\Staff;
 use App\Http\Middleware\Hr;
+use App\Http\Middleware\Auditor;
 use App\Http\Middleware\LeadAuditor;
 use App\Http\Middleware\UserAssignedArea;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -72,6 +73,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'area_assigned' => UserAssignedArea::class,
         'lead-auditor' => LeadAuditor::class,
+        'auditor' => Auditor::class,
         'admin' => Admin::class,
         'dcc' => Dcc::class,
         'po' => Po::class,

@@ -92,10 +92,20 @@
         <div class="mt-3 row">
             @foreach($files as $file)
                 <div class="col-2 text-center">
-                    <button class="btn align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $file->id }}">
+                    <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $file->id }}">
                         <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
-                        <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
+                        <p class="text-dark mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                     </button>
+
+                        @if(in_array($file->type, ['evidences', 'templates', 'manuals']))
+                            <button class="btn btn-remarks
+                                {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
+                                data-file-id="{{ $file->id }}"
+                                {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff']))
+                                ? 'data-route='.route('save-remarks', $file->id) : '' }}>
+                                        <i class="fa fa-email"></i> Remarks
+                            </button>
+                        @endif
                     <ul class="dropdown-menu text-left px-3">
                         <li><a href="{{ route('archives-download-file', $file->id) }}" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>
                         <li>
@@ -286,10 +296,56 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="remarksModal" tabindex="-1" aria-labelledby="remarksModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remarks</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="" id="remarksForm">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="remarksDetailForm">
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Choose Remarks:</label><br/>
+                                    <input type="radio" class="btn-check" name="type" id="remarks-success" value="success" autocomplete="off" checked>
+                                    <label class="btn btn-outline-success p-2 px-4" for="remarks-success"></label>
+
+                                    <input type="radio" class="btn-check" name="type" id="remarks-warning" value="warning" autocomplete="off">
+                                    <label class="btn btn-outline-warning p-2 px-4" for="remarks-warning"></label>
+
+                                    <input type="radio" class="btn-check" name="type" id="remarks-danger" value="danger" autocomplete="off">
+                                    <label class="btn btn-outline-danger p-2 px-4" for="remarks-danger"></label>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label" for="comments">Comments:</label>
+                                    <textarea class="form-control" rows="3" name="comments" id="remarks-comments"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="comments">Recent Remarks:</label>
+                                <table class="table recent-remarks-table"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-submit-remarks">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
 <script>
+    var files = {!! json_encode($files) !!};
+    var user_id = parseInt("{{ Auth::user()->id }}");
+
     var userShare = $('#userShare').select2({
         dropdownParent: $('#shareModal'),
         width: '100%'
@@ -349,6 +405,50 @@
 
     $('.btn-directory').on('dblclick', function(){
         location.href = $(this).data('route')
+    });
+
+    $('.btn-remarks').on('click', function(){
+        var file_id = parseInt($(this).data('file-id'));
+        
+        $('.btn-submit-remarks').hide();
+        $('.remarksDetailForm').hide();
+
+        if( $(this).data('route')) {
+            $('#remarksForm').prop('action', $(this).data('route'));
+            $('.btn-submit-remarks').show();
+            $('.remarksDetailForm').show();
+        }
+        
+        
+        var file = files.find(item => 
+            item.id === file_id
+        );
+
+        $('.recent-remarks-table').html('');
+        if(file.remarks.length > 0) {
+            var remark = file.remarks.find(item => item.user_id === user_id);
+            if(remark) {
+                $('#remarks-' + remark.type).prop('checked', true);
+                $('#remarks-comments').html(remark.comments);
+            }
+            file.remarks.forEach(function(i){
+                if(i.user_id !== user_id) {
+                    $('.recent-remarks-table').append(`
+                        <tr>
+                            <td class="text-center">
+                                <i class="fa fa-user text-` + i.type + ` fa-2x"></i><br/>
+                                <small class="badge bg-secondary" data-bs-toggle="tooltip" title="` + i.created_at_formatted + `">` + i.created_at_for_humans + `</small>
+                            </td>
+                            <td><strong class="px-0">` + i.user.firstname + ` ` + i.user.surname + `</strong><br/>` +
+                                `(` + i.user.role.role_name + `)<br/>` + 
+                                i.comments + `
+                            </td>
+                        </tr>
+                    `);
+                }
+            });
+        }
+        
     });
 </script>
 @endsection
