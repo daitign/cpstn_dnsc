@@ -186,6 +186,13 @@ Route::middleware(['auth'])->group(function(){
     Route::middleware(['auditor', 'area_assigned'])->prefix('auditor')->name('auditor.')->group(function () {
         Route::get('/templates', [TemplateController::class, 'index'])->name('template.index');
         Route::get('/evidences', [EvidenceController::class, 'index'])->name('evidence.index');
+        
+        Route::prefix('audit-reports')->name('audit-reports.')->group(function () {
+            Route::get('/', [AuditController::class, 'auditReports'])->name('index');
+            Route::get('/create', [AuditController::class, 'createAuditReport'])->name('create');
+            Route::post('/', [AuditController::class, 'storeAuditReport'])->name('store');
+        });
+        Route::post('/consolidated-report', [AuditController::class, 'storeConsolidatedAuditReport'])->name('consolidated-audit-reports.store');
     });
 
     Route::middleware('lead-auditor')->prefix('lead-auditor')->name('lead-auditor.')->group(function () {

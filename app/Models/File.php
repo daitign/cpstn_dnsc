@@ -11,7 +11,7 @@ class File extends Model
 
     protected $guarded = [];
 
-    protected $with = ['file_users', 'remarks'];
+    protected $with = ['file_users', 'remarks', 'audit_report'];
 
     protected $appends = ['shared_users'];
 
@@ -33,5 +33,10 @@ class File extends Model
     public function remarks()
     {
         return $this->hasMany(FileRemark::class);
+    }
+
+    public function audit_report()
+    {
+        return $this->hasOne(AuditReport::class);
     }
 }

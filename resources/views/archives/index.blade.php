@@ -92,12 +92,17 @@
         <div class="mt-3 row">
             @foreach($files as $file)
                 <div class="col-2 text-center">
+                    @if($file->type == 'audit_reports'
+                        && !empty($file->audit_report)
+                        && !empty($file->audit_report->consolidated_report))
+                            <a href="{{ route('archives-download-file', $file->audit_report->consolidated_report->file->id) }}" style="float:right"><img src="{{ asset('media/info.png') }}" width="40px"></a>
+                    @endif
                     <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $file->id }}">
                         <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
                         <p class="text-dark mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                     </button>
 
-                        @if(in_array($file->type, ['evidences', 'templates', 'manuals']))
+                        @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports']))
                             <button class="btn btn-remarks
                                 {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
                                 data-file-id="{{ $file->id }}"
@@ -119,6 +124,13 @@
                                 data-description="{{ $file->description ?? ''}}"
                             ><i class="fa fa-cog"></i> Properties</a>
                         </li>
+                        @if(Auth::user()->role->role_name == 'Internal Auditor' 
+                            && $file->user_id == Auth::user()->id
+                            && $file->type == 'audit_reports'
+                            && !empty($file->audit_report)
+                            && empty($file->audit_report->consolidated_report))
+                            <a href="#" class="text-decoration-none upload-consolidated-report" data-audit-report="{{ $file->audit_report->id ?? '' }}" data-bs-toggle="modal" data-bs-target="#consolAuditReportModal"><i class="fa fa-book"></i> Consolidated Report</a>
+                        @endif
                         @if($file->user_id == Auth::user()->id)
                         <li>
                             <a href="#" class="text-decoration-none btn-share" data-bs-toggle="modal" data-bs-target="#shareModal" data-users="{{ $file->shared_users }}" data-route="{{ route('archives-share-file', $file->id) }}"><i class="fa fa-share"></i> Share</button>
@@ -129,14 +141,14 @@
                         </li>
                         @endif
                         @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-                        <li>
+                        <!-- <li>
                             <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i>Delete</button>
                                 <form id="delete_file_{{ $file->id }}" action="{{ route('archives-delete-file', $file->id) }}" class="d-none" method="POST">
                                     @csrf
                                     @method('DELETE')
                                 </form>
                             </a>
-                        </li>
+                        </li> -->
                         @endif
                     </ul>
                 </div>
@@ -339,6 +351,43 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="consolAuditReportModal" tabindex="-1" aria-labelledby="consolAuditReportModalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="consolAuditReportModalModalLabel">Upload Consolidated Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('auditor.consolidated-audit-reports.store') }}" enctype="multipart/form-data" id="fileModalForm">
+                    @csrf
+                    <input type="hidden" value="" id="audit_report_id" name="audit_report_id">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="name" id="name" placeholder="Enter Filename" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date:</label>
+                            <input type="date" id="date" class="form-control" name="date" max="{{ date('Y-m-d') }}"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="file_attachment" class="form-label">Attachment</label>
+                            <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        </div>
+                        <div class="mb-3">
+                            <label for="search" class="form-label">Description:</label>
+                            <textarea name="description" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -449,6 +498,17 @@
             });
         }
         
+    });
+
+    $("#date").flatpickr({
+        altInput: true,
+        altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
+        maxDate: "{{ date('Y-m-d') }}"
+    });
+
+    $('.upload-consolidated-report').on('click', function(){
+        $('#audit_report_id').val($(this).data('audit-report'));
     });
 </script>
 @endsection
