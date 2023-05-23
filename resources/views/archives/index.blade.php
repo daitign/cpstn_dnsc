@@ -481,20 +481,18 @@
                 $('#remarks-comments').html(remark.comments);
             }
             file.remarks.forEach(function(i){
-                if(i.user_id !== user_id) {
-                    $('.recent-remarks-table').append(`
-                        <tr>
-                            <td class="text-center">
-                                <i class="fa fa-user text-` + i.type + ` fa-2x"></i><br/>
-                                <small class="badge bg-secondary" data-bs-toggle="tooltip" title="` + i.created_at_formatted + `">` + i.created_at_for_humans + `</small>
-                            </td>
-                            <td><strong class="px-0">` + i.user.firstname + ` ` + i.user.surname + `</strong><br/>` +
-                                `(` + i.user.role.role_name + `)<br/>` + 
-                                i.comments + `
-                            </td>
-                        </tr>
-                    `);
-                }
+                $('.recent-remarks-table').append(`
+                    <tr>
+                        <td class="text-center">
+                            <i class="fa fa-user text-` + i.type + ` fa-2x"></i><br/>
+                            <small class="badge bg-secondary" data-bs-toggle="tooltip" title="` + i.created_at_formatted + `">` + i.created_at_for_humans + `</small>
+                        </td>
+                        <td><strong class="px-0">` + i.user.firstname + ` ` + i.user.surname + `</strong><br/>` +
+                            `(` + i.user.role.role_name + `)<br/>` + 
+                            i.comments + `
+                        </td>
+                    </tr>
+                `);
             });
         }
         
