@@ -42,7 +42,6 @@ class DirectoryRepository {
             }
         }else {
             if($current_user->role->role_name !== 'Administrator') {
-                dd($current_user->role->role_name);
                 if(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
                     $directories = Directory::where('area_id', $current_user->assigned_area->id);
                     $directories = $directories->get();
