@@ -23,7 +23,7 @@ class UserController extends Controller
             'files' => File::where('user_id', Auth::user()->id)->count(),
         ];
 
-        return view('Dcc.dashboard', compact('data'));
+        return view('user.dashboard', compact('data'));
     }
 
     public function __construct()

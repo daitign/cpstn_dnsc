@@ -3,7 +3,7 @@
 <title>Dashboard</title>
 @endsection
 @section('page')
-    <div class="container">
+    <div class="page-header">
         <h1>Dashboard</h1>
     </div>
     <div class="container mt-3">
