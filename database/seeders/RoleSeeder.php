@@ -39,7 +39,7 @@ class RoleSeeder extends Seeder
                 'role_name'=> 'Document Control Custodian',
             ],
             [
-                'role_name'=>'College Management Team',
+                'role_name'=> 'College Management Team',
             ],
         ]);
     }

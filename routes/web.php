@@ -29,6 +29,7 @@ use App\Http\Controllers\AuditController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\ManualController;
+use App\Http\Controllers\CMTController;
 
 
 use App\Http\Controllers\HR\HRDashboardController;
@@ -211,6 +212,16 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
         });
     });
+
+    Route::middleware('cmt')->prefix('cmt')->name('cmt.')->group(function () {
+        Route::get('/survey-reports', [CMTController::class, 'surveyReports'])->name('survey-reports');
+        Route::post('/survey-reports/{id}/approve', [CMTController::class, 'approveSurveyReport'])->name('survey-reports.approve');
+        Route::post('/survey-reports/{id}/reject', [CMTController::class, 'rejectSurveyReport'])->name('survey-reports.reject');
+        Route::get('/consolidated-audit-reports', [CMTController::class, 'consolidatedAuditReports'])->name('consolidated-audit-reports');
+        Route::post('/consolidated-audit-reports/{id}/approve', [CMTController::class, 'approveConsolidatedAuditReport'])->name('consolidated-audit-reports.approve');
+        Route::post('/consolidated-audit-reports/{id}/reject', [CMTController::class, 'rejectConsolidatedAuditReport'])->name('consolidated-audit-reports.reject');
+    });
+    
     Route::post('save-remarks/{file_id}',[UserController::class,'saveRemarks'])->name('save-remarks');
     Route::get('logout',[AuthController::class,'lg'])->name('logout');
     Route::get('download-evidence/{id}',[DownloadController::class,'evidenceDownload'])->name('download-evidence');

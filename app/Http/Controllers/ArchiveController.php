@@ -185,9 +185,6 @@ class ArchiveController extends Controller
     {
         $file = File::findOrFail($id);
         $user = Auth::user();
-        if($file->user_id !== $user->id && !in_array($user->role->role_name, config('app.manage_archive'))) {
-            return back()->withError("You don't have permission to download the file");
-        }
 
         $content = Storage::get($file->container_path);
         

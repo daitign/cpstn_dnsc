@@ -58,8 +58,7 @@
                     <ul class="dropdown-menu text-center">
                         <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
                         <li><a href="#" class="text-decoration-none btn-property"
-                            data-bs-toggle="modal" data-bs-target="#pro
-                            pertyModal"
+                            data-bs-toggle="modal" data-bs-target="#propertyModal"
                             data-name="{{ $directory->name }}"
                             data-type="Directory"
                             data-created-by="{{ $directory->user->username ?? 'Admin' }}"
@@ -113,7 +112,7 @@
                             </button>
                         @endif
                     <ul class="dropdown-menu text-left px-3">
-                        <li><a href="{{ route('archives-download-file', $file->id) }}" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>
+                        <li><a href="{{ route('archives-download-file', $file->id) }}" target="_blank" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>
                         <li>
                             <a href="#" class="text-decoration-none btn-property"
                                 data-bs-toggle="modal" data-bs-target="#propertyModal"

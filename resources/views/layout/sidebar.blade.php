@@ -210,6 +210,8 @@
         @include('layout.lead-auditor')
     @elseif (auth()->user()->role->role_name == 'Internal Auditor')
         @include('layout.auditor')
+    @elseif (auth()->user()->role->role_name == 'College Management Team')
+        @include('layout.cmt')
     @endif
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: #37a87f;">
         <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
