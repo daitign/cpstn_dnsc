@@ -78,3 +78,12 @@ body {
     color: #005B40;
     background-position: right;
 }
+
+.text-bubble {
+    font-size: 16px !important;margin: 0px;margin-top: 0px;position: absolute;
+}
+
+.latpickr-calendar.inline {
+    width: 100% !important;
+    box-shadow: none !important;
+}

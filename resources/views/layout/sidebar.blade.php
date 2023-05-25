@@ -193,6 +193,10 @@
     #title {
         color: #ffffff;
     }
+    
+    .flatpickr-calendar {
+        box-shadow: none !important;
+    }
 </style>
 @endsection
 @section('content')

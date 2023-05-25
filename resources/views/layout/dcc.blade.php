@@ -9,7 +9,7 @@
 
     <li class="nav-item">
         <a class="nav-link text-start py-1 px-0 {{ request()->routeIs('manuals') ? 'active' : '' }}" href="{{ route('manuals') }}">
-            <i class="fas fa-book mx-3 mx-3 mx-3"></i><span class="text-nowrap mx-2">Manual</span>
+            <i class="fas fa-book mx-3 mx-3 mx-3"></i><span class="text-nowrap mx-2">Manuals</span>
         </a>
     </li>
     <li class="nav-item">

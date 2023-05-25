@@ -60,6 +60,9 @@ class UserController extends Controller
             'deleted_at'=>null
         ]);
 
+        $user = User::find($request->user_id);
+        \Notification::notify($user, 'Approved your account');
+
         return redirect(URL::previous())->with('success', 'User approved successfully');
     }
 
@@ -100,6 +103,9 @@ class UserController extends Controller
             'user_id' => $request->user_id,
             'area_id' => $area->id,
         ]);
+
+        $user = User::find($request->user_id);
+        \Notification::notify($user, 'Assigned to area '.$area->area_name);
 
         return redirect(URL::previous())->with('success', 'User has been assigned successfully');
     }

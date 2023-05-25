@@ -72,6 +72,9 @@ class AuditController extends Controller
                 'user_id' => $auditor,
                 'area_id' => $area->id,
             ]);
+            
+            $user = User::find($auditor);
+            \Notification::notify($user, 'Assigned you to '.$area->area_name);
         }
         
         return back()->withMessage('Audit plan saved successfully');
@@ -141,6 +144,9 @@ class AuditController extends Controller
             'file_id' => $file_id
         ]);
 
+        $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::AUDIT_REPORTS); })->get();
+        \Notification::notify($users, 'Submitted Audit Report');
+
         
         return back()->withMessage('Audit report created successfully');
     }
@@ -185,6 +191,8 @@ class AuditController extends Controller
             'file_id' => $file_id
         ]);
 
+        $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::CONSOLIDATED_AUDIT_REPORTS); })->get();
+        \Notification::notify($users, 'Submitted Consolidated Audit Report');
         
         return back()->withMessage('Consolidated Audit report created successfully');
     }

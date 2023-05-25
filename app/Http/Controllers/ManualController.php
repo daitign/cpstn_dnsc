@@ -96,6 +96,9 @@ class ManualController extends Controller
             'file_id' => $file_id
         ]);
 
+        $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::MANUALS); })->get();
+        \Notification::notify($users, 'Submitted Manuals');
+
         
         return back()->withMessage('Manual created successfully');
     }

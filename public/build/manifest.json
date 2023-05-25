@@ -1,0 +1,91 @@
+{
+  "_jquery-86d809ae.js": {
+    "file": "assets/jquery-86d809ae.js"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot": {
+    "file": "assets/materialdesignicons-webfont-f5966bae.eot",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.eot"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf": {
+    "file": "assets/materialdesignicons-webfont-c02d41ce.ttf",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.ttf"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff": {
+    "file": "assets/materialdesignicons-webfont-6d5e4be4.woff",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff"
+  },
+  "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2": {
+    "file": "assets/materialdesignicons-webfont-739dc70d.woff2",
+    "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-84bb6f3c.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/app.css": {
+    "file": "assets/app-f9cd2bee.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "assets": [
+      "assets/materialdesignicons-webfont-f5966bae.eot",
+      "assets/materialdesignicons-webfont-739dc70d.woff2",
+      "assets/materialdesignicons-webfont-6d5e4be4.woff",
+      "assets/materialdesignicons-webfont-c02d41ce.ttf"
+    ],
+    "css": [
+      "assets/app-f9cd2bee.css"
+    ],
+    "file": "assets/app-a8e13f42.js",
+    "imports": [
+      "_jquery-86d809ae.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/js/jq.js": {
+    "file": "assets/jq-f67368b6.js",
+    "imports": [
+      "_jquery-86d809ae.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/jq.js"
+  },
+  "resources/js/login.js": {
+    "file": "assets/login-52cfae7b.js",
+    "imports": [
+      "_jquery-86d809ae.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/login.js"
+  },
+  "resources/js/sidebar.js": {
+    "file": "assets/sidebar-3d4aa76b.js",
+    "imports": [
+      "_jquery-86d809ae.js"
+    ],
+    "isEntry": true,
+    "src": "resources/js/sidebar.js"
+  },
+  "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.eot": {
+    "file": "assets/m-plus-rounded-1c-v15-latin-regular-8ea951d7.eot",
+    "src": "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.eot"
+  },
+  "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.svg": {
+    "file": "assets/m-plus-rounded-1c-v15-latin-regular-6be49865.svg",
+    "src": "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.svg"
+  },
+  "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.ttf": {
+    "file": "assets/m-plus-rounded-1c-v15-latin-regular-5df92fb5.ttf",
+    "src": "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.ttf"
+  },
+  "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.woff": {
+    "file": "assets/m-plus-rounded-1c-v15-latin-regular-5fd40d20.woff",
+    "src": "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.woff"
+  },
+  "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.woff2": {
+    "file": "assets/m-plus-rounded-1c-v15-latin-regular-cd15770a.woff2",
+    "src": "storage/app/public/assets/fonts/m-plus-rounded-1c-v15-latin-regular.woff2"
+  }
+}

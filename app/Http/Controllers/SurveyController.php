@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Area;
 use App\Models\Survey;
 use App\Models\SurveyArea;
@@ -36,6 +37,9 @@ class SurveyController extends Controller
             'cordiality' => $request->cordiality,
         ]);
 
+        $users = User::whereHas('role', function($q){ $q->whereIn('role_name', ['Human Resources']); })->get();
+        \Notification::notify($users, 'Submitted Survey', $request->fullname);
+        
         return redirect()->route('surveys.success');
     }
 

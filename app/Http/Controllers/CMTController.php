@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\User;
 use App\Models\SurveyReport;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ConsolidatedAuditReport;
@@ -23,6 +24,9 @@ class CMTController extends Controller
         $report->updated_by = Auth::user()->id;
         $report->save();
         
+        $user = User::find($report->user_id);
+        \Notification::notify($user, 'Approved survey report');
+        
         return back()->withMessage('Survey report approved successfully');
     }
 
@@ -32,6 +36,9 @@ class CMTController extends Controller
         $report->status = 'rejected';
         $report->updated_by = Auth::user()->id;
         $report->save();
+        
+        $user = User::find($report->user_id);
+        \Notification::notify($user, 'Rejected survey report');
         
         return back()->withMessage('Survey report rejected successfully');
     }
@@ -48,6 +55,9 @@ class CMTController extends Controller
         $report->status = 'approved';
         $report->updated_by = Auth::user()->id;
         $report->save();
+
+        $user = User::find($report->user_id);
+        \Notification::notify($user, 'Approved consolidated audit report');
         
         return back()->withMessage('Consolidated audit report approved successfully');
     }
@@ -58,6 +68,10 @@ class CMTController extends Controller
         $report->status = 'rejected';
         $report->updated_by = Auth::user()->id;
         $report->save();
+
+        
+        $user = User::find($report->user_id);
+        \Notification::notify($user, 'Rejected consolidated audit report');
         
         return back()->withMessage('Consolidated audit report rejected successfully');
     }

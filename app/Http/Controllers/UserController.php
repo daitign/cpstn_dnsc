@@ -2,28 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use Ramsey\Uuid\Uuid;
+
 use App\Models\Area;
 use App\Models\ProcessUser;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\File;
+use App\Models\Notification;
 use App\Models\FileRemark;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
-use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function dashboard()
     {
-        $data = (object) [
+        $user_type = Auth::user()->role->role_name;
+        if(in_array(Auth::user()->role->role_name, ['Administrator', 'Human Resources'])){
+            $users = User::get();
+        }elseif(Auth::user()->role->role_name == 'Internal Lead Auditor'){
+            $users = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+            $user_type = 'Internal Auditors';
+        }else{
+            $users = User::where('role_id', Auth::user()->role_id)->get();
+        }
+        
+        $data = [
             'files' => File::where('user_id', Auth::user()->id)->count(),
+            'users' => $users,
+            'user_type' => Str::plural($user_type),
+            'notifications' => Auth::user()->notifications
         ];
 
-        return view('user.dashboard', compact('data'));
+        return view('user.dashboard', $data);
     }
 
     public function __construct()
@@ -89,6 +106,11 @@ class UserController extends Controller
             ['type' => $request->type, 'comments' => $request->comments],
             ['file_id' => $file_id, 'user_id' => Auth::user()->id]
         );
+
+        if($file->user_id !== Auth::user()->id) {
+            $user = User::find($file->user_id);
+            \Notification::notify($user, 'Submitted Remarks');
+        }
         
         return redirect()->back()->with('success', 'Your remarks has been saved successfully');
     }
