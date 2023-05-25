@@ -28,7 +28,16 @@ class TemplateController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $user = Auth::user();
+        if(!empty($request->directory)) {
+            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
+            $data['route'] = 'templates';
+            $data['page_title'] = $this->parent;
+            return view('archives.index', $data);
+        }
+
         $data = $this->dr->getDirectoryFiles($this->parent);
+        $data['page_title'] = $this->parent;
+        $data['route'] = 'templates';
 
         return view('archives.files', $data);
     }

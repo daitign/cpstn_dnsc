@@ -24,10 +24,20 @@ class EvidenceController extends Controller
         $this->dr = new DirectoryRepository;
     }
 
-    public function index(Request $request, $directory_name = '')
+    public function index(Request $request)
     {
         $user = Auth::user();
+
+        if(!empty($request->directory)) {
+            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
+            $data['route'] = 'evidences';
+            $data['page_title'] = $this->parent;
+            return view('archives.index', $data);
+        }
+
         $data = $this->dr->getDirectoryFiles($this->parent);
+        $data['page_title'] = $this->parent;
+        $data['route'] = 'evidences';
 
         return view('archives.files', $data);
     }

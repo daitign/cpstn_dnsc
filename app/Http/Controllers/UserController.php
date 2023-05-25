@@ -79,7 +79,8 @@ class UserController extends Controller
         if(!in_array(Auth::user()->role->role_name, [
             'Staff',
             'Internal Lead Auditor',
-            'Internal Auditor'
+            'Internal Auditor',
+            'Document Control Custodian'
         ])){
             return redirect()->back()->with('error', 'You are not authorized');
         }

@@ -32,7 +32,7 @@ class File extends Model
 
     public function remarks()
     {
-        return $this->hasMany(FileRemark::class);
+        return $this->hasMany(FileRemark::class)->latest();
     }
 
     public function audit_report()

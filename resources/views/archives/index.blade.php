@@ -7,11 +7,12 @@
         <h1>{{ $page_title ?? 'Archives' }}</h1>
         <h5 class="text-decoration-none">
             @if(empty($page_title))
-                <a href="{{ route('archives-page') }}">Archives</a>
+                <a href="{{ route('archives-page') }}">Archives</a> >
             @endif
             @if(!empty($parents))
                 @foreach($parents as $parent) 
-                    > {{ $parent->name }}
+                    {{ $parent->name }}
+                    @if(!$loop->last) > @endif
                 @endforeach
             @endif
         </h5>
@@ -50,12 +51,12 @@
         <div class="mb-4 row">
             @foreach($directories as $directory)
                 <div class="col-2 text-center">
-                    <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $directory->id }}">
+                    <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}">
                         <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
                         <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
                     </button>
                     <ul class="dropdown-menu text-center">
-                        <li><a href="{{ route('archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
+                        <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
                         <li><a href="#" class="text-decoration-none btn-property"
                             data-bs-toggle="modal" data-bs-target="#pro
                             pertyModal"
@@ -97,7 +98,7 @@
                         && !empty($file->audit_report->consolidated_report))
                             <a href="{{ route('archives-download-file', $file->audit_report->consolidated_report->file->id) }}" style="float:right"><img src="{{ asset('media/info.png') }}" width="40px"></a>
                     @endif
-                    <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $file->id }}">
+                    <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
                         <p class="text-dark mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                     </button>
@@ -106,7 +107,7 @@
                             <button class="btn btn-remarks
                                 {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
                                 data-file-id="{{ $file->id }}"
-                                {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff']))
+                                {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian']))
                                 ? 'data-route='.route('save-remarks', $file->id) : '' }}>
                                         <i class="fa fa-email"></i> Remarks
                             </button>

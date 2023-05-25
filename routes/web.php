@@ -206,6 +206,7 @@ Route::middleware(['auth'])->group(function(){
         Route::prefix('audit-plan')->group(function () {
             Route::get('/', [AuditController::class, 'index'])->name('audit.index');
             Route::get('/create', [AuditController::class, 'createAuditPlan'])->name('audit.create');
+            Route::get('/{id}', [AuditController::class, 'editAuditPlan'])->name('audit.edit');
             // Route::get('/previous', [AuditController::class, 'getPrevious'])->name('audit.previous');
             Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
         });
@@ -214,6 +215,26 @@ Route::middleware(['auth'])->group(function(){
     Route::get('logout',[AuthController::class,'lg'])->name('logout');
     Route::get('download-evidence/{id}',[DownloadController::class,'evidenceDownload'])->name('download-evidence');
     
+
+    Route::prefix('templates')->middleware('directory:Templates')->group(function(){
+        Route::get('/', [TemplateController::class, 'index'])->name('templates');
+    });
+
+    Route::prefix('evidences')->middleware('directory:Evidences')->group(function(){
+        Route::get('/', [EvidenceController::class, 'index'])->name('evidences');
+    });
+
+    Route::prefix('manuals')->middleware('directory:Manuals')->group(function(){
+        Route::get('/', [ManualController::class, 'index'])->name('manuals');
+    });
+
+    Route::prefix('audit-reports')->middleware('directory:Templates')->group(function(){
+        Route::get('/', [AuditController::class, 'auditReports'])->name('audit-reports');
+    });
+
+    Route::prefix('survey_reports')->middleware('directory:Survey Reports')->group(function(){
+        Route::get('/', [SurveyReportController::class, 'index'])->name('survey-reports');
+    });
 });
 
 Route::resources([

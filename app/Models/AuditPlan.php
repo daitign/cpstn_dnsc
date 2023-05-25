@@ -10,4 +10,9 @@ class AuditPlan extends Model
     use HasFactory;
     
     protected $guarded = [];
+    
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
 }

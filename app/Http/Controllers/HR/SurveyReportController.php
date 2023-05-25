@@ -29,7 +29,16 @@ class SurveyReportController extends Controller
     
     public function index(Request $request)
     {
+        if(!empty($request->directory)) {
+            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
+            $data['route'] = 'survey-reports';
+            $data['page_title'] = $this->parent;
+            return view('archives.index', $data);
+        }
+
         $data = $this->dr->getDirectoryFiles($this->parent);
+        $data['route'] = 'survey-reports';
+        $data['page_title'] = 'Audit Reports';
         return view('archives.files', $data);
     }
 

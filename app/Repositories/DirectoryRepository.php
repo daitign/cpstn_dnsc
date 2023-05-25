@@ -31,7 +31,7 @@ class DirectoryRepository {
 
             if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
                 ($current_user->role->role_name == 'Staff' && $this->getGrandParent($current_directory) == 'Manuals') ||
-                (in_array($current_user->role->role_name, ['Internal Auditor', 'Internal Lead Auditor']))
+                (in_array($current_user->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Document Control Custodian']))
             ) {
                 $files = File::where('directory_id', $current_directory->id)
                             ->get();

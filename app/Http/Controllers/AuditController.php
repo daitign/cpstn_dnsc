@@ -32,10 +32,10 @@ class AuditController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $user = Auth::user();
-        $data = $this->dr->getDirectoryFiles($this->parent);
-        $data['auditors'] = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        $audit_plans = AuditPlan::get();
         
-        return view('audits.index', $data);
+        return view('audits.index', compact('audit_plans', 'auditors'));
     }
 
     public function createAuditPlan()
@@ -43,6 +43,13 @@ class AuditController extends Controller
         $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
         $tree_areas = $this->dr->getAreaFamilyTree(null, 'process');
         return view('audits.create', compact('tree_areas', 'auditors'));
+    }
+
+    public function editAuditPlan($id)
+    {
+        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        $audit_plan = AuditPlan::findOrFail($id);
+        return view('audits.edit', compact('auditors', 'audit_plan'));
     }
 
     public function saveAuditPlan(Request $request)
@@ -53,24 +60,37 @@ class AuditController extends Controller
             $audit_plan = AuditPlan::create(['area_id' => $area->id]);
         }
         
+        // Remove existing auditors from area
+        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        foreach($auditors as $auditor) {
+            AreaUser::where('area_id', $area->id)
+                ->where('user_id', $auditor)->delete();
+        }
 
         foreach($request->auditors as $auditor) {
-            // Remove existing auditors from area
-            AreaUser::where('user_id', $auditor)->delete();
-
             AreaUser::create([
                 'user_id' => $auditor,
                 'area_id' => $area->id,
             ]);
         }
         
-        return back()->withMessage('Audit plan created successfully');
+        return back()->withMessage('Audit plan saved successfully');
     }
 
     public function auditReports(Request $request, $directory_name = '')
     {
         $user = Auth::user();
+
+        if(!empty($request->directory)) {
+            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
+            $data['route'] = 'audit-reports';
+            $data['page_title'] = 'Audit Reports';
+            return view('archives.index', $data);
+        }
+
         $data = $this->dr->getDirectoryFiles('Audit Reports');
+        $data['page_title'] = 'Audit Reports';
+        $data['route'] = 'audit-reports';
 
         return view('archives.files', $data);
     }

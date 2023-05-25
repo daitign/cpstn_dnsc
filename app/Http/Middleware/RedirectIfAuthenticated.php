@@ -24,9 +24,8 @@ class RedirectIfAuthenticated
                 $role = Auth::user()->role->role_name;
                 if ($role == 'Administrator') {
                     return redirect()->route('admin-dashboard-page');
-                }
-                elseif ($role == 'Administrator') {
-                    # code...
+                }else{
+                    return redirect()->route('user.dashboard');
                 }
             }
         }
