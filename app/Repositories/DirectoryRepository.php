@@ -29,17 +29,7 @@ class DirectoryRepository {
             $parents = collect($current_directory->parents())->reverse();
             $directories = Directory::where('parent_id', $current_directory->id)->get();
 
-            if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
-                ($current_user->role->role_name == 'Staff' && $this->getGrandParent($current_directory) == 'Manuals') ||
-                (in_array($current_user->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Document Control Custodian']))
-            ) {
-                $files = File::where('directory_id', $current_directory->id)
-                            ->get();
-            }else{
-                $files = File::where('directory_id', $current_directory->id)
-                            ->where('user_id', $current_user->id)
-                            ->get();
-            }
+            $files = $this->getFiles($current_directory->id,  $current_user->id);
         }else {
             if($current_user->role->role_name !== 'Administrator') {
                 if(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
@@ -86,12 +76,36 @@ class DirectoryRepository {
         }
         
         $directories = Directory::where('parent_id', $directory->id)->get();
-        
-        $files = File::where('directory_id', $directory->id)
-                    ->where('user_id', $current_user->id)
-                    ->get();
+        $files = $this->getFiles($directory->id);
+
         return compact('files', 'current_user', 'users', 'directories', 'directory', 'parent_directory');
     }    
+    
+    public function getFiles($directory, $request_user = '') {
+        $current_user = !empty($request_user) ? User::findOrFail($request_user) : Auth::user();
+        $current_directory = Directory::findOrFail($directory);
+
+        $role_file_access = [
+            'Internal Auditor', 
+            'Internal Lead Auditor', 
+            'Document Control Custodian',
+            'College Management Team',
+        ];
+
+        if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
+        ($current_user->role->role_name == 'Staff' && $this->getGrandParent($current_directory) == 'Manuals') ||
+        (in_array($current_user->role->role_name, $role_file_access))
+        ){
+            $files = File::where('directory_id', $current_directory->id)
+                ->get();
+        }else{
+            $files = File::where('directory_id', $current_directory->id)
+                ->where('user_id', $current_user->id)
+                ->get();
+        }
+
+        return $files;
+    }
 
     public function getDirectory($name, $parent_id = null, $area_id = null)
     {

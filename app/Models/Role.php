@@ -29,7 +29,7 @@ class Role extends Model
         }elseif($this->role_name == 'Human Resources') {
             $directories = ['Survey Reports'];
         }elseif($this->role_name == 'College Management Team') {
-            $directories = ['Audit Reports', 'Survey Reports'];
+            $directories = ['Consolidated Audit Reports', 'Survey Reports'];
         }
 
         return $directories;
