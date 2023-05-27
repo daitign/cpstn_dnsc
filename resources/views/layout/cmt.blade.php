@@ -6,7 +6,7 @@
                 id="sidebarToggleHolder" href="#"><i class="fas fa-bars" id="sidebarToggle"></i></a></div>
     </li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('user.dashboard') ? 'active' : '' }}" href="{{ route('user.dashboard') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
-
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('templates') ? 'active' : '' }}" href="{{ route('templates') }}"><i class="fas fa-newspaper mx-3"></i><span class="text-nowrap mx-2">Templates</span></a></li>
     <li class="nav-item">
         <a class="nav-link text-start py-1 px-0 {{ request()->routeIs('cmt.survey-reports') ? 'active' : '' }}" href="{{ route('cmt.survey-reports') }}">
             <i class="fas fa-book mx-3 mx-3 mx-3"></i><span class="text-nowrap mx-2">Pending SR</span>

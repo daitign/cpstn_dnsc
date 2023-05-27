@@ -21,15 +21,15 @@ class Role extends Model
         if($this->role_name == 'Staff') {
             $directories = ['Manuals', 'Templates'];
         }elseif(in_array($this->role_name, ['Process Owner', 'Document Control Custodian'])) {
-            $directories = ['Manuals', 'Evidences'];
+            $directories = ['Templates', 'Manuals', 'Evidences'];
         }elseif(in_array($this->role_name, ['Internal Auditor', 'Internal Lead Auditor'])) {
-            $directories = ['Audit Reports', 'Evidences', 'Template'];
+            $directories = ['Templates', 'Audit Reports', 'Evidences', 'Template'];
         }elseif($this->role_name == 'Quality Assurance Director') {
-            $directories = ['Manuals', 'Audit Reports', 'Survey Reports'];
+            $directories = ['Templates', 'Manuals', 'Audit Reports', 'Survey Reports'];
         }elseif($this->role_name == 'Human Resources') {
-            $directories = ['Survey Reports'];
+            $directories = ['Templates', 'Survey Reports'];
         }elseif($this->role_name == 'College Management Team') {
-            $directories = ['Consolidated Audit Reports', 'Survey Reports'];
+            $directories = ['Templates', 'Consolidated Audit Reports', 'Survey Reports'];
         }
 
         return $directories;
