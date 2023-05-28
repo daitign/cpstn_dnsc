@@ -17,7 +17,7 @@ class Admin
     public function handle(Request $request, Closure $next, $guard = null): Response
     {
         if (Auth::guard($guard)->check() && 
-            (Auth::user()->role->role_name == 'Administrator')
+            (in_array(Auth::user()->role->role_name, ['Quality Assurance Director', 'Administrator']))
         ){
             return $next($request);
         }

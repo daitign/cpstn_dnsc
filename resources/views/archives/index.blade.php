@@ -124,6 +124,23 @@
                                 data-description="{{ $file->description ?? ''}}"
                             ><i class="fa fa-cog"></i> Properties</a>
                         </li>
+                        @if(!empty($file->trackings))
+                        <li>
+                            <a href="#" class="text-decoration-none btn-tracking"
+                            data-bs-toggle="modal" data-bs-target="#trackingModal"
+                            ><i class="fa fa-search"></i> Track</a>
+                            <div class="d-none file-tracking-info">
+                                <div class="tracking-container">
+                                    @foreach($file->trackings as $key => $track)
+                                        <div class="tracking-item text-white {{ $track['color'] ?? 'bg-secondary' }}">
+                                            <span>{{ $key }}</span><br/>
+                                            <small>&nbsp;{{ $track['user'] ?? '' }}</small>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </li>
+                        @endif
                         @if(Auth::user()->role->role_name == 'Internal Auditor' 
                             && $file->user_id == Auth::user()->id
                             && $file->type == 'audit_reports'
@@ -279,6 +296,24 @@
         </div>
     </div>
 
+    <div class="modal fade" id="trackingModal" tabindex="-1" aria-labelledby="trackingModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tracking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -325,9 +360,6 @@
                                     <label class="form-label">Choose Remarks:</label><br/>
                                     <input type="radio" class="btn-check" name="type" id="remarks-success" value="success" autocomplete="off" checked>
                                     <label class="btn btn-outline-success p-2 px-4" for="remarks-success"></label>
-
-                                    <input type="radio" class="btn-check" name="type" id="remarks-warning" value="warning" autocomplete="off">
-                                    <label class="btn btn-outline-warning p-2 px-4" for="remarks-warning"></label>
 
                                     <input type="radio" class="btn-check" name="type" id="remarks-danger" value="danger" autocomplete="off">
                                     <label class="btn btn-outline-danger p-2 px-4" for="remarks-danger"></label>
@@ -438,6 +470,10 @@
         $('#propertyCreated').html($(this).data('created-at'));
         $('#propertyUpdated').html($(this).data('updated-at'));
         $('#propertyDescription').html($(this).data('description'));
+    });
+
+    $('.btn-tracking').on('click', function(){
+       $('#trackingModal').find('.modal-body').html($(this).parents('li').find('.file-tracking-info').html());
     });
 
     $('.btn-share').on('click', function(){

@@ -37,7 +37,8 @@ class AuthController extends Controller
                 'Human Resources',
                 'Internal Lead Auditor',
                 'Internal Auditor',
-                'College Management Team'
+                'College Management Team',
+                'Quality Assurance Director'
             ])){
                 return redirect()->route('user.dashboard');
             }else{

@@ -13,7 +13,7 @@ class File extends Model
 
     protected $with = ['file_users', 'remarks', 'audit_report'];
 
-    protected $appends = ['shared_users'];
+    protected $appends = ['shared_users', 'trackings'];
 
     public function user()
     {
@@ -38,5 +38,35 @@ class File extends Model
     public function audit_report()
     {
         return $this->hasOne(AuditReport::class);
+    }
+
+    public function getTrackingsAttribute()
+    {
+        $track_records = [];
+        if($this->type == 'evidences') {
+            $track_records = ['dcc' => [], 'auditor' => []];
+
+            $remarks = $this->remarks()->whereHas('user.role', function($q) {
+                $q->where('role_name', 'Document Control Custodian');
+            })->first();
+            if($remarks) {
+                $track_records['dcc'] = [
+                    'color' => 'bg-success',
+                    'user' => $remarks->user->firstname .' '.$remarks->user->lastname
+                ];
+            }
+
+            $remarks = $this->remarks()->whereHas('user.role', function($q) {
+                $q->whereIn('role_name', ['Internal Auditor', 'Internal Lead Auditor']);
+            })->first();
+
+            if($remarks) {
+                $track_records['auditor'] = [
+                    'color' => 'bg-danger',
+                    'user' => $remarks->user->firstname .' '.$remarks->user->lastname
+                ];
+            }
+        }
+        return $track_records;
     }
 }

@@ -197,10 +197,38 @@
     .flatpickr-calendar {
         box-shadow: none !important;
     }
+
+    .tracking-container {
+        text-align:center;
+    }
+    .tracking-item {
+        position: relative;
+        min-width: 150px;
+        min-height: 50px;
+        text-align: center;
+        display: inline-block;
+        border: 2px solid black;
+        padding: 2px 5px 2px 5px;
+        border-radius: 10px;
+    }
+    
+    .tracking-container .tracking-item:not(:last-child) {
+        margin-right: 17px;
+    }
+    .tracking-container .tracking-item:not(:last-child):after {
+        position: absolute;
+        content: '';
+        right: -50%;
+        top: 0%;
+        width: 50%;
+        height: 50%;
+        border-bottom: 10px solid black;
+    }
+
 </style>
 @endsection
 @section('content')
-    @if (auth()->user()->role->role_name == 'Administrator')
+    @if (in_array(auth()->user()->role->role_name, ['Quality Assurance Director','Administrator']))
         @include('layout.admin')
     @elseif (auth()->user()->role->role_name == 'Document Control Custodian')
         @include('layout.dcc')
