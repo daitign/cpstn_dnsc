@@ -176,7 +176,7 @@ class AuditController extends Controller
                 'file_mime' => $file->getClientMimeType(),
                 'container_path' => $path,
                 'description' => $request->description,
-                'type' => 'audit_reports'
+                'type' => 'consolidated_audit_reports'
             ]);
             $file_id = $file->id;
         }

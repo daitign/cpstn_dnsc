@@ -11,7 +11,7 @@
             <div class="col-8">
                 <div class="row">
                     
-                    @if(auth()->user()->role->role_name == 'Administrator')
+                    @if(in_array(auth()->user()->role->role_name, ['Quality Assurance Director', 'Administrator']))
                         <div class="col-4">
                             <a href="{{ route('admin-area-page') }}" class="text-success">
                                 <div class="card p-3 text-center">
@@ -311,7 +311,7 @@
                     <div class="row mt-2">
                         <div class="card p-3 text-center">
                             <div class="card-body">
-                                <h4>{{ in_array($user_type, ['Administrators', 'Human Resources']) ? 'All Users' : $user_type }}</h4>
+                                <h4>{{ in_array($user_type, ['Administrators', 'Human Resources', 'Quality Assurance Director']) ? 'All Users' : $user_type }}</h4>
                                 <div style="max-height:400px; overflow-y:scroll">
                                     <table class="table">
                                     @foreach($users as $user)

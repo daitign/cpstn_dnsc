@@ -124,17 +124,18 @@
                                 data-description="{{ $file->description ?? ''}}"
                             ><i class="fa fa-cog"></i> Properties</a>
                         </li>
-                        @if(!empty($file->trackings))
+                        @if(!empty($file->trackings()))
                         <li>
                             <a href="#" class="text-decoration-none btn-tracking"
                             data-bs-toggle="modal" data-bs-target="#trackingModal"
                             ><i class="fa fa-search"></i> Track</a>
                             <div class="d-none file-tracking-info">
                                 <div class="tracking-container">
-                                    @foreach($file->trackings as $key => $track)
+                                    @foreach($file->trackings() as $track)
                                         <div class="tracking-item text-white {{ $track['color'] ?? 'bg-secondary' }}">
-                                            <span>{{ $key }}</span><br/>
-                                            <small>&nbsp;{{ $track['user'] ?? '' }}</small>
+                                            <span><strong>{{ $track['name'] ?? '' }}</strong></span><br/>
+                                            <small>&nbsp;{{ !empty($track['user']) ? "By: ". $track['user'] : ' ' }}</small><br/>
+                                            <small>&nbsp;{{ !empty($track['date']) ? "Date: ".$track['date'] : ' ' }}</small>
                                         </div>
                                     @endforeach
                                 </div>

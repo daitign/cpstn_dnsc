@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\FileRemark;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +14,7 @@ class File extends Model
 
     protected $with = ['file_users', 'remarks', 'audit_report'];
 
-    protected $appends = ['shared_users', 'trackings'];
+    protected $appends = ['shared_users'];
 
     public function user()
     {
@@ -40,31 +41,81 @@ class File extends Model
         return $this->hasOne(AuditReport::class);
     }
 
-    public function getTrackingsAttribute()
+    public function trackings()
     {
         $track_records = [];
         if($this->type == 'evidences') {
-            $track_records = ['dcc' => [], 'auditor' => []];
+            $track_records = $this->trackItem($this->id,
+                [
+                    [
+                        'name' => 'DCC',
+                        'role' => 'Document Control Custodian',
+                        'color' => 'bg-success'
+                    ],
+                    [
+                        'name' => 'Auditor',
+                        'role' => 'Internal Auditor',
+                        'color' => 'bg-danger'
+                    ],
+                ]
+            );
+        }
+        if($this->type == 'audit_reports') {
+            $track_records = $this->trackItem($this->id,
+                [
+                    [
+                        'name' => 'Auditor',
+                        'role' => 'Internal Auditor',
+                        'color' => 'bg-success'
+                    ],
+                    [
+                        'name' => 'Lead Auditor',
+                        'role' => 'Internal Lead Auditor',
+                        'color' => 'bg-danger'
+                    ],
+                ]
+            );
+        }
+        if(in_array($this->type, ['manuals', 'survey_reports', 'consolidated_audit_reports'])) {
+            $track_records = $this->trackItem($this->id,
+                [
+                    [
+                        'name' => 'Director',
+                        'role' => 'Quality Assurance Director',
+                        'color' => 'bg-success'
+                    ],
+                    [
+                        'name' => 'CMT',
+                        'role' => 'College Management Team',
+                        'color' => 'bg-danger'
+                    ],
+                ]
+            );
+        }
+        return $track_records;
+        
+    }
 
-            $remarks = $this->remarks()->whereHas('user.role', function($q) {
-                $q->where('role_name', 'Document Control Custodian');
-            })->first();
-            if($remarks) {
-                $track_records['dcc'] = [
-                    'color' => 'bg-success',
-                    'user' => $remarks->user->firstname .' '.$remarks->user->lastname
+    private function trackItem($file_id, $tracks)
+    {
+        $track_records = [];
+        foreach($tracks as $track) {
+            
+
+            $remarks = FileRemark::whereHas('user.role', function($q) use($track) {
+                $q->whereIn('role_name', [$track['role']]);
+            })->where('file_id', $file_id)->first();
+
+            if(!empty($remarks)) {
+                $track_records[] = [
+                    'file_id' => $remarks->file_id,
+                    'name' => $track['name'],
+                    'color' => $track['color'],
+                    'date' => $remarks->created_at->format('M d, Y h:i A'),
+                    'user' => $remarks->user->firstname .' '.$remarks->user->surname
                 ];
-            }
-
-            $remarks = $this->remarks()->whereHas('user.role', function($q) {
-                $q->whereIn('role_name', ['Internal Auditor', 'Internal Lead Auditor']);
-            })->first();
-
-            if($remarks) {
-                $track_records['auditor'] = [
-                    'color' => 'bg-danger',
-                    'user' => $remarks->user->firstname .' '.$remarks->user->lastname
-                ];
+            }else{
+                $track_records[] = ['name'=> $track['name']];
             }
         }
         return $track_records;
