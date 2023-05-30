@@ -207,8 +207,13 @@
         min-height: 50px;
         text-align: center;
         display: inline-block;
-        border: 2px solid black;
+    }
+
+    .tracking-item .item-box {
+        height: 50px; 
+        width:100%;
         padding: 2px 5px 2px 5px;
+        border: 2px solid black;
         border-radius: 10px;
     }
     

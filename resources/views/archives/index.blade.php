@@ -132,9 +132,12 @@
                             <div class="d-none file-tracking-info">
                                 <div class="tracking-container">
                                     @foreach($file->trackings() as $track)
-                                        <div class="tracking-item text-white {{ $track['color'] ?? 'bg-secondary' }}">
+                                        <div class="tracking-item">
                                             <span><strong>{{ $track['name'] ?? '' }}</strong></span><br/>
-                                            <small>&nbsp;{{ !empty($track['user']) ? "By: ". $track['user'] : ' ' }}</small><br/>
+                                            <div class="item-box text-white {{ $track['color'] ?? 'bg-secondary' }}">
+                                                <i class="mt-2 fa fa-user"></i>
+                                            </div>
+                                           <small>&nbsp;{{ !empty($track['user']) ? "By: ". $track['user'] : ' ' }}</small><br/>
                                             <small>&nbsp;{{ !empty($track['date']) ? "Date: ".$track['date'] : ' ' }}</small>
                                         </div>
                                     @endforeach
