@@ -220,11 +220,11 @@
     .tracking-container .tracking-item:not(:last-child) {
         margin-right: 17px;
     }
-    .tracking-container .tracking-item:not(:last-child):after {
+    .tracking-container .tracking-item:not(:last-child):before {
         position: absolute;
         content: '';
         right: -50%;
-        top: 0%;
+        margin-top: -8px;
         width: 50%;
         height: 50%;
         border-bottom: 10px solid black;
