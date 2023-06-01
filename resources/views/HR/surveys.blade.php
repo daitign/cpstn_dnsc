@@ -43,11 +43,14 @@
             <form action="{{ route('hr-survey-page') }}">
                 <div class="input-group mb-3 col-6">
                     <input type="text" name="keyword" class="form-control" placeholder="Input Office..." aria-describedby="basic-addon2" value="{{ $keyword ?? '' }}">
+                    <input type="date" name="date_from" class="form-control">
+                    <input type="date" name="date_to" class="form-control">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="button"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>
             </form>
+
             <div style="overflow-y: auto;height:60vh;">
             @if(count($surveys) == 0)
                 <h3 class="text-center mt-4">No Survey Submitted Yet</h3>

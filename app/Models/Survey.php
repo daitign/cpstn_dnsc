@@ -11,8 +11,15 @@ class Survey extends Model
 
     protected $guarded = [];
 
+    protected $appends = ['total_score'];
+
     public function score()
     {
         return $this->hasOne(SurveyArea::class);
+    }
+
+    public function getTotalScoreAttribute()
+    {
+        return (($this->score->promptness + $this->score->engagement + $this->score->cordiality) / 3);
     }
 }

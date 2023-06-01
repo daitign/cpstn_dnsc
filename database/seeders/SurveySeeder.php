@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Area;
 use App\Models\Survey;
@@ -57,6 +58,7 @@ class SurveySeeder extends Seeder
                 'course_year' => $type == 'Student' ? $year : '',
                 'occupation' => $type == 'Visitor' ? $occupation : '',
                 'suggestions' => $suggestion ?? '',
+                'created_at' => Carbon::today()->subDays(rand(0, 365))
             ]);
 
             SurveyArea::create([

@@ -156,6 +156,7 @@ Route::middleware(['auth'])->group(function(){
         });
         Route::get('/dashboard',[HRDashboardController::class,'dashboard'])->name('hr-dashboard-page');
         Route::get('/survey',[HRSurveyController::class,'index'])->name('hr-survey-page');
+        Route::get('/survey/report',[HRSurveyController::class,'reports'])->name('hr-survey-report');
 
         Route::prefix('survey_reports')->group(function(){
             Route::get('/', [SurveyReportController::class, 'index'])->name('hr.survey_report.index');
