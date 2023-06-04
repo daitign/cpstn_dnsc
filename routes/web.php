@@ -24,6 +24,7 @@ use App\Http\Controllers\Staff\StaffDashboardController;
 use App\Http\Controllers\Staff\StaffTemplateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuditController;
+use App\Http\Controllers\MessageController;
 
 
 use App\Http\Controllers\TemplateController;
@@ -246,6 +247,11 @@ Route::middleware(['auth'])->group(function(){
 
     Route::prefix('survey_reports')->middleware('directory:Survey Reports')->group(function(){
         Route::get('/', [SurveyReportController::class, 'index'])->name('survey-reports');
+    });
+
+    Route::prefix('messages')->middleware('staff_qad')->group(function(){
+        Route::get('/', [MessageController::class, 'index'])->name('messages');
+        Route::post('/send', [MessageController::class, 'store'])->name('messages.send');
     });
 });
 

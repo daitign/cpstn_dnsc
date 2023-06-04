@@ -72,6 +72,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'directory' => \App\Http\Middleware\DirectoryMiddleware::class,
+        'staff_qad' => \App\Http\Middleware\StaffAndQAD::class,
         'cmt' => \App\Http\Middleware\Cmt::class,
         'area_assigned' => UserAssignedArea::class,
         'lead-auditor' => LeadAuditor::class,
