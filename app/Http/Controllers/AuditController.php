@@ -15,6 +15,7 @@ use App\Models\Evidence;
 use App\Models\Directory;
 use App\Models\AuditPlan;
 use App\Models\AuditReport;
+use App\Models\AuditPlanUser;
 use App\Models\ConsolidatedAuditReport;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\DirectoryRepository;
@@ -34,7 +35,6 @@ class AuditController extends Controller
         $user = Auth::user();
         $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
         $audit_plans = AuditPlan::get();
-        
         return view('audits.index', compact('audit_plans', 'auditors'));
     }
 
@@ -59,6 +59,11 @@ class AuditController extends Controller
         if(empty($audit_plan)) {
             $audit_plan = AuditPlan::create(['area_id' => $area->id]);
         }
+        $audit_plan->name = $request->name;
+        $audit_plan->description = $request->description;
+        $audit_plan->date = $request->date;
+        $audit_plan->area_id = $area->id;
+        $audit_plan->save();
         
         // Remove existing auditors from area
         $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();

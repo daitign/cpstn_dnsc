@@ -55,4 +55,25 @@ class User extends Authenticatable
             'area_id'
         );
     }
+
+    public function assigned_areas()
+    {
+        return $this->hasManyThrough(
+            Area::class,
+            AreaUser::class,
+            'user_id',
+            'id',
+            'id',
+            'area_id'
+        );
+    }
+
+    public function getAssignedAreas()
+    {
+        $areas = [];
+        foreach($this->assigned_areas()->get() as $area) {
+            $areas[] = sprintf("%s%s", $area->parent->area_name ? $area->parent->area_name.' > ' : '', $area->area_name ?? '');
+        }
+        return $areas;
+    }
 }

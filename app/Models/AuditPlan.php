@@ -10,6 +10,8 @@ class AuditPlan extends Model
     use HasFactory;
     
     protected $guarded = [];
+
+    protected $dates = ['audit_plan_date'];
     
     public function area()
     {

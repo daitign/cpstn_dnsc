@@ -27,12 +27,16 @@ class EvidenceController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
+        
         if(!empty($request->directory)) {
             $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
             $data['route'] = 'evidences';
             $data['page_title'] = $this->parent;
             return view('archives.index', $data);
+        }else{
+            if(Auth::user()->role->role_name == 'Internal Auditor') {
+                return view('audits.auditor-areas');
+            }
         }
 
         $data = $this->dr->getDirectoryFiles($this->parent);

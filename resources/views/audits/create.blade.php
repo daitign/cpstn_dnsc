@@ -15,9 +15,21 @@
                     @csrf
                     <div>
                         <div class="mb-3">
+                            <label for="process" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" required>
+                        </div>
+                        <div class="mb-3">
                             <label for="name" class="form-label">Select Process</label>
                             <input type="hidden" name="area" id="area">
                             <div id="tree"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="process" class="form-label">Description</label>
+                            <textarea class="form-control" rows="3" id="description" name="description" placeholder="Enter description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="process" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" placeholder="Enter date" required>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Auditors</label>
