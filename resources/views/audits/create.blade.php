@@ -20,7 +20,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Select Process</label>
-                            <input type="hidden" name="area" id="area">
+                            <input type="hidden" name="areas" id="areas">
                             <div id="tree"></div>
                         </div>
                         <div class="mb-3">
@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <div style="text-align: right" class="pb-5">
-                        <button type="submit" class="btn btn-success px-3 py-2">Save Audit Plan</button>
+                        <button type="submit" class="btn btn-success btn-save px-3 py-2">Save Audit Plan</button>
                     </div>
                 </form>
             </div>
@@ -62,16 +62,23 @@
     
     var areas = {!! json_encode($tree_areas) !!};
 
-    $('#tree').treeview({
+    var tree = $('#tree').treeview({
         data: areas,
         levels: 1,
+        multiSelect: true,
         collapseIcon: "fa fa-minus",
         expandIcon: "fa fa-plus",
-        onNodeSelected: function(event, data) {
-            $('#area').val(data.id);
-        }
     });
 
     $('.select2').select2();
+
+    $('.btn-save').on('click', function(){
+        var selected = tree.treeview('getSelected');
+        var selectedAreas = [];
+        selected.forEach(function(area){
+            selectedAreas.push(area.id)
+        });
+        $('#areas').val(selectedAreas);
+    });
 </script>
 @endsection
