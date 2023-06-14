@@ -20,7 +20,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Process</label>
-                            <input type="text" class="form-control" value="{{ $audit_plan->area->parent->area_name.' > '. $audit_plan->area->area_name }}" readonly>
+                            <input type="text" class="form-control" value="{{ sprintf('%s%s', !empty($audit_plan->area->parent->area_name) ? $audit_plan->area->parent->area_name.' > ' : '' , $audit_plan->area->area_name ?? '') }}" readonly>
                             <input type="hidden" name="area" id="area" value="{{ $audit_plan->area_id }}">
                         </div>
                         <div class="mb-3">

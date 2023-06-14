@@ -17,6 +17,7 @@ use App\Models\AuditPlan;
 use App\Models\AuditReport;
 use App\Models\AuditPlanUser;
 use App\Models\AuditPlanArea;
+use App\Models\AuditPlanDirectory;
 use App\Models\ConsolidatedAuditReport;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\DirectoryRepository;
@@ -67,7 +68,7 @@ class AuditController extends Controller
         $audit_plan->save();
         
         AuditPlanUser::where('audit_plan_id', $audit_plan->id)->delete();
-        AuditPlanArea::where('audit_plan_id', $audit_plan->id)->delete();
+        AuditPlanDirectory::where('audit_plan_id', $audit_plan->id)->delete();
 
         foreach($request->auditors as $auditor) {
             AuditPlanUser::create([
@@ -77,6 +78,19 @@ class AuditController extends Controller
             
             $user = User::find($auditor);
             \Notification::notify($user, 'Assigned you to audit plan '.$request->name);
+
+            foreach($areas as $area) {
+                $directories = Directory::where('area_id', $area->id)->get();
+                foreach($directories as $directory) {
+                    if($this->dr->getGrandParent($directory) == 'Evidences') {
+                        $dir = $this->dr->getDirectory($request->name, $directory->id, $area->id);
+                        AuditPlanDirectory::create([
+                            'directory_id' => $dir->id,
+                            'audit_plan_id' => $audit_plan->id,
+                        ]);
+                    }
+                }
+            }
         }
 
         foreach($areas as $area) {
