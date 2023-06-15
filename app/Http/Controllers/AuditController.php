@@ -17,7 +17,6 @@ use App\Models\AuditPlan;
 use App\Models\AuditReport;
 use App\Models\AuditPlanUser;
 use App\Models\AuditPlanArea;
-use App\Models\AuditPlanDirectory;
 use App\Models\ConsolidatedAuditReport;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\DirectoryRepository;
@@ -32,12 +31,32 @@ class AuditController extends Controller
         $this->dr = new DirectoryRepository;
     }
 
-    public function index(Request $request, $directory_name = '')
+    public function index(Request $request)
     {
         $user = Auth::user();
-        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
-        $audit_plans = AuditPlan::get();
+
+        if($user->role->role_name == 'Internal Lead Auditor') {
+            $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+            $audit_plans = AuditPlan::get();
+        }else{
+            $auditors = [];
+            $audit_plans = AuditPlan::whereHas('users', function($q) { $q->where('user_id', Auth::user()->id); })->get();
+        }
+        
         return view('audits.index', compact('audit_plans', 'auditors'));
+    }
+
+    public function areas(Request $request, $id)
+    {
+        $user = Auth::user();
+        $audit_plan = AuditPlan::whereHas('users', function($q) { $q->where('user_id', Auth::user()->id); })
+                            ->where('id', $id)->firstOrFail();
+        $areas = $audit_plan->areas;
+
+        foreach($areas as $area) {
+            $area->directory = $this->dr->getDirectoryByAreaAndGrandParent($area->id, 'Evidences');
+        }
+        return view('audits.auditor-areas', compact('audit_plan', 'areas'));
     }
 
     public function createAuditPlan()
@@ -56,50 +75,51 @@ class AuditController extends Controller
 
     public function saveAuditPlan(Request $request, $id = null)
     {
-        $selected_areas = explode(',',$request->areas);
-        $areas = Area::whereIn('id', $selected_areas)->where('type', 'process')->get();
-        $audit_plan = AuditPlan::where('id', $id)->first();
-        if(empty($id)) {
-            $audit_plan = AuditPlan::create(['name' => $request->name]);
-        }
-        $audit_plan->name = $request->name;
-        $audit_plan->description = $request->description;
-        $audit_plan->date = $request->date;
-        $audit_plan->save();
-        
-        AuditPlanUser::where('audit_plan_id', $audit_plan->id)->delete();
-        AuditPlanDirectory::where('audit_plan_id', $audit_plan->id)->delete();
+        $request = (object) $request->all();
+        \DB::transaction(function () use (
+            $id,
+            $request
+        ) {
+            $selected_areas = explode(',',$request->areas);
+            $areas = Area::whereIn('id', $selected_areas)->where('type', 'process')->get();
+            $audit_plan = AuditPlan::where('id', $id)->first();
+           
+            if(empty($audit_plan)) {
+                $audit_plan = AuditPlan::create(['name' => $request->name]);
+            }
 
-        foreach($request->auditors as $auditor) {
-            AuditPlanUser::create([
-                'user_id' => $auditor,
-                'audit_plan_id' => $audit_plan->id,
-            ]);
+            $audit_plan->name = $request->name;
+            $audit_plan->description = $request->description;
+            $audit_plan->date = $request->date;
+            $audit_plan->save();
             
-            $user = User::find($auditor);
-            \Notification::notify($user, 'Assigned you to audit plan '.$request->name);
+            AuditPlanUser::where('audit_plan_id', $audit_plan->id)->delete();
+
+            foreach($request->auditors as $auditor) {
+                AuditPlanUser::create([
+                    'user_id' => $auditor,
+                    'audit_plan_id' => $audit_plan->id,
+                ]);
+                
+                foreach($areas as $area) {
+                    AreaUser::firstOrcreate([
+                        'area_id' => $area->id,
+                        'user_id' => $auditor,
+                    ]);
+                }
+                
+                $user = User::find($auditor);
+                \Notification::notify($user, 'Assigned you to audit plan '.$request->name);
+            }
 
             foreach($areas as $area) {
-                $directories = Directory::where('area_id', $area->id)->get();
-                foreach($directories as $directory) {
-                    if($this->dr->getGrandParent($directory) == 'Evidences') {
-                        $dir = $this->dr->getDirectory($request->name, $directory->id, $area->id);
-                        AuditPlanDirectory::create([
-                            'directory_id' => $dir->id,
-                            'audit_plan_id' => $audit_plan->id,
-                        ]);
-                    }
-                }
+                AuditPlanArea::create([
+                    'area_id' => $area->id,
+                    'audit_plan_id' => $audit_plan->id,
+                ]);
             }
-        }
+        });
 
-        foreach($areas as $area) {
-            AuditPlanArea::create([
-                'area_id' => $area->id,
-                'audit_plan_id' => $audit_plan->id,
-            ]);
-        }
-        
         return back()->withMessage('Audit plan saved successfully');
     }
 

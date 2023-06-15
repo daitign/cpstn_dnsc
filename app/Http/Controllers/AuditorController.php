@@ -15,11 +15,17 @@ class AuditorController extends Controller
         $this->dr = new DirectoryRepository;
     }
 
-    public function index(Request $request, $directory_name = '')
+    public function auditPlans(Request $request, $directory_name = '')
     {
         $user = Auth::user();
-        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
         $audit_plans = AuditPlan::get();
-        return view('audits.index', compact('audit_plans', 'auditors'));
+        return view('audits.index', compact('audit_plans'));
+    }
+
+    public function areas(Request $request, $id)
+    {
+        $user = Auth::user();
+        $audi_plan = AuditPlan::findOrFail($id);
+        return view('audits.index', compact('audi_plan'));
     }
 }

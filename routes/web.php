@@ -188,7 +188,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::middleware(['auditor', 'area_assigned'])->prefix('auditor')->name('auditor.')->group(function () {
         Route::get('/templates', [TemplateController::class, 'index'])->name('template.index');
-        Route::get('/evidences', [EvidenceController::class, 'index'])->name('evidence.index');
+        Route::get('/audit-evidence', [AuditController::class, 'index'])->name('audit.evidence.index');
+        Route::get('/audit-evidence/{id}', [AuditController::class, 'areas'])->name('audit.evidence.show');
         
         Route::prefix('audit-reports')->name('audit-reports.')->group(function () {
             Route::get('/', [AuditController::class, 'auditReports'])->name('index');

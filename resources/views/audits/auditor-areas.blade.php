@@ -1,18 +1,18 @@
 @extends('layout.sidebar')
 @section('title')
-<title>Evidence</title>
+    <title>Audit Evidence > {{ $audit_plan->name }}</title>
 @endsection
 @section('page')
     <div class="page-header">
-        <h1>Evidence</h1>
+        <h1>Audit Evidence > {{ $audit_plan->name }}</h1>
     </div>
     <div class="container">
         @include('layout.alert')
         <div class="mb-4 row">
             <div class="row col-12 mt-4">
-                @foreach(auth()->user()->assigned_areas as $area)
+                @foreach($areas as $area)
                     <div class="col-3">
-                        <a href="#">
+                        <a href="{{ route('evidences') }}?directory={{ $area->directory->id }}">
                             <div class="card bg-success text-white">
                                 <div class="card-body ">
                                     <div class="block-content block-content-full">

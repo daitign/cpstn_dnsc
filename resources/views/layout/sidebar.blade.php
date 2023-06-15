@@ -229,7 +229,9 @@
         height: 50%;
         border-bottom: 10px solid black;
     }
-
+    a {
+        text-decoration: none;
+    }
 </style>
 @endsection
 @section('content')

@@ -193,4 +193,15 @@ class DirectoryRepository {
 
         return $tree_areas;
     }
+
+    public function getDirectoryByAreaAndGrandParent($area_id, $grandParent) {
+        $directories = Directory::where('area_id', $area_id)->get();
+        $directory = null;
+        foreach($directories as $key => $dir) {
+            if($this->getGrandParent($dir) == $grandParent) {
+                $directory = $dir;
+            }
+        }
+        return $directory;
+    }
 }

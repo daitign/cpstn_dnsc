@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('audit_plan_directories', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('audit_plan_id')->nullable()->constrained();
-            $table->foreignId('directory_id')->nullable()->constrained();
-            $table->timestamps();
+        Schema::table('audit_plans', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('area_id');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('audit_plan_directories');
+        Schema::table('audit_plans', function (Blueprint $table) {
+            //
+        });
     }
 };

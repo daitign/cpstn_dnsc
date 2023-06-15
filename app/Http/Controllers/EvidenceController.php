@@ -11,6 +11,7 @@ use App\Models\File;
 use App\Models\Office;
 use App\Models\Evidence;
 use App\Models\Directory;
+use App\Models\AuditPlan;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\DirectoryRepository;
 

@@ -13,8 +13,20 @@ class AuditPlan extends Model
 
     protected $dates = ['audit_plan_date'];
     
-    public function area()
+    public function areas()
     {
-        return $this->belongsTo(Area::class);
+        return $this->hasManyThrough(
+            Area::class,
+            AuditPlanArea::class,
+            'audit_plan_id',
+            'id',
+            'id',
+            'area_id'
+        );
+    }
+
+    public function users()
+    {
+        return $this->hasMany(AuditPlanUser::class);
     }
 }
