@@ -166,12 +166,12 @@ class DirectoryRepository {
         }
     }
 
-    public function getAreaFamilyTree($areas = null, $selectable_type = null) {
+    public function getAreaFamilyTree($areas = null, $selectable_type = null, $selected_areas = []) {
         $areas = empty($areas) ? Area::whereNull('parent_area')->get() : $areas;
-        return $this->getAreaGrandTree($areas, $selectable_type);
+        return $this->getAreaGrandTree($areas, $selectable_type, $selected_areas);
     }
 
-    private function getAreaGrandTree($areas, $selectable_type)
+    private function getAreaGrandTree($areas, $selectable_type, $selected_areas)
     {
         $tree_areas = [];
         foreach($areas as $area) {
@@ -179,14 +179,17 @@ class DirectoryRepository {
             if(!empty($selectable_type)) {
                $selectable = $selectable_type == $area->type;
             }
-
             $tree_area = [
                 'id' => $area->id,
                 'text' => $area->area_name,
-                'selectable' => $selectable
+                'selectable' => $selectable,
+                'state' => [
+                    'selected' => in_array($area->id, $selected_areas),
+                    'expanded' => in_array($area->id, $selected_areas),
+                ]
             ];
             if(count($area->children) > 0) {
-                $tree_area['nodes'] = $this->getAreaFamilyTree($area->children, $selectable_type);
+                $tree_area['nodes'] = $this->getAreaFamilyTree($area->children, $selectable_type, $selected_areas);
             }
             $tree_areas[] = $tree_area;
         }

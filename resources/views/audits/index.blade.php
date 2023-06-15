@@ -14,7 +14,7 @@
         @if(auth()->user()->role->role_name == 'Internal Lead Auditor')
         <div style="text-align:right">
             <a href="{{ route('lead-auditor.audit.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Start New Audit Plan</a>
-            <!-- <a href="#" class="btn btn-warning"><i class="fa fa-edit"></i> Update Previous Audit Plan</a> -->
+            <a href="{{ route('lead-auditor.audit.previous') }}" class="btn btn-warning"><i class="fa fa-edit"></i> Use Previous Audit Plan</a>
         </div>
         @endif
         @include('layout.alert')

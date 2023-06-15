@@ -1,22 +1,22 @@
 @extends('layout.sidebar')
 @section('title')
-<title>Edit Audit Plan</title>
+<title>Use Previous Audit Plan</title>
 @endsection
 
 @section('page')
     <div class="page-header">
-        <h1>View Audit Plan</h1>
+        <h1>Use Previous Audit Plan</h1>
     </div>
     <div class="container">
         <div class="row mt-3 px-2 pb-3">
             @include('layout.alert')
             <div class="col-8">
-                <form method="POST" action="{{ route('lead-auditor.audit.update', $audit_plan->id) }}">
+                <form method="POST" action="{{ route('lead-auditor.audit.save') }}">
                     @csrf
                     <div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Name</label>
-                            <input type="text" value="{{ $audit_plan->name ?? '' }}" class="form-control" id="name" name="name" placeholder="Enter name" readonly>
+                            <input type="text" value="{{ $audit_plan->name ?? '' }}" class="form-control" id="name" name="name" placeholder="Enter name" required>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Select Process</label>
@@ -29,20 +29,20 @@
                         </div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Date</label>
-                            <input type="date" value="{{ $audit_plan->date ?? '' }}" class="form-control" id="date" name="date" placeholder="Enter date" readonly>
+                            <input type="date" value="{{ $audit_plan->date ?? '' }}" class="form-control" id="date" name="date" placeholder="Enter date" required>
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Auditors</label>
-                            <select class="form-control select2" name="auditors[]" multiple readonly data-placeholder="Choose Auditors">
+                            <select class="form-control select2" name="auditors[]" multiple required data-placeholder="Choose Auditors">
                                 @foreach($auditors as $user)
                                     <option value="{{ $user->id }}" {{ in_array($user->id, $selected_users) ? 'selected' : '' }}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <!-- <div style="text-align: right" class="pb-5">
+                    <div style="text-align: right" class="pb-5">
                         <button type="submit" class="btn btn-success btn-save px-3 py-2">Save Audit Plan</button>
-                    </div> -->
+                    </div>
                 </form>
             </div>
             <div class="col-4 mt-2 alert alert-success">

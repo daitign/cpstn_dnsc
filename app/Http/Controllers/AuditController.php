@@ -66,11 +66,22 @@ class AuditController extends Controller
         return view('audits.create', compact('tree_areas', 'auditors'));
     }
 
+    public function getPrevious()
+    {
+        $audit_plan = AuditPlan::latest()->firstOrFail();
+        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        $tree_areas = $this->dr->getAreaFamilyTree(null, 'process', $audit_plan->areas->pluck('id')->toArray());
+        $selected_users = $audit_plan->users->pluck('user_id')->toArray();
+        return view('audits.previous', compact('tree_areas', 'auditors', 'audit_plan', 'selected_users'));
+    }
+
     public function editAuditPlan($id)
     {
-        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
         $audit_plan = AuditPlan::findOrFail($id);
-        return view('audits.edit', compact('auditors', 'audit_plan'));
+        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        $tree_areas = $this->dr->getAreaFamilyTree(null, 'process', $audit_plan->areas->pluck('id')->toArray());
+        $selected_users = $audit_plan->users->pluck('user_id')->toArray();
+        return view('audits.edit', compact('tree_areas', 'auditors', 'audit_plan', 'selected_users'));
     }
 
     public function saveAuditPlan(Request $request, $id = null)
@@ -93,6 +104,7 @@ class AuditController extends Controller
             $audit_plan->date = $request->date;
             $audit_plan->save();
             
+            AuditPlanArea::where('audit_plan_id', $audit_plan->id)->delete();
             AuditPlanUser::where('audit_plan_id', $audit_plan->id)->delete();
 
             foreach($request->auditors as $auditor) {

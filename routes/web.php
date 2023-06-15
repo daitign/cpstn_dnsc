@@ -210,9 +210,10 @@ Route::middleware(['auth'])->group(function(){
         Route::prefix('audit-plan')->group(function () {
             Route::get('/', [AuditController::class, 'index'])->name('audit.index');
             Route::get('/create', [AuditController::class, 'createAuditPlan'])->name('audit.create');
+            Route::get('/previous', [AuditController::class, 'getPrevious'])->name('audit.previous');
             Route::get('/{id}', [AuditController::class, 'editAuditPlan'])->name('audit.edit');
-            // Route::get('/previous', [AuditController::class, 'getPrevious'])->name('audit.previous');
             Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
+            Route::post('/{id}/update', [AuditController::class, 'saveAuditPlan'])->name('audit.update');
         });
     });
 
