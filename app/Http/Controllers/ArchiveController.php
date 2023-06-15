@@ -67,7 +67,13 @@ class ArchiveController extends Controller
         $fileSearch = $request->fileSearch;
         $files = File::where('file_name', 'LIKE', "%$request->fileSearch%");
 
-        if(!empty($current_user)) {
+        $role_file_access = [
+            'Internal Auditor', 
+            'Internal Lead Auditor', 
+            'Document Control Custodian',
+            'College Management Team',
+        ];
+        if(!empty($current_user) && !in_array($current_user->role->role_name, $role_file_access)) {
             $files = $files->where(function($q) use($current_user){
                 $q->where('user_id', $current_user->id);
             });
