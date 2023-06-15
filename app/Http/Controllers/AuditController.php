@@ -132,7 +132,7 @@ class AuditController extends Controller
             }
         });
 
-        return back()->withMessage('Audit plan saved successfully');
+        return redirect()->route('lead-auditor.audit.index')->withMessage('Audit plan saved successfully');
     }
 
     public function auditReports(Request $request, $directory_name = '')
