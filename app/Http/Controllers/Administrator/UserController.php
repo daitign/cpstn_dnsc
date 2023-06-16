@@ -10,11 +10,19 @@ use App\Models\AreaUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 use App\Http\Controllers\Controller;
+use App\Repositories\DirectoryRepository;
 
 
 class UserController extends Controller
 {
     //
+    private $dr;
+
+    public function __construct() 
+    {
+        $this->dr = new DirectoryRepository;
+    }
+
     public function index(Request $request)
     {
         $roles = Role::get();
@@ -89,8 +97,10 @@ class UserController extends Controller
                 ->join('roles','roles.id','users.role_id')
                 ->select('users.*','roles.role_name')
                 ->get();
+
+        $tree_areas = $this->dr->getAreaFamilyTree(null, 'process');
                 
-        return view('administrators.assign', compact('data', 'areas', 'main_areas'));
+        return view('administrators.assign', compact('data', 'areas', 'main_areas', 'tree_areas'));
     }
 
     public function assignUser(Request $request)
@@ -109,4 +119,23 @@ class UserController extends Controller
 
         return redirect(URL::previous())->with('success', 'User has been assigned successfully');
     }
+
+    public function assignPOUser(Request $request)
+    {
+        $selected_areas = explode(',',$request->areas);
+        $areas = Area::whereIn('id', $selected_areas)->where('type', 'process')->get();
+        AreaUser::where('user_id', $request->user_id)->delete();
+        
+        foreach($areas as $area) {
+            AreaUser::firstOrCreate([
+                'user_id' => $request->user_id,
+                'area_id' => $area->id,
+            ]);
+            $user = User::find($request->user_id);
+            \Notification::notify($user, 'Assigned to area '.$area->area_name);    
+        }
+
+        return redirect(URL::previous())->with('success', 'User has been assigned successfully');
+    }
+    
 }

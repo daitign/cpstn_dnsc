@@ -86,7 +86,11 @@
                         
                         <hr>
                         <div class="text-center">
-                            <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assign_modal" class="btn btn-outline-success btn-assign" value="{{ $user->id }}">Assign</button>
+                            @if($user->role->role_name == 'Process Owner')
+                                <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assignPOModal" class="btn btn-outline-success btn-assign-po" value="{{ $user->id }}">Assign</button>
+                            @else
+                                <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assign_modal" class="btn btn-outline-success btn-assign" value="{{ $user->id }}">Assign</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -115,6 +119,32 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" id="btn-submit" class="btn btn-success">Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="assignPOModal" tabindex="-1" aria-labelledby="assignPO" aria-hidden="true">
+        <div class="modal-dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assignPO">Assign Area</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('admin-assign-po-user') }}">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="user_type" class="user_type">
+                        <input type="hidden" name="user_id" class="user_id">
+                        <label for="name" class="form-label">Select Process</label>
+                        <input type="hidden" name="areas" id="areas">
+                        <div id="tree"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" id="btn-submit" class="btn btn-success btn-save">Save</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -252,6 +282,34 @@
                     $('#assign_area').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
                 });
             });
+        });
+    </script>
+
+    <script src="{{ asset('packages/bootstrap-treeview-1.2.0/src/js/bootstrap-treeview.js') }}"></script>
+    <script>
+        
+        var areas = {!! json_encode($tree_areas) !!};
+
+        var tree = $('#tree').treeview({
+            data: areas,
+            levels: 1,
+            multiSelect: true,
+            collapseIcon: "fa fa-minus",
+            expandIcon: "fa fa-plus",
+        });
+
+        $('.btn-assign-po').on('click', function(){
+            $('#assignPOModal .user_id').val($(this).data('user-id'));
+            $('#assignPOModal .user_type').val(user_type);
+        });
+
+        $('.btn-save').on('click', function(){
+            var selected = tree.treeview('getSelected');
+            var selectedAreas = [];
+            selected.forEach(function(area){
+                selectedAreas.push(area.id)
+            });
+            $('#areas').val(selectedAreas);
         });
     </script>
 @endsection

@@ -106,6 +106,7 @@ Route::middleware(['auth'])->group(function(){
         
         Route::get('/assign_users',[AdminUserController::class, 'assignUserList'])->name('admin-assign-users');
         Route::post('/assign_users',[AdminUserController::class, 'assignUser'])->name('admin-assign-user');
+        Route::post('/assign_po_users',[AdminUserController::class, 'assignPOUser'])->name('admin-assign-po-user');
 
         Route::get('/users',[AdminUserController::class,'index'])->name('admin-user-list');
         // Route::prefix('roles')->group(function(){
