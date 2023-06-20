@@ -43,16 +43,23 @@
                                     <h4>Personal Details</h4>
                                     <div class="mt-3">
                                         <label>Fullname</label>
-                                        <input type="text" class="form-control" name="fullname" placeholder="Enter Fullname" required value="{{ old('fullname') }}">
+                                        <input type="text" class="form-control" name="fullname" placeholder="Enter Fullname" required value="{{ old('fullname', $prevSurvey->name ?? '') }}" required>
                                         @error('fullname')
                                             <span class="text-danger error_fullname">{{ $message }}</span>
                                         @enderror
                                     </div> 
                                     <div class="mt-3">
                                         <label>Contact Number</label>
-                                        <input type="text" class="form-control" name="contact_number" placeholder="Enter Contact Number" value="{{ old('contact_number') }}">
+                                        <input type="text" class="form-control" name="contact_number" placeholder="Enter Contact Number" value="{{ old('contact_number', $prevSurvey->contact_number ?? '') }}">
                                         @error('contact_number')
                                             <span class="text-danger error_contact_number">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="mt-3">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" name="email" placeholder="Enter Email" value="{{ old('email', $prevSurvey->email ?? '') }}" required>
+                                        @error('email')
+                                            <span class="text-danger error_email">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     <div class="mt-3">
@@ -104,8 +111,8 @@
                                     <div class="mt-3">
                                         <select name="office" class="form-control" required>
                                             <option value="">Select Office</option>
-                                            @foreach($offices as $office)
-                                                <option value="{{ $office->id }}">{{ $office->area_name }}</option>
+                                            @foreach($facilities as $facility)
+                                                <option value="{{ $facility->id }}">{{ $facility->name }}</option>
                                             @endforeach
                                         </select>
                                         @error('office')

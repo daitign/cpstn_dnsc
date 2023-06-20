@@ -13,13 +13,13 @@ class Survey extends Model
 
     protected $appends = ['total_score'];
 
-    public function score()
-    {
-        return $this->hasOne(SurveyArea::class);
-    }
-
     public function getTotalScoreAttribute()
     {
-        return (($this->score->promptness + $this->score->engagement + $this->score->cordiality) / 3);
+        return (($this->promptness + $this->engagement + $this->cordiality) / 3);
+    }
+
+    public function facility()
+    {
+        return $this->hasOne(Facility::class, 'id', 'facility_id');
     }
 }
