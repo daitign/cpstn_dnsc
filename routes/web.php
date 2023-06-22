@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Administrator\AnnouncementController;
 use App\Http\Controllers\Administrator\AreaController;
 use App\Http\Controllers\Administrator\DashboardController;
 use App\Http\Controllers\Administrator\InstituteController;
@@ -115,6 +116,15 @@ Route::middleware(['auth'])->group(function(){
         // });
         
         Route::get('/surveys',[AdminSurveyController::class,'index'])->name('admin-surveys-list');
+
+        Route::prefix('announcements')->group(function(){
+            Route::get('/',[AnnouncementController::class, 'index'])->name('admin-announcement-page');
+            Route::get('/create',[AnnouncementController::class, 'create'])->name('admin-announcement-create');
+            Route::post('/',[AnnouncementController::class, 'store'])->name('admin-announcement-store');
+            Route::get('/{id}',[AnnouncementController::class, 'edit'])->name('admin-announcement-edit');
+            Route::patch('/{id}',[AnnouncementController::class, 'update'])->name('admin-announcement-update');
+            Route::delete('/{id}',[AnnouncementController::class, 'delete'])->name('admin-announcement-delete');
+        });
     });
 
     Route::prefix('dcc')->middleware('dcc')->group(function(){

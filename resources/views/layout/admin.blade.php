@@ -17,6 +17,13 @@
             <a class="dropdown-item {{ request()->routeIs('admin-user-list') ? 'active' : '' }}" href="{{ route('admin-user-list') }}"><span>User List</span></a>
         </div>
   </li>
+  <li class="nav-item dropdown {{ request()->is('administrator/announcement*') ? 'show' : '' }}">
+    <a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative {{ request()->is('administrator/announcement*') ? 'active' : '' }}" aria-expanded="true" data-bs-toggle="dropdown" href="#"><i class="fa fa-bullhorn mx-3"></i><span class="text-nowrap mx-2">Announcement</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
+        <div class="dropdown-menu drop-menu border-0 animated fadeIn {{ request()->is('administrator/announcement*') ? 'show' : '' }}" data-bs-popper="none">
+            <a class="dropdown-item {{ request()->routeIs('admin-announcement-page') ? 'active' : '' }}" href="{{ route('admin-announcement-page') }}"><span>Announcement List</span></a>
+            <a class="dropdown-item {{ request()->routeIs('admin-announcement-create') ? 'active' : '' }}" href="{{ route('admin-announcement-create') }}"><span>Create Announcement</span></a>
+        </div>
+  </li>
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('messages') ? 'active' : '' }}" href="{{ route('messages') }}"><i class="fa fa-envelope mx-3"></i><span class="text-nowrap mx-2">Messages</span></a></li>
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-page') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
   <!-- <li class="nav-item"><a class="nav-link text-start py-1 px-0" href="#"><i class="fas fa-chart-bar mx-3"></i><span class="text-nowrap mx-2">Statistics</span></a></li> -->

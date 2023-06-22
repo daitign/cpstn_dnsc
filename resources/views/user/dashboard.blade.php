@@ -278,20 +278,18 @@
                     <div class="col-12 px-2">
                         <div class="card p-3">
                             <div class="card-body pt-2">
-                                <h4>Notifications</h4>
+                                <h4>Announcements</h4>
                                 <table class="table datatables">
-                                    <thead><tr><td>#</td><td>Notification</td><td>User</td><td>Date</td></tr></thead>
+                                    <thead><tr><td>#</td><td>Name</td><td>Description</td><td>Date</td></tr></thead>
                                     <div style="max-height:400px; overflow-y:scroll">
                                         <tbody>
-                                            @foreach($notifications as $notification)
-                                                @if($notification->data['by_user_id'] !== auth()->user()->id)
-                                                    <tr>
-                                                        <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $notification->data['message'] }}</td>
-                                                        <td>{{ $notification->data['by'] }}</td>
-                                                        <td>{{ $notification->created_at->format('M d, Y h:i A') }}</td>
-                                                    </tr>
-                                                @endif
+                                            @foreach($announcements as $announcements)
+                                                <tr class="{{ $loop->index == 0 ? 'text-bold' : ''}}">
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $announcement->name }}</td>
+                                                    <td>{{ $announcement->description }}</td>
+                                                    <td>{{ $announcement->date->format('M d, Y h:i A') }}</td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
                                     </div>

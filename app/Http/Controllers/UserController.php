@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Ramsey\Uuid\Uuid;
 
 use App\Models\Area;
-use App\Models\ProcessUser;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\File;
-use App\Models\Notification;
 use App\Models\FileRemark;
+use App\Models\ProcessUser;
+use App\Models\Notification;
+use App\Models\Announcement;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -23,6 +24,7 @@ class UserController extends Controller
 {
     public function dashboard()
     {
+        $announcements = Announcement::latest()->get();
         $user_type = Auth::user()->role->role_name;
         if(in_array(Auth::user()->role->role_name, ['Administrator', 'Human Resources'])){
             $users = User::get();
@@ -32,12 +34,12 @@ class UserController extends Controller
         }else{
             $users = User::where('role_id', Auth::user()->role_id)->get();
         }
-        
         $data = [
             'files' => File::where('user_id', Auth::user()->id)->count(),
             'users' => $users,
             'user_type' => Str::plural($user_type),
-            'notifications' => Auth::user()->notifications
+            'notifications' => Auth::user()->notifications,
+            'announcements' => $announcements
         ];
 
         return view('user.dashboard', $data);
