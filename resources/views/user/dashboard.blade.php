@@ -283,12 +283,12 @@
                                     <thead><tr><td>#</td><td>Name</td><td>Description</td><td>Date</td></tr></thead>
                                     <div style="max-height:400px; overflow-y:scroll">
                                         <tbody>
-                                            @foreach($announcements as $announcements)
+                                            @foreach($announcements as $announcement)
                                                 <tr class="{{ $loop->index == 0 ? 'text-bold' : ''}}">
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $announcement->name }}</td>
                                                     <td>{{ $announcement->description }}</td>
-                                                    <td>{{ $announcement->date->format('M d, Y h:i A') }}</td>
+                                                    <td>{{ $announcement->date ? Carbon\Carbon::parse($announcement->date)->format('M d, Y') : '' }}</td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
