@@ -159,6 +159,10 @@ Route::middleware(['auth'])->group(function(){
                 Route::get('/create', [ManualController::class, 'create'])->name('manual.create');
                 Route::post('/', [ManualController::class, 'store'])->name('manual.store');
             });
+
+            Route::prefix('archives')->group(function(){
+                Route::get('/', [ManualController::class, 'index'])->name('archives');
+            });
         });
     });
 

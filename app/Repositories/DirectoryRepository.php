@@ -126,6 +126,17 @@ class DirectoryRepository {
         return Directory::where('parent_id', $directory->id)->get();
     }
 
+    public function getDirectoriesAssignedByGrandParent($grand_parent_name)
+    {
+        $directories = Directory::whereIn('area_id', Auth::user()->assigned_areas->pluck('id'))->get();
+        
+        foreach($directories as $key => $directory) {
+            $directory->grand_parent = $this->getGrandParent($directory);
+        }
+        $directories = $directories->where('grand_parent', $grand_parent_name);
+        return Directory::whereIn('parent_id', $directories->pluck('id'))->get();
+    }
+
     public function getAreaTree($area)
     {
         $areas = $this->getParentArea($area);
@@ -143,6 +154,15 @@ class DirectoryRepository {
         }
 
         return $areas;
+    }
+
+    public function getGrandParentDirectory($directory)
+    {
+        if(!empty($directory->parent)) {
+            return $this->getGrandParentDirectory($directory->parent);
+        }else{
+            return $directory;
+        }
     }
 
     public function makeDirectory($area, $parent_directory)

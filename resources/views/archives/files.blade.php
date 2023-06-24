@@ -5,7 +5,7 @@
 @section('page')
     <div class="page-header">
         <h1>{{ $page_title ?? 'Archives' }}</h1>
-        <h5>{{ !empty($parent_directory->name) ? $parent_directory->name.' > ' : '' }}{{ $directory->name }}</h5>
+        <h5>{{ !empty($parent_directory->name) ? $parent_directory->name.' > ' : '' }}{{ $directory->name ?? '' }}</h5>
     </div>
     <div class="container">
         @include('layout.alert')
@@ -15,7 +15,13 @@
                 <div class="col-2 text-center">
                     <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}">
                         <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
-                        <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
+                        <p class="text-dark" style="text-overflow: ellipsis"><small>
+                            @if(empty($parent_directory))
+                                {{ sprintf('%s%s%s', $directory->parent->parent->name ? $directory->parent->parent->name.' > ' : '', $directory->parent->name ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
+                            @else
+                                {{ $directory->name ?? '' }}
+                            @endif
+                        </small></p>
                     </button>
                     <ul class="dropdown-menu text-center">
                         <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>

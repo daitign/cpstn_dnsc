@@ -76,8 +76,10 @@
                         <h6><Strong>{{ $user->role_name ?? ''}}</strong></h6>
                         <h6><small>
                             Assigned on: 
-                            @if(!empty($user->assigned_area) && $user->assigned_area->type == 'process')
-                                {{ sprintf("%s > %s", $user->assigned_area->parent->area_name ?? '', $user->assigned_area->area_name ?? 'None') }}
+                            @if(!empty($user->assigned_areas))
+                                @foreach($user->assigned_areas as $area)
+                                    <br/>{{ sprintf("%s > %s", $area->parent->area_name ?? '', $area->area_name ?? 'None') }}
+                                @endforeach
                             @else
                                 {{ $user->assigned_area->area_name ?? 'None' }}
                             @endif

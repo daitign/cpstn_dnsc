@@ -41,6 +41,13 @@ class EvidenceController extends Controller
         }
 
         $data = $this->dr->getDirectoryFiles($this->parent);
+        if($user->role->role_name == 'Process Owner') {
+            $data = $this->dr->getDirectoryFiles($this->parent);
+            $data['parent_directory'] = null;
+            $data['directory'] = null;
+            $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
+        }
+
         $data['page_title'] = $this->parent;
         $data['route'] = 'evidences';
 
