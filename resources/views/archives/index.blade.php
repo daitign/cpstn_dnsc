@@ -53,7 +53,13 @@
                 <div class="col-2 text-center">
                     <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}">
                         <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
-                        <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
+                        <p class="text-dark" style="text-overflow: ellipsis"><small>
+                            @if(in_array($current_user->role->role_name, ['Process Owner', 'Internal Auditor']))
+                                {{ sprintf('%s%s%s', !empty($directory->parent->parent->name) ? $directory->parent->parent->name.' > ' : '', !empty($directory->parent->name) ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
+                            @else
+                                {{ $directory->name ?? '' }}
+                            @endif
+                        </small></p>
                     </button>
                     <ul class="dropdown-menu text-center">
                         <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>

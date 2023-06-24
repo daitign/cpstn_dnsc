@@ -16,7 +16,7 @@
                     <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}">
                         <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
                         <p class="text-dark" style="text-overflow: ellipsis"><small>
-                            @if(empty($parent_directory))
+                            @if(in_array($current_user->role->role_name, ['Process Owner', 'Internal Auditor']))
                                 {{ sprintf('%s%s%s', $directory->parent->parent->name ? $directory->parent->parent->name.' > ' : '', $directory->parent->name ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
                             @else
                                 {{ $directory->name ?? '' }}

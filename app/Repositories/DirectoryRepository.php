@@ -30,7 +30,7 @@ class DirectoryRepository {
             $directories = Directory::where('parent_id', $current_directory->id)->get();
 
             $files = $this->getFiles($current_directory->id,  $current_user->id);
-        }else {
+        } else {
             if($current_user->role->role_name !== 'Administrator') {
                 if(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
                     $directories = Directory::where('area_id', $current_user->assigned_area->id);
