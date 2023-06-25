@@ -15,6 +15,7 @@
     </li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('evidences') ? 'active' : '' }}" href="{{ route('evidences') }}"><i class="fas fa-book mx-3"></i><span class="text-nowrap mx-2">Evidences</span></a></li>
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('lead-auditor.audit.index') || request()->is('lead-auditor/audit-plan*') ? 'active' : '' }}" href="{{ route('lead-auditor.audit.index') }}"><i class="fas fa-book mx-3"></i><span class="text-nowrap mx-2">Audit Plan</span></a></li>
+    <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->is('lead-auditor/audit-reports*') || request()->is('audit-reports*')  ? 'active' : '' }}" href="{{ route('lead-auditor.audit-reports.index') }}"><i class="fas fa-receipt mx-3"></i><span class="text-nowrap mx-2">Audit Reports</span></a></li>
     <!-- <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-shared') ? 'active' : '' }}" href="{{ route('archives-shared') }}"><i class="fas fa-share mx-3 mx-3"></i><span class="text-nowrap mx-2">Shared with me</span></a></li> -->
     <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->is('archives') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
 </ul>

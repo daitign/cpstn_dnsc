@@ -232,6 +232,7 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
             Route::post('/{id}/update', [AuditController::class, 'saveAuditPlan'])->name('audit.update');
         });
+        Route::get('/', [AuditController::class, 'auditReports'])->name('audit-reports.index');
     });
 
     Route::middleware('cmt')->prefix('cmt')->name('cmt.')->group(function () {
