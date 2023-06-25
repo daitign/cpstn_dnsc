@@ -11,10 +11,10 @@ class AuditReport extends Model
     
     protected $guarded = [];
 
-    protected $with = ['consolidated_report'];
+    protected $with = ['cars'];
 
-    public function consolidated_report()
+    public function cars()
     {
-        return $this->hasOne(ConsolidatedAuditReport::class);
+        return $this->hasOne(Car::class);
     }
 }

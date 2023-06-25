@@ -103,8 +103,8 @@
                     <div class="col-2 text-center">
                         @if($file->type == 'audit_reports'
                             && !empty($file->audit_report)
-                            && !empty($file->audit_report->consolidated_report))
-                                <a href="{{ route('archives-download-file', $file->audit_report->consolidated_report->file->id) }}" style="float:right"><img src="{{ asset('media/info.png') }}" width="40px"></a>
+                            && !empty($file->audit_report->cars))
+                                <a href="{{ route('archives-download-file', $file->audit_report->cars->file->id) }}" class="cars"><img src="{{ asset('media/info.png') }}" width="40px"></a>
                         @endif
                         <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
@@ -158,8 +158,8 @@
                                 && $file->user_id == Auth::user()->id
                                 && $file->type == 'audit_reports'
                                 && !empty($file->audit_report)
-                                && empty($file->audit_report->consolidated_report))
-                                <a href="#" class="text-decoration-none upload-consolidated-report" data-audit-report="{{ $file->audit_report->id ?? '' }}" data-bs-toggle="modal" data-bs-target="#consolAuditReportModal"><i class="fa fa-book"></i> Consolidated Report</a>
+                                && empty($file->audit_report->cars))
+                                <a href="#" class="text-decoration-none upload-cars" data-audit-report="{{ $file->audit_report->id ?? '' }}" data-bs-toggle="modal" data-bs-target="#consolAuditReportModal"><i class="fa fa-book"></i> Upload CARS</a>
                             @endif
                             @if($file->user_id == Auth::user()->id)
                             <li>
@@ -402,10 +402,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="consolAuditReportModalModalLabel">Upload Consolidated Report</h5>
+                    <h5 class="modal-title" id="consolAuditReportModalModalLabel">Upload CARS</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('auditor.consolidated-audit-reports.store') }}" enctype="multipart/form-data" id="fileModalForm">
+                <form method="POST" action="{{ route('auditor.cars.store') }}" enctype="multipart/form-data" id="fileModalForm">
                     @csrf
                     <input type="hidden" value="" id="audit_report_id" name="audit_report_id">
                     <div class="modal-body">
@@ -555,7 +555,7 @@
         maxDate: "{{ date('Y-m-d') }}"
     });
 
-    $('.upload-consolidated-report').on('click', function(){
+    $('.upload-cars').on('click', function(){
         $('#audit_report_id').val($(this).data('audit-report'));
     });
 </script>

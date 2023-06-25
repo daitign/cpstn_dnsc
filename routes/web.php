@@ -213,7 +213,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/create', [AuditController::class, 'createAuditReport'])->name('create');
             Route::post('/', [AuditController::class, 'storeAuditReport'])->name('store');
         });
-        Route::post('/consolidated-report', [AuditController::class, 'storeConsolidatedAuditReport'])->name('consolidated-audit-reports.store');
+        Route::post('/cars', [AuditController::class, 'storeCars'])->name('cars.store');
     });
 
     Route::middleware('lead-auditor')->prefix('lead-auditor')->name('lead-auditor.')->group(function () {

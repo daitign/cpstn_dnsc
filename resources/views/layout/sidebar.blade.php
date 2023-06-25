@@ -232,6 +232,10 @@
     a {
         text-decoration: none;
     }
+    .cars {
+        position: absolute;
+        margin-left: 120px;
+    }
 </style>
 @endsection
 @section('content')

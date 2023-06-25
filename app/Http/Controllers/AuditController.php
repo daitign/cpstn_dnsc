@@ -17,6 +17,7 @@ use App\Models\AuditPlan;
 use App\Models\AuditReport;
 use App\Models\AuditPlanUser;
 use App\Models\AuditPlanArea;
+use App\Models\Car;
 use App\Models\ConsolidatedAuditReport;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\DirectoryRepository;
@@ -222,7 +223,7 @@ class AuditController extends Controller
         return back()->withMessage('Audit report created successfully');
     }
 
-    public function storeConsolidatedAuditReport(Request $request)
+    public function storeCars(Request $request)
     {
         $user = Auth::user();
 
@@ -247,12 +248,12 @@ class AuditController extends Controller
                 'file_mime' => $file->getClientMimeType(),
                 'container_path' => $path,
                 'description' => $request->description,
-                'type' => 'consolidated_audit_reports'
+                'type' => 'cars'
             ]);
             $file_id = $file->id;
         }
 
-        ConsolidatedAuditReport::create([
+        Car::create([
             'name' => $request->name,
             'audit_report_id' => $request->audit_report_id,
             'description' => $request->description,
@@ -262,9 +263,9 @@ class AuditController extends Controller
             'file_id' => $file_id
         ]);
 
-        $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::CONSOLIDATED_AUDIT_REPORTS); })->get();
-        \Notification::notify($users, 'Submitted Consolidated Audit Report');
+        $users = User::whereHas('role', function($q){ $q->where('role_name', 'Internal Lead Auditor'); })->get();
+        \Notification::notify($users, 'Submitted CARS');
         
-        return back()->withMessage('Consolidated Audit report created successfully');
+        return back()->withMessage('CARS created successfully');
     }
 }
