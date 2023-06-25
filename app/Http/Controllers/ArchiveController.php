@@ -34,6 +34,10 @@ class ArchiveController extends Controller
                 if($role_name == 'Process Owner') {
                     $data['directories'] = Directory::whereIn('name', ['Evidences', 'Manuals'])->get();
                 }
+
+                if($role_name == 'Internal Auditor') {
+                    $data['directories'] = Directory::whereIn('name', ['Evidences', 'Audit Reports'])->get();
+                }
             }
             
         }

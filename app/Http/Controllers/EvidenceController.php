@@ -42,7 +42,6 @@ class EvidenceController extends Controller
 
         $data = $this->dr->getDirectoryFiles($this->parent);
         if($user->role->role_name == 'Process Owner') {
-            $data = $this->dr->getDirectoryFiles($this->parent);
             $data['parent_directory'] = null;
             $data['directory'] = null;
             $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
@@ -58,7 +57,7 @@ class EvidenceController extends Controller
     {
         $directories = [];
         if(Auth::user()->role->role_name == 'Process Owner') {
-            $directories = $this->dr->getDirectoryAssignedByGrandParent($this->parent);
+            $directories = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
         }
 
         return view('evidences.create', compact('directories'));
@@ -69,7 +68,7 @@ class EvidenceController extends Controller
         $user = Auth::user();
 
         if(Auth::user()->role->role_name == 'Process Owner') {
-            $directories = $this->dr->getDirectoryAssignedByGrandParent($this->parent);
+            $directories = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
             $directory = $directories->where('id', $request->directory)->firstOrFail();
         }else{
             $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();

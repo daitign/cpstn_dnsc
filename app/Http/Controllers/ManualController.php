@@ -52,7 +52,7 @@ class ManualController extends Controller
     {
         $directories = [];
         if(Auth::user()->role->role_name == 'Process Owner') {
-            $directories = $this->dr->getDirectoryAssignedByGrandParent($this->parent);
+            $directories = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
         }
         return view('manuals.create', compact('directories'));
     }
@@ -62,7 +62,7 @@ class ManualController extends Controller
         $user = Auth::user();
 
         if(Auth::user()->role->role_name == 'Process Owner') {
-            $directories = $this->dr->getDirectoryAssignedByGrandParent($this->parent);
+            $directories = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
             $directory = $directories->where('id', $request->directory)->firstOrFail();
         }else{
             $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();

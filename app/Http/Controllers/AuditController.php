@@ -99,10 +99,20 @@ class AuditController extends Controller
                 $audit_plan = AuditPlan::create(['name' => $request->name]);
             }
 
+            if(empty($audit_plan->directory_id)) {
+                $parent_directory = Directory::where('name', 'Audit Reports')->whereNull('parent_id')->firstOrFail();
+                $dir = $this->dr->getDirectory($request->name, $parent_directory->id);
+                $audit_plan->directory_id = $dir->id;
+            }
+
             $audit_plan->name = $request->name;
             $audit_plan->description = $request->description;
             $audit_plan->date = $request->date;
             $audit_plan->save();
+
+            Directory::where('id', $audit_plan->directory_id)->update(['name' => $audit_plan->name]);
+
+            
             
             AuditPlanArea::where('audit_plan_id', $audit_plan->id)->delete();
             AuditPlanUser::where('audit_plan_id', $audit_plan->id)->delete();
@@ -139,14 +149,21 @@ class AuditController extends Controller
     {
         $user = Auth::user();
 
+        $data = $this->dr->getDirectoryFiles('Audit Reports');
         if(!empty($request->directory)) {
             $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
             $data['route'] = 'audit-reports';
             $data['page_title'] = 'Audit Reports';
+
             return view('archives.index', $data);
         }
 
-        $data = $this->dr->getDirectoryFiles('Audit Reports');
+        if($user->role->role_name == 'Internal Auditor') {
+            $data['parent_directory'] = null;
+            $data['directory'] = null;
+            $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent('Audit Reports');
+        }
+
         $data['page_title'] = 'Audit Reports';
         $data['route'] = 'audit-reports';
 
@@ -155,17 +172,16 @@ class AuditController extends Controller
 
     public function createAuditReport()
     {
-        return view('audit-reports.create');
+        $audit_plans = $audit_plans = AuditPlan::whereHas('users', function($q) { $q->where('user_id', Auth::user()->id); })->get();
+        return view('audit-reports.create', compact('audit_plans'));
     }
 
     public function storeAuditReport(Request $request)
     {
         $user = Auth::user();
 
-        $parent_directory = Directory::where('name', 'Audit Reports')->whereNull('parent_id')->firstOrFail();
-
-        $user = Auth::user();
-        $dir = $this->dr->makeDirectory($user->assigned_area, $parent_directory->id);
+        $audit_plan = AuditPlan::findOrFail($request->audit_plan);
+        $dir = Directory::findOrFail($audit_plan->directory_id);
 
         $year = Carbon::parse($request->date)->format('Y');
         $directory = $this->dr->getDirectory($year, $dir->id);

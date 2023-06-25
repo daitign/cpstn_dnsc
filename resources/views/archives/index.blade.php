@@ -48,139 +48,143 @@
                 @endforeach
             </select>
         @endif
-        <div class="mb-4 row">
-            @foreach($directories as $directory)
-                <div class="col-2 text-center">
-                    <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}">
-                        <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
-                        <p class="text-dark" style="text-overflow: ellipsis"><small>
-                            @if(in_array($current_user->role->role_name, ['Process Owner', 'Internal Auditor']))
-                                {{ sprintf('%s%s%s', !empty($directory->parent->parent->name) ? $directory->parent->parent->name.' > ' : '', !empty($directory->parent->name) ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
-                            @else
-                                {{ $directory->name ?? '' }}
-                            @endif
-                        </small></p>
-                    </button>
-                    <ul class="dropdown-menu text-center">
-                        <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
-                        <li><a href="#" class="text-decoration-none btn-property"
-                            data-bs-toggle="modal" data-bs-target="#propertyModal"
-                            data-name="{{ $directory->name }}"
-                            data-type="Directory"
-                            data-created-by="{{ $directory->user->username ?? 'Admin' }}"
-                            data-created-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
-                            data-updated-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
-                        >Properties</a></li>
-                        
-                        @if(Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
-                        <li>
-                            <a href="#" class="text-decoration-none toggleDirectoryModal"
-                                data-name="{{ $directory->name }}" 
-                                data-route="{{ route('archives-update-directory', $directory->id) }}" 
-                                data-bs-toggle="modal" data-bs-target="#directoryModal">
-                                    Rename
-                            </a>
-                        </li>
-                        <!-- <li>
-                            <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_directory_{{ $directory->id }}">Delete</button>
-                                <form id="delete_directory_{{ $directory->id }}" action="{{ route('archives-delete-directory', $directory->id) }}" class="d-none" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </a>
-                        </li> -->
-                        @endif
-                    </ul>
-                </div>
-            @endforeach
-        </div>
-
-        <div class="mt-3 row">
-            @foreach($files as $file)
-                <div class="col-2 text-center">
-                    @if($file->type == 'audit_reports'
-                        && !empty($file->audit_report)
-                        && !empty($file->audit_report->consolidated_report))
-                            <a href="{{ route('archives-download-file', $file->audit_report->consolidated_report->file->id) }}" style="float:right"><img src="{{ asset('media/info.png') }}" width="40px"></a>
-                    @endif
-                    <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
-                        <p class="text-dark mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
-                    </button>
-
-                        @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports']))
-                            <button class="btn btn-remarks
-                                {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
-                                data-file-id="{{ $file->id }}"
-                                {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian']))
-                                ? 'data-route='.route('save-remarks', $file->id) : '' }}>
-                                        <i class="fa fa-email"></i> Remarks
-                            </button>
-                        @endif
-                    <ul class="dropdown-menu text-left px-3">
-                        <li><a href="{{ route('archives-download-file', $file->id) }}" target="_blank" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>
-                        <li>
-                            <a href="#" class="text-decoration-none btn-property"
+        @if(!empty($directories))
+            <div class="mb-4 row">
+                @foreach($directories as $directory)
+                    <div class="col-2 text-center">
+                        <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}">
+                            <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
+                            <p class="text-dark" style="text-overflow: ellipsis"><small>
+                                @if(in_array($current_user->role->role_name, ['Process Owner', 'Internal Auditor']))
+                                    {{ sprintf('%s%s%s', !empty($directory->parent->parent->name) ? $directory->parent->parent->name.' > ' : '', !empty($directory->parent->name) ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
+                                @else
+                                    {{ $directory->name ?? '' }}
+                                @endif
+                            </small></p>
+                        </button>
+                        <ul class="dropdown-menu text-center">
+                            <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
+                            <li><a href="#" class="text-decoration-none btn-property"
                                 data-bs-toggle="modal" data-bs-target="#propertyModal"
-                                data-name="{{ $file->file_name }}"
-                                data-type="{{ $file->file_mime }}"
-                                data-created-by="{{ $file->user->username }}"
-                                data-created-at="{{ $file->created_at->format('M d, Y h:i A') }}"
-                                data-updated-at="{{ $file->created_at->format('M d, Y h:i A') }}"
-                                data-description="{{ $file->description ?? ''}}"
-                            ><i class="fa fa-cog"></i> Properties</a>
-                        </li>
-                        @if(!empty($file->trackings()))
-                        <li>
-                            <a href="#" class="text-decoration-none btn-tracking"
-                            data-bs-toggle="modal" data-bs-target="#trackingModal"
-                            ><i class="fa fa-search"></i> Track</a>
-                            <div class="d-none file-tracking-info">
-                                <div class="tracking-container">
-                                    @foreach($file->trackings() as $track)
-                                        <div class="tracking-item">
-                                            <span><strong>{{ $track['name'] ?? '' }}</strong></span><br/>
-                                            <div class="pt-2 item-box text-white {{ $track['color'] ?? 'bg-secondary' }}">
-                                                <i class="fa fa-user"></i>
-                                            </div>
-                                           <small>&nbsp;{{ !empty($track['user']) ? "By: ". $track['user'] : ' ' }}</small><br/>
-                                            <small>&nbsp;{{ !empty($track['date']) ? "Date: ".$track['date'] : ' ' }}</small>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </li>
-                        @endif
-                        @if(Auth::user()->role->role_name == 'Internal Auditor' 
-                            && $file->user_id == Auth::user()->id
-                            && $file->type == 'audit_reports'
+                                data-name="{{ $directory->name }}"
+                                data-type="Directory"
+                                data-created-by="{{ $directory->user->username ?? 'Admin' }}"
+                                data-created-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
+                                data-updated-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
+                            >Properties</a></li>
+                            
+                            @if(Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
+                            <li>
+                                <a href="#" class="text-decoration-none toggleDirectoryModal"
+                                    data-name="{{ $directory->name }}" 
+                                    data-route="{{ route('archives-update-directory', $directory->id) }}" 
+                                    data-bs-toggle="modal" data-bs-target="#directoryModal">
+                                        Rename
+                                </a>
+                            </li>
+                            <!-- <li>
+                                <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_directory_{{ $directory->id }}">Delete</button>
+                                    <form id="delete_directory_{{ $directory->id }}" action="{{ route('archives-delete-directory', $directory->id) }}" class="d-none" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </a>
+                            </li> -->
+                            @endif
+                        </ul>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        @if(!empty($files))
+            <div class="mt-3 row">
+                @foreach($files as $file)
+                    <div class="col-2 text-center">
+                        @if($file->type == 'audit_reports'
                             && !empty($file->audit_report)
-                            && empty($file->audit_report->consolidated_report))
-                            <a href="#" class="text-decoration-none upload-consolidated-report" data-audit-report="{{ $file->audit_report->id ?? '' }}" data-bs-toggle="modal" data-bs-target="#consolAuditReportModal"><i class="fa fa-book"></i> Consolidated Report</a>
+                            && !empty($file->audit_report->consolidated_report))
+                                <a href="{{ route('archives-download-file', $file->audit_report->consolidated_report->file->id) }}" style="float:right"><img src="{{ asset('media/info.png') }}" width="40px"></a>
                         @endif
-                        @if($file->user_id == Auth::user()->id)
-                        <li>
-                            <a href="#" class="text-decoration-none btn-share" data-bs-toggle="modal" data-bs-target="#shareModal" data-users="{{ $file->shared_users }}" data-route="{{ route('archives-share-file', $file->id) }}"><i class="fa fa-share"></i> Share</button>
-                                <form id="unshare_file_{{ $file->id }}" action="{{ route('archives-unshare-file', $file->id) }}" class="d-none" method="POST">
-                                    @csrf
-                                </form>
-                            </a>
-                        </li>
-                        @endif
-                        @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-                        <!-- <li>
-                            <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i>Delete</button>
-                                <form id="delete_file_{{ $file->id }}" action="{{ route('archives-delete-file', $file->id) }}" class="d-none" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </a>
-                        </li> -->
-                        @endif
-                    </ul>
-                </div>
-            @endforeach
-        </div>
+                        <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
+                            <p class="text-dark mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
+                        </button>
+
+                            @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports']))
+                                <button class="btn btn-remarks
+                                    {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
+                                    data-file-id="{{ $file->id }}"
+                                    {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian']))
+                                    ? 'data-route='.route('save-remarks', $file->id) : '' }}>
+                                            <i class="fa fa-email"></i> Remarks
+                                </button>
+                            @endif
+                        <ul class="dropdown-menu text-left px-3">
+                            <li><a href="{{ route('archives-download-file', $file->id) }}" target="_blank" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>
+                            <li>
+                                <a href="#" class="text-decoration-none btn-property"
+                                    data-bs-toggle="modal" data-bs-target="#propertyModal"
+                                    data-name="{{ $file->file_name }}"
+                                    data-type="{{ $file->file_mime }}"
+                                    data-created-by="{{ $file->user->username }}"
+                                    data-created-at="{{ $file->created_at->format('M d, Y h:i A') }}"
+                                    data-updated-at="{{ $file->created_at->format('M d, Y h:i A') }}"
+                                    data-description="{{ $file->description ?? ''}}"
+                                ><i class="fa fa-cog"></i> Properties</a>
+                            </li>
+                            @if(!empty($file->trackings()))
+                            <li>
+                                <a href="#" class="text-decoration-none btn-tracking"
+                                data-bs-toggle="modal" data-bs-target="#trackingModal"
+                                ><i class="fa fa-search"></i> Track</a>
+                                <div class="d-none file-tracking-info">
+                                    <div class="tracking-container">
+                                        @foreach($file->trackings() as $track)
+                                            <div class="tracking-item">
+                                                <span><strong>{{ $track['name'] ?? '' }}</strong></span><br/>
+                                                <div class="pt-2 item-box text-white {{ $track['color'] ?? 'bg-secondary' }}">
+                                                    <i class="fa fa-user"></i>
+                                                </div>
+                                            <small>&nbsp;{{ !empty($track['user']) ? "By: ". $track['user'] : ' ' }}</small><br/>
+                                                <small>&nbsp;{{ !empty($track['date']) ? "Date: ".$track['date'] : ' ' }}</small>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </li>
+                            @endif
+                            @if(Auth::user()->role->role_name == 'Internal Auditor' 
+                                && $file->user_id == Auth::user()->id
+                                && $file->type == 'audit_reports'
+                                && !empty($file->audit_report)
+                                && empty($file->audit_report->consolidated_report))
+                                <a href="#" class="text-decoration-none upload-consolidated-report" data-audit-report="{{ $file->audit_report->id ?? '' }}" data-bs-toggle="modal" data-bs-target="#consolAuditReportModal"><i class="fa fa-book"></i> Consolidated Report</a>
+                            @endif
+                            @if($file->user_id == Auth::user()->id)
+                            <li>
+                                <a href="#" class="text-decoration-none btn-share" data-bs-toggle="modal" data-bs-target="#shareModal" data-users="{{ $file->shared_users }}" data-route="{{ route('archives-share-file', $file->id) }}"><i class="fa fa-share"></i> Share</button>
+                                    <form id="unshare_file_{{ $file->id }}" action="{{ route('archives-unshare-file', $file->id) }}" class="d-none" method="POST">
+                                        @csrf
+                                    </form>
+                                </a>
+                            </li>
+                            @endif
+                            @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
+                            <!-- <li>
+                                <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i>Delete</button>
+                                    <form id="delete_file_{{ $file->id }}" action="{{ route('archives-delete-file', $file->id) }}" class="d-none" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </a>
+                            </li> -->
+                            @endif
+                        </ul>
+                    </div>
+                @endforeach
+            </div>
+        @endif
     </div>
 
 

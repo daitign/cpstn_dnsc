@@ -30,8 +30,7 @@ class DirectorySeeder extends Seeder
                 'automatic_child' => true,
             ],
             [
-                'name' => 'Audit Reports', 
-                'automatic_child' => true,
+                'name' => 'Audit Reports'
             ],
             [
                 'name' => 'Consolidated Audit Reports',

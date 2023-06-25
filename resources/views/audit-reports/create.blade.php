@@ -24,6 +24,16 @@
                         <textarea name="description" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
+                        <label for="audit_plan" class="form-label">Audit Plan:</label>
+                        <select id="audit_plan" name="audit_plan" class="form-control" required>
+                            <option value="">Select Audit Plan</option>
+                            @foreach($audit_plans as $audit_plan)
+                                <option value="{{ $audit_plan->id }}">{{ $audit_plan->name ?? '' }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
                         <label for="file_attachment" class="form-label">Attachment</label>
                         <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     </div>

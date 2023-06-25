@@ -28,7 +28,13 @@
                         <select id="directory" name="directory" class="form-control" required>
                             <option value="">Select Directory</option>
                             @foreach($directories as $directory)
-                                <option value="{{ $directory->id }}">{{ $directory->name }}</option>
+                                <option value="{{ $directory->id }}">
+                                    @if(in_array(auth()->user()->role->role_name, ['Process Owner', 'Internal Auditor']))
+                                        {{ sprintf('%s%s%s', $directory->parent->parent->name ? $directory->parent->parent->name.' > ' : '', $directory->parent->name ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
+                                    @else
+                                        {{ $directory->name ?? '' }}
+                                    @endif
+                                </option>
                             @endforeach
                         </select>
                     </div>
