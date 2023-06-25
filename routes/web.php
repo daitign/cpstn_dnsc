@@ -233,6 +233,11 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/{id}/update', [AuditController::class, 'saveAuditPlan'])->name('audit.update');
         });
         Route::get('/', [AuditController::class, 'auditReports'])->name('audit-reports.index');
+        Route::prefix('consolidated-audit-reports')->name('consolidated-audit-reports.')->group(function () {
+            Route::get('/', [AuditController::class, 'consolidatedAuditReports'])->name('index');
+            Route::get('/create', [AuditController::class, 'createConsolidatedAuditReport'])->name('create');
+            Route::post('/', [AuditController::class, 'storeConsolidatedAuditReport'])->name('store');
+        });
     });
 
     Route::middleware('cmt')->prefix('cmt')->name('cmt.')->group(function () {

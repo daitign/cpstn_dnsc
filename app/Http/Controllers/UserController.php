@@ -99,7 +99,9 @@ class UserController extends Controller
             'Staff',
             'Internal Lead Auditor',
             'Internal Auditor',
-            'Document Control Custodian'
+            'Document Control Custodian',
+            'College Management Team',
+            'Quality Assurance Director'
         ])){
             return redirect()->back()->with('error', 'You are not authorized');
         }

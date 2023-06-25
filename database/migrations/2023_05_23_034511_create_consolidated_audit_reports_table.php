@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('directory_id')->nullable()->constrained();
+            $table->bigInteger('audit_report_id')->unsigned()->nullable(true);
+            $table->foreign('audit_report_id')->references('id')->on('audit_reports')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained();
             $table->date('date')->nullable();
             $table->foreignId('file_id')->nullable();

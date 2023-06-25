@@ -111,11 +111,11 @@
                             <p class="text-dark mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                         </button>
 
-                            @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports']))
+                            @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports', 'consolidated_audit_reports']))
                                 <button class="btn btn-remarks
                                     {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
                                     data-file-id="{{ $file->id }}"
-                                    {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian']))
+                                    {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian', 'College Management Team', 'Quality Assurance Director']))
                                     ? 'data-route='.route('save-remarks', $file->id) : '' }}>
                                             <i class="fa fa-email"></i> Remarks
                                 </button>
