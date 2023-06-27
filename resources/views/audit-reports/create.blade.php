@@ -32,6 +32,12 @@
                             @endforeach
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for="process" class="form-label">Process:</label>
+                        <select id="process" name="process" class="form-control" required>
+                            <option value="">Select Process</option>
+                        </select>
+                    </div>
                     
                     <div class="mb-3">
                         <label for="file_attachment" class="form-label">Attachment</label>
@@ -53,6 +59,20 @@
         altFormat: "F j, Y",
         dateFormat: "Y-m-d",
         maxDate: "{{ date('Y-m-d') }}"
+    });
+
+    var audit_plans = {!! json_encode($audit_plans) !!};
+
+    $('#audit_plan').on('change', function(){
+        var plan_id = parseInt($(this).val());
+        
+        $('#process').html('<option value="">Select Process</option>');
+        if(plan_id != '') {
+            var audit_plan = audit_plans.find(item => item.id === plan_id);
+            audit_plan.areas.forEach(function(i){
+                $('#process').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+            }); 
+        }
     });
 </script>
 @endsection

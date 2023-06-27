@@ -173,7 +173,10 @@ class AuditController extends Controller
 
     public function createAuditReport()
     {
-        $audit_plans = $audit_plans = AuditPlan::whereHas('users', function($q) { $q->where('user_id', Auth::user()->id); })->get();
+        $audit_plans = AuditPlan::whereHas('users', function($q) {
+                            $q->where('user_id', Auth::user()->id); 
+                        })->with('areas')
+                        ->get();
         return view('audit-reports.create', compact('audit_plans'));
     }
 
@@ -182,10 +185,10 @@ class AuditController extends Controller
         $user = Auth::user();
 
         $audit_plan = AuditPlan::findOrFail($request->audit_plan);        
-        $dir = Directory::findOrFail($audit_plan->directory_id);
+        $dir = Directory::findOrFail($audit_plan->directory_id);     
+        $process = Area::findOrFail($request->process);
 
-        $year = Carbon::parse($request->date)->format('Y');
-        $directory = $this->dr->getDirectory($year, $dir->id);
+        $directory = $this->dr->getDirectory($process->area_name, $dir->id);
         $file_id = null;
         if ($request->hasFile('file_attachment')) {
             $now = Carbon::now();
@@ -212,6 +215,7 @@ class AuditController extends Controller
             'description' => $request->description,
             'user_id' => $user->id,
             'audit_plan_id' => $audit_plan->id,
+            'area_id' => $request->process,
             'directory_id' => $directory->id,
             'date' => $request->date,
             'file_id' => $file_id

@@ -17,7 +17,6 @@ return new class extends Migration
         });
 
         Schema::table('audit_reports', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('area_id');
             $table->foreignId('audit_plan_id')->nullable()->after('user_id')->constrained();
         });
     }
