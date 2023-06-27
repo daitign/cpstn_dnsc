@@ -72,6 +72,7 @@
                     <div class="card-body text-center">
                         <h5>
                             {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}
+                            <br/><small>({{ $user->username ?? ''}})</small>
                         </h5>
                         <h6><Strong>{{ $user->role_name ?? ''}}</strong></h6>
                         <h6><small>

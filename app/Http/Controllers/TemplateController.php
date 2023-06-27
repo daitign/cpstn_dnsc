@@ -44,23 +44,24 @@ class TemplateController extends Controller
 
     public function create()
     {
-        $tree_areas = $this->dr->getAreaFamilyTree();
-        return view('templates.create', compact('tree_areas'));
+        $roles = Role::get();
+
+        $tree_process = $this->dr->getAreaFamilyTree(null, 'process');
+        $institutes = Area::whereIn('type', ['institute', 'office'])->get();
+
+        return view('templates.create', compact('tree_process', 'institutes', 'roles'));
     }
 
     public function store(Request $request)
     {
         $user = Auth::user();
-
-        $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
-        $area = Area::findOrFail($request->area);
-
-        $dir = $this->dr->makeDirectory($area, $parent_directory->id);
+        $role = Role::findOrFail($request->role);
+        $areas = $role->role_name == 'Process Owner' ? explode(',', $request->process) : $request->institutes;
         
-        $year = Carbon::parse($request->date)->format('Y');
-        $directory = $this->dr->getDirectory($year, $dir->id);
-
-        $file_id = null;
+        $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
+        $role = Role::findOrFail($request->role);
+        $directory = $this->dr->getDirectory($role->role_name, $parent_directory->id);
+        
         if ($request->hasFile('file_attachment')) {
             $now = Carbon::now();
             $file = $request->file('file_attachment');
@@ -69,17 +70,33 @@ class TemplateController extends Controller
             $path = Storage::put($target_path, $file);
             $file_name = $request->name.".".$file->getClientOriginalExtension();
 
-            $file = File::create([
-                'directory_id' => $directory->id,
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'description' => $request->description,
-                'type' => 'templates'
-            ]);
-
-            $file_id = $file->id;
+            if(in_array($role->role_name, ['Process Owner', 'Document Control Custodian'])) {
+                $selected_areas = $role->role_name == 'Process Owner' ? explode(',', $request->process) : $request->institutes;
+                $areas = Area::whereIn('id', $selected_areas)->get();
+                foreach($areas as $area) {
+                    $dir = $this->dr->getDirectory($area->area_name, $directory->id);
+                    
+                    File::create([
+                        'directory_id' => $dir->id,
+                        'user_id' => $user->id,
+                        'file_name' => $file_name,
+                        'file_mime' => $file->getClientMimeType(),
+                        'container_path' => $path,
+                        'description' => $request->description,
+                        'type' => 'templates'
+                    ]);
+                }
+            }else{
+                $file = File::create([
+                    'directory_id' => $directory->id,
+                    'user_id' => $user->id,
+                    'file_name' => $file_name,
+                    'file_mime' => $file->getClientMimeType(),
+                    'container_path' => $path,
+                    'description' => $request->description,
+                    'type' => 'templates'
+                ]);
+            }
         }
 
         Template::create([
@@ -87,7 +104,8 @@ class TemplateController extends Controller
             'description' => $request->description,
             'user_id' => $user->id,
             'date' => $request->date,
-            'file_id' => $file_id
+            'role_id' => $request->role,
+            'areas' => implode(',', $areas->pluck('id')->toArray())
         ]);
 
         

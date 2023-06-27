@@ -55,14 +55,13 @@
                             @if(in_array($user->role->role_name, config('app.role_with_assigned_area')))
                                 <div class="col-12 mt-3">
                                     <span>Assigned on</span>
-                                    @php
-                                        if(!empty($user->assigned_area) && $user->assigned_area->type == 'process') {
-                                           $assigned_on = sprintf("%s > %s", $user->assigned_area->parent->area_name ?? '', $user->assigned_area->area_name ?? 'None');
-                                        } else {
-                                            $assigned_on = $user->assigned_area->area_name ?? 'None';
-                                        }
-                                    @endphp
-                                    <input type="text" class="form-control" name="suffix" placeholder="Enter suffix" value="{{ $assigned_on }}" disabled>
+                                    @if(!empty($user->assigned_areas))
+                                        @foreach($user->assigned_areas as $area)
+                                            <br/>{{ sprintf("%s > %s", $area->parent->area_name ?? '', $area->area_name ?? 'None') }}
+                                        @endforeach
+                                    @else
+                                        {{ $user->assigned_area->area_name ?? 'None' }}
+                                    @endif
                                 </div>
                             @endif
 

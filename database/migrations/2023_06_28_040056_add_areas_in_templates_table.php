@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('template_downloads', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('template_id')->constrained('templates');
-            $table->foreignId('user_id')->constrained();
-            $table->timestamps();
+        Schema::table('templates', function (Blueprint $table) {
+           $table->string('areas', 200)->after('role_id')->nullable(false);
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('template_downloads');
+        Schema::table('templates', function (Blueprint $table) {
+            //
+        });
     }
 };

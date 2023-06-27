@@ -17,9 +17,29 @@
                         <input type="text" class="form-control" name="name" id="name" placeholder="Enter Template Name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="name" class="form-label">Area</label>
-                        <input type="hidden" name="area" id="area">
-                        <div id="tree"></div>
+                        <label for="name" class="form-label">Role</label>
+                        <select name="role" class="form-control select-role" required>
+                            <option value="">Select Role</option>
+                            @foreach($roles as $role)
+                                <option value="{{ $role->id }}">{{ $role->role_name ?? ''}}</option>
+                            @endforeach
+                        </select>
+                        @error('type')
+                            <span class="text-danger error_type">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3 institute-container d-none">
+                        <label for="name" class="form-label">Institute</label>
+                        <select name="institutes[]" id="institute" class="form-control" multiple>
+                            @foreach($institutes as $institute)
+                                <option value="{{ $institute->id }}">{{ $institute->area_name ?? ''}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3 process-container d-none">
+                        <label for="name" class="form-label">Process</label>
+                        <input type="hidden" name="process" id="process">
+                        <div id="process_tree"></div>
                     </div>
                     <div class="mb-3">
                         <label for="date" class="form-label">Date:</label>
@@ -52,15 +72,37 @@
         maxDate: "{{ date('Y-m-d') }}"
     });
     
-    var areas = {!! json_encode($tree_areas) !!};
-
-    $('#tree').treeview({
-        data: areas,
+    var tree_process = {!! json_encode($tree_process) !!};
+    var process_tree = $('#process_tree').treeview({
+        data: tree_process,
         levels: 1,
         collapseIcon: "fa fa-minus",
         expandIcon: "fa fa-plus",
+        multiSelect: true,
         onNodeSelected: function(event, data) {
-            $('#area').val(data.id);
+            var processes = process_tree.treeview('getSelected');
+            var selected_process = [];
+            $(processes).each(function(i, val){
+                selected_process.push(val.id);
+            });
+            $('#process').val(selected_process);
+        }
+    });
+
+    $('.select-role').on('change', function(){
+        var role_name = $(this).find('option:selected').text();
+        
+        $('#process').prop('required', false);
+        $('#institute').prop('required', false);
+        $('.process-container').addClass('d-none');
+        $('.institute-container').addClass('d-none');
+
+        if(role_name == 'Process Owner') {
+        $('#process').prop('required', true);
+            $('.process-container').removeClass('d-none');
+        }else if(role_name == 'Document Control Custodian'){
+            $('#institute').prop('required', true);
+            $('.institute-container').removeClass('d-none');
         }
     });
 </script>

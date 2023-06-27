@@ -27,7 +27,6 @@ class DirectorySeeder extends Seeder
             ],
             [
                 'name' => 'Templates',
-                'automatic_child' => true,
             ],
             [
                 'name' => 'Audit Reports'

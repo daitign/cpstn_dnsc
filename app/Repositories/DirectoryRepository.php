@@ -63,9 +63,21 @@ class DirectoryRepository {
         $current_user = Auth::user();
         $users = $current_user->role->role_name == 'Administrator' ? User::get() : User::where('role_id', $current_user->role_id)->get();
         $parent_directory = Directory::where('name', $parent_directory)->whereNull('parent_id')->firstOrFail();
-
-        if(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
-            $directories = Directory::where('area_id', Auth::user()->assigned_area->id)->get();
+        
+        if($parent_directory->name == 'Templates') {
+            if(in_array($current_user->role->role_name, ['Process Owner', 'Document Control Custodian', 'Internal Auditor', 'Human Resources'])) {
+                $directories = Directory::whereHas('parent', function($q) use($parent_directory){
+                    $q->where('name',  $parent_directory->name);
+                })->where('name', $current_user->role->role_name)->get();
+            }else{
+                $directories = Directory::whereHas('parent', function($q) use($parent_directory){
+                    $q->where('name',  $parent_directory->name);
+                })->get();
+            }
+            $directory = $directories->first();
+            $parent_directory = $directory->parent ?? null;
+        }elseif(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
+            $directories = Directory::where('area_id', Auth::user()->assigned_area->id ?? '')->get();
             if(Auth::user()->role->role_name == 'Internal Auditor') {
                 if(Auth::user()->role->role_name == 'Internal Auditor') {
                     $audit_plan_directories = AuditPlan::whereHas('users', function($q){
@@ -89,34 +101,44 @@ class DirectoryRepository {
             $parent_directory = null;
         }
         
-        $directories = Directory::where('parent_id', $directory->id)->get();
-        $files = $this->getFiles($directory->id);
+        $directories = Directory::where('parent_id', $directory->id ?? '')->get();
+        if(!empty($parent_directory) && $parent_directory->name == 'Templates' && in_array($current_user->role->role_name, ['Process Owner', 'Document Control Custodian'])) {
+            $directories = Directory::where('parent_id', $directory->id ?? '')
+                            ->whereIn('name', Auth::user()->assigned_areas->pluck('area_name'))
+                            ->get();
+        }
+        $files = $this->getFiles($directory->id ?? '');
 
         return compact('files', 'current_user', 'users', 'directories', 'directory', 'parent_directory');
     }    
     
     public function getFiles($directory, $request_user = '') {
         $current_user = !empty($request_user) ? User::findOrFail($request_user) : Auth::user();
-        $current_directory = Directory::findOrFail($directory);
+        $current_directory = Directory::find($directory);
+        $files = [];
+        
+        if(!empty($current_directory)) {
+            $role_file_access = [
+                'Internal Auditor', 
+                'Internal Lead Auditor', 
+                'Document Control Custodian',
+                'College Management Team',
+                'Quality Assurance Director'
+            ];
 
-        $role_file_access = [
-            'Internal Auditor', 
-            'Internal Lead Auditor', 
-            'Document Control Custodian',
-            'College Management Team',
-            'Quality Assurance Director'
-        ];
-
-        if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
-        ($current_user->role->role_name == 'Staff' && $this->getGrandParent($current_directory) == 'Manuals') ||
-        (in_array($current_user->role->role_name, $role_file_access))
-        ){
-            $files = File::where('directory_id', $current_directory->id)
-                ->get();
-        }else{
-            $files = File::where('directory_id', $current_directory->id)
-                ->where('user_id', $current_user->id)
-                ->get();
+            if(($current_user->role->role_name == 'Administrator' && $current_user->id == Auth::user()->id) ||
+            ($current_user->role->role_name == 'Staff' && $this->getGrandParent($current_directory) == 'Manuals') ||
+            (in_array($current_user->role->role_name, $role_file_access))
+            ){
+                $files = File::where('directory_id', $current_directory->id)
+                    ->get();
+            }else{
+                $files = File::where('directory_id', $current_directory->id)
+                    ->where(function($q) use($current_user) {
+                        $q->where('user_id', $current_user->id)
+                            ->orWhere('type', 'templates');
+                    })->get();
+            }
         }
 
         return $files;
@@ -133,7 +155,7 @@ class DirectoryRepository {
 
     public function getDirectoryAssignedByGrandParent($grand_parent_name)
     {
-        $directories = Directory::where('area_id', Auth::user()->assigned_area->id)->get();
+        $directories = Directory::where('area_id', Auth::user()->assigned_area->id ?? '')->get();
         foreach($directories as $key => $directory) {
             $directory->grand_parent = $this->getGrandParent($directory);
         }
