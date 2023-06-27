@@ -161,7 +161,7 @@
                                 && empty($file->audit_report->cars))
                                 <a href="#" class="text-decoration-none upload-cars" data-audit-report="{{ $file->audit_report->id ?? '' }}" data-bs-toggle="modal" data-bs-target="#consolAuditReportModal"><i class="fa fa-book"></i> Upload CARS</a>
                             @endif
-                            @if($file->user_id == Auth::user()->id)
+                            <!-- @if($file->user_id == Auth::user()->id)
                             <li>
                                 <a href="#" class="text-decoration-none btn-share" data-bs-toggle="modal" data-bs-target="#shareModal" data-users="{{ $file->shared_users }}" data-route="{{ route('archives-share-file', $file->id) }}"><i class="fa fa-share"></i> Share</button>
                                     <form id="unshare_file_{{ $file->id }}" action="{{ route('archives-unshare-file', $file->id) }}" class="d-none" method="POST">
@@ -169,7 +169,23 @@
                                     </form>
                                 </a>
                             </li>
+                            @endif -->
+                            @if($file->user_id == Auth::user()->id)
+                                <li>
+                                    <a href="#" class="text-decoration-none btn-edit-file"
+                                        data-bs-toggle="modal" data-bs-target="#editFileModal"
+                                        data-route="{{ route('archives-update-file', $file->id) }}"
+                                        data-name="{{ $file->file_name }}"
+                                        data-description="{{ $file->description ?? ''}}"
+                                    ><i class="fa fa-edit"></i> Edit</a>
+                                </li>
                             @endif
+                            <li>
+                                <a href="#" class="text-decoration-none btn-history"
+                                    data-file-id="{{ $file->id }}"
+                                    data-bs-toggle="modal" data-bs-target="#historyModal"
+                                ><i class="fa fa-history"></i> History</a>
+                            </li>
                             @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
                             <!-- <li>
                                 <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i>Delete</button>
@@ -310,6 +326,39 @@
         </div>
     </div>
 
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">History</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+                        <div class="file-history">
+                            <h5>File History</h5>
+                            <table class="table file-history-table">
+                                <thead>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>Description</td>
+                                        <td>Date</td>
+                                        <td>File</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
     <div class="modal fade" id="trackingModal" tabindex="-1" aria-labelledby="trackingModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -434,6 +483,39 @@
             </div>
         </div>
     </div>
+
+    
+    <div class="modal fade" id="editFileModal" tabindex="-1" aria-labelledby="editFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="#" id="updateFileModalForm" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="edit_file_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="file_name" id="edit_file_name" placeholder="Enter File Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Description</label>
+                            <textarea class="form-control" name="file_description" id="file_description" placeholder="Enter File Description" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="file_attachment" class="form-label">Attachment</label>
+                            <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -478,12 +560,38 @@
     });
 
     $('.btn-property').on('click', function(){
+        
         $('#propertyName').html($(this).data('name'));
         $('#propertyType').html($(this).data('type'));
         $('#propertyCreatedBy').html($(this).data('created-by'));
         $('#propertyCreated').html($(this).data('created-at'));
         $('#propertyUpdated').html($(this).data('updated-at'));
         $('#propertyDescription').html($(this).data('description'));
+
+        
+    });
+
+    $('.btn-history').on('click', function(){
+        var file_id = parseInt($(this).data('file-id'));
+        if(file_id !== '') {
+            var file = files.find(item => 
+                item.id === file_id
+            );
+
+            $('.file-history-table tbody').html('');
+            if(file.histories.length > 0) {
+                file.histories.forEach(function(i){
+                    $('.file-history-table tbody').append(`
+                        <tr>
+                            <td>` + i.file_name + `</td>
+                            <td>` + i.description + `</td>
+                            <td>` + i.created_at_format + `</td>
+                            <td><a href="{{ url('/') }}/archives/file-history/` + i.id + `" target="_blank" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></td>
+                        </tr>
+                    `);
+                });
+            }
+        }
     });
 
     $('.btn-tracking').on('click', function(){
@@ -557,6 +665,12 @@
 
     $('.upload-cars').on('click', function(){
         $('#audit_report_id').val($(this).data('audit-report'));
+    });
+
+    $('.btn-edit-file').on('click', function(){
+        $('#updateFileModalForm').prop('action', $(this).data('route'));
+        $('#edit_file_name').val($(this).data('name'));
+        $('#file_description').html($(this).data('description'));
     });
 </script>
 @endsection

@@ -8,6 +8,7 @@ use App\Models\File;
 use App\Models\User;
 use App\Models\FileUser;
 use App\Models\Directory;
+use App\Models\FileHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\DirectoryRepository;
@@ -204,9 +205,59 @@ class ArchiveController extends Controller
         return back()->withMessage('File uploaded successfully');
     }
 
+
+    public function updateFile(Request $request, $file_id)
+    {
+        $user = Auth::user();
+        $file = File::where('user_id', $user->id)
+                    ->where('id', $file_id)
+                    ->firstOrFail();
+
+        FileHistory::create([
+            'file_id' => $file->id,
+            'file_name' => $file->file_name,
+            'file_mime' => $file->file_mime,
+            'container_path' => $file->container_path,
+            'description' => $file->description,
+        ]);
+
+        if ($request->hasFile('file_attachment')) {
+            $now = Carbon::now();
+            $uploaded_file = $request->file('file_attachment');
+            $hash_name = md5($uploaded_file->getClientOriginalName() . uniqid());
+            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
+            $path = Storage::put($target_path, $uploaded_file);
+            $uploaded_file_name = $request->file_name.".".$uploaded_file->getClientOriginalExtension();
+
+            $file->file_name = $uploaded_file_name;
+            $file->description = $request->file_description;
+            $file->container_path = $path;
+            $file->save();
+        }else{
+            $file->description = $request->file_description;
+            $file->save();
+        }
+
+        return back()->withMessage('File updated successfully');
+    }
+
     public function downloadFile($id)
     {
         $file = File::findOrFail($id);
+        $user = Auth::user();
+
+        $content = Storage::get($file->container_path);
+        
+        return response()->download(
+            storage_path('app/'.$file->container_path), 
+            $file->file_name, 
+            ['Content-Type' => $file->file_mime]
+        );
+    }
+
+    public function downloadFileHistory($id)
+    {
+        $file = FileHistory::findOrFail($id);
         $user = Auth::user();
 
         $content = Storage::get($file->container_path);

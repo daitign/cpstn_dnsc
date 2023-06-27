@@ -12,7 +12,7 @@ class File extends Model
 
     protected $guarded = [];
 
-    protected $with = ['file_users', 'remarks', 'audit_report'];
+    protected $with = ['file_users', 'remarks', 'audit_report', 'histories'];
 
     protected $appends = ['shared_users'];
 
@@ -24,6 +24,11 @@ class File extends Model
     public function file_users()
     {
         return $this->hasMany(FileUser::class);
+    }
+
+    public function histories()
+    {
+        return $this->hasMany(FileHistory::class)->orderBy('created_at', 'DESC');
     }
 
     public function getSharedUsersAttribute()

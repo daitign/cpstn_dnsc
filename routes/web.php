@@ -79,7 +79,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/shared-with-me',[ArchiveController::class,'sharedWithMe'])->name('archives-shared');
         
         Route::get('/file/{id}',[ArchiveController::class,'downloadFile'])->name('archives-download-file');
+        Route::post('/file/{id}',[ArchiveController::class,'updateFile'])->name('archives-update-file');
         Route::delete('/file/{id}',[ArchiveController::class,'deleteFile'])->name('archives-delete-file');
+
+        Route::get('/file-history/{id}',[ArchiveController::class,'downloadFileHistory'])->name('archives-download-file-history');
 
         Route::post('/file/{id}/share',[ArchiveController::class,'shareFile'])->name('archives-share-file');
         Route::post('/file/{id}/unshare',[ArchiveController::class,'unshareFile'])->name('archives-unshare-file');

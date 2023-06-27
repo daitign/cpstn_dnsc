@@ -39,7 +39,6 @@
             @endforeach
         </div>
 
-
         <div class="mt-3 row">
             @foreach($files as $file)
                 <div class="col-2 text-center">
@@ -60,13 +59,23 @@
                                 data-description="{{ $file->description ?? ''}}"
                             ><i class="fa fa-cog"></i> Properties</a>
                         </li>
-                        @if($file->user_id == Auth::user()->id)
+                        <!-- @if($file->user_id == Auth::user()->id)
                         <li>
                             <a href="#" class="text-decoration-none btn-share" data-bs-toggle="modal" data-bs-target="#shareModal" data-users="{{ $file->shared_users }}" data-route="{{ route('archives-share-file', $file->id) }}"><i class="fa fa-share"></i> Share</button>
                                 <form id="unshare_file_{{ $file->id }}" action="{{ route('archives-unshare-file', $file->id) }}" class="d-none" method="POST">
                                     @csrf
                                 </form>
                             </a>
+                        </li>
+                        @endif -->
+                        @if($file->user_id == Auth::user()->id)
+                        <li>
+                            <a href="#" class="text-decoration-none btn-edit-file"
+                                data-bs-toggle="modal" data-bs-target="#editFileModal"
+                                data-route="{{ route('archives-update-file', $file->id) }}"
+                                data-name="{{ $file->file_name }}"
+                                data-description="{{ $file->description ?? ''}}"
+                            ><i class="fa fa-edit"></i> Edit</a>
                         </li>
                         @endif
                         <!-- @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
@@ -106,8 +115,54 @@
                                 </td>
                             </tr>
                         </table>
+
+                        <h5>File History</h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>Description</td>
+                                    <td>Date</td>
+                                    <td>File</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editFileModal" tabindex="-1" aria-labelledby="editFileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="#" id="updateFileModalForm">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Enter Audit Report Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Description</label>
+                            <textarea class="form-control" name="file_description" id="file_description" placeholder="Enter File Description" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="file_attachment" class="form-label">Attachment</label>
+                            <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -191,6 +246,12 @@
         $('#propertyCreated').html($(this).data('created-at'));
         $('#propertyUpdated').html($(this).data('updated-at'));
         $('#propertyDescription').html($(this).data('description'));
+    });
+
+    $('.btn-edit-file').on('click', function(){
+        $('#updateFileModalForm').prop('action', $(this).data('route'));
+        $('#file_name').val($(this).data('name'));
+        $('#file_description').html($(this).data('description'));
     });
 
     $('.btn-share').on('click', function(){
