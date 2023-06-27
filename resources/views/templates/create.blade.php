@@ -29,8 +29,8 @@
                         @enderror
                     </div>
                     <div class="mb-3 institute-container d-none">
-                        <label for="name" class="form-label">Institute</label>
-                        <select name="institutes[]" id="institute" class="form-control" multiple>
+                        <label for="name" class="form-label">Institute/Office</label>
+                        <select name="institutes[]" id="institute" class="select2 form-control" multiple>
                             @foreach($institutes as $institute)
                                 <option value="{{ $institute->id }}">{{ $institute->area_name ?? ''}}</option>
                             @endforeach
@@ -87,6 +87,9 @@
             });
             $('#process').val(selected_process);
         }
+    });
+    $('.select2').select2({
+        'width' : '100%'
     });
 
     $('.select-role').on('change', function(){

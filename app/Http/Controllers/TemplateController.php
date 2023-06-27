@@ -46,7 +46,7 @@ class TemplateController extends Controller
     {
         $roles = Role::get();
 
-        $tree_process = $this->dr->getAreaFamilyTree(null, 'process');
+        $tree_process = $this->dr->getAreaFamilyTree(null, ['process']);
         $institutes = Area::whereIn('type', ['institute', 'office'])->get();
 
         return view('templates.create', compact('tree_process', 'institutes', 'roles'));

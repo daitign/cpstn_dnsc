@@ -236,6 +236,7 @@
         position: absolute;
         margin-left: 120px;
     }
+    
 </style>
 @endsection
 @section('content')
