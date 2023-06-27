@@ -47,9 +47,9 @@ class TemplateController extends Controller
         $roles = Role::get();
 
         $tree_process = $this->dr->getAreaFamilyTree(null, ['process']);
-        $institutes = Area::whereIn('type', ['institute', 'office'])->get();
+        $areas = Area::whereIn('type', ['institute', 'office'])->get()->groupBy('parent.area_name');
 
-        return view('templates.create', compact('tree_process', 'institutes', 'roles'));
+        return view('templates.create', compact('tree_process', 'areas', 'roles'));
     }
 
     public function store(Request $request)

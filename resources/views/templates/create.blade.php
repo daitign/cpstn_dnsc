@@ -31,8 +31,12 @@
                     <div class="mb-3 institute-container d-none">
                         <label for="name" class="form-label">Institute/Office</label>
                         <select name="institutes[]" id="institute" class="select2 form-control" multiple>
-                            @foreach($institutes as $institute)
-                                <option value="{{ $institute->id }}">{{ $institute->area_name ?? ''}}</option>
+                            @foreach($areas as $key => $child_areas)
+                                <optgroup label="{{ $key }}">
+                                    @foreach($child_areas as $area)
+                                        <option value="{{ $area->id }}">{{ $area->area_name ?? ''}}</option>
+                                    @endforeach
+                                </optgroup>
                             @endforeach
                         </select>
                     </div>
