@@ -106,10 +106,10 @@
                                 + msg.message + '</p><div class="seen"></div></div><div class="received_withd_msg"><span class="sentby pull-right"><small>'
                                 + msg.created_at_formatted + '</small></span></div></div></div>');
                         }else{
-                            elem.append('<div class="incoming_msg"><div class="received_msg"><div class="received_withd_msg"><p>' 
-                                + msg.message + '</p><span class="sentby show"><small>' 
-                                + msg.sender + '</small></span><span class="sentby pull-right"><small>' 
-                                + msg.created_at_formatted + '</small></span></div></div></div>');
+                            elem.append(`<div class="incoming_msg"><img src="{{ asset('storage/profiles') }}/` + msg.user.img + `" onerror="this.src='/storage/assets/dnsc-logo.png'" width="50px"/><div class="received_msg"><div class="received_withd_msg"><p>`
+                                + msg.message + `</p><span class="sentby show"><small>`
+                                + msg.sender + `</small></span><span class="sentby pull-right"><small>`
+                                + msg.created_at_formatted + `</small></span></div></div></div>`);
                         }
                     });
                 }

@@ -51,7 +51,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="search" class="form-label">Description:</label>
-                        <textarea name="description" class="form-control" rows="5"></textarea>
+                        <textarea name="description" class="form-control" rows="5" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="file_attachment" class="form-label">Attachment</label>

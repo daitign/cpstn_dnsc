@@ -14,9 +14,9 @@ class MessageController extends Controller
         $timestamp = !empty($request->timestamp) ? $request->timestamp : $max_timestamp;
         if($request->ajax()) {
             if(!empty($request->timestamp)) {
-                $messages = Message::where('created_at', '>', $timestamp)->get();
+                $messages = Message::with('user')->where('created_at', '>', $timestamp)->get();
             }else{
-                $messages = Message::get();    
+                $messages = Message::with('user')->get();    
             }
 
             $timestamp = $max_timestamp;

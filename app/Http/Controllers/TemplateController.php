@@ -82,7 +82,7 @@ class TemplateController extends Controller
                         'file_name' => $file_name,
                         'file_mime' => $file->getClientMimeType(),
                         'container_path' => $path,
-                        'description' => $request->description,
+                        'description' => $request->description ?? '',
                         'type' => 'templates'
                     ]);
                 }
@@ -93,7 +93,7 @@ class TemplateController extends Controller
                     'file_name' => $file_name,
                     'file_mime' => $file->getClientMimeType(),
                     'container_path' => $path,
-                    'description' => $request->description,
+                    'description' => $request->description ?? '',
                     'type' => 'templates'
                 ]);
             }
@@ -101,11 +101,11 @@ class TemplateController extends Controller
 
         Template::create([
             'name' => $request->name,
-            'description' => $request->description,
+            'description' => $request->description ?? '',
             'user_id' => $user->id,
             'date' => $request->date,
             'role_id' => $request->role,
-            'areas' => implode(',', $areas->pluck('id')->toArray())
+            'areas' => !empty($areas) ? implode(',', $areas->pluck('id')->toArray()) : ''
         ]);
 
         
