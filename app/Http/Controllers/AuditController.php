@@ -80,7 +80,7 @@ class AuditController extends Controller
     {
         $audit_plan = AuditPlan::findOrFail($id);
         $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
-        $tree_areas = $this->dr->getAreaFamilyTree(null, 'process', $audit_plan->areas->pluck('id')->toArray());
+        $tree_areas = $this->dr->getAreaFamilyTree(null, 'none', $audit_plan->areas->pluck('id')->toArray(), true);
         $selected_users = $audit_plan->users->pluck('user_id')->toArray();
         return view('audits.edit', compact('tree_areas', 'auditors', 'audit_plan', 'selected_users'));
     }

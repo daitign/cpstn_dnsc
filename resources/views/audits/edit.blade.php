@@ -11,8 +11,8 @@
         <div class="row mt-3 px-2 pb-3">
             @include('layout.alert')
             <div class="col-8">
-                <form method="POST" action="{{ route('lead-auditor.audit.update', $audit_plan->id) }}">
-                    @csrf
+                <!-- <form method="POST" action="{{ route('lead-auditor.audit.update', $audit_plan->id) }}">
+                    @csrf -->
                     <div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Name</label>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Description</label>
-                            <textarea class="form-control" rows="3" id="description" name="description" placeholder="Enter description">{{ $audit_plan->description ?? '' }}</textarea>
+                            <textarea class="form-control" rows="3" id="description" name="description" placeholder="Enter description" readonly>{{ $audit_plan->description ?? '' }}</textarea>
                         </div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Date</label>
@@ -33,7 +33,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="name" class="form-label">Auditors</label>
-                            <select class="form-control select2" name="auditors[]" multiple readonly data-placeholder="Choose Auditors">
+                            <select class="form-control select2" name="auditors[]" readonly multiple readonly data-placeholder="Choose Auditors">
                                 @foreach($auditors as $user)
                                     <option value="{{ $user->id }}" {{ in_array($user->id, $selected_users) ? 'selected' : '' }}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
                                 @endforeach
@@ -43,7 +43,7 @@
                     <!-- <div style="text-align: right" class="pb-5">
                         <button type="submit" class="btn btn-success btn-save px-3 py-2">Save Audit Plan</button>
                     </div> -->
-                </form>
+                <!-- </form> -->
             </div>
             <div class="col-4 mt-2 alert alert-success">
                 <h3 class="mb-2">Internal Auditors</h3>
@@ -71,6 +71,7 @@
     });
 
     $('.select2').select2();
+    $('.select2').prop('disabled', true);
 
     $('.btn-save').on('click', function(){
         var selected = tree.treeview('getSelected');
