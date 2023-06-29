@@ -138,9 +138,11 @@ class DirectoryRepository {
                     ->get();
             }else{
                 $files = File::where('directory_id', $current_directory->id)
-                    ->where(function($q) use($current_user) {
-                        $q->where('user_id', $current_user->id)
-                            ->orWhere('type', 'templates');
+                    ->where(function($q) use($current_user, $current_directory) {
+                        $q->where('user_id', $current_user->id);
+                        if($current_user->role->role_name !== 'Staff' || $current_directory->name == 'Staff') {
+                            $q->orWhere('type', 'templates');
+                        }
                     })->get();
             }
         }
