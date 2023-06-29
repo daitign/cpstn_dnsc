@@ -42,12 +42,13 @@
     <div class="container pt-2">
         <div class="row g-3">
             <form action="{{ route('hr-survey-report') }}">
+                @csrf
                 <div class="input-group mb-3 col-6">
                     <input type="text" name="keyword" class="form-control" placeholder="Input Office..." aria-describedby="basic-addon2" value="{{ $keyword ?? '' }}">
                     <input type="date" name="date_from" class="form-control" value="{{ $date_from }}">
                     <input type="date" name="date_to" class="form-control" value="{{ $date_to }}">
                     <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                        <button class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
                     </div>
                 </div>
             </form>
