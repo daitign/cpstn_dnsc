@@ -1,6 +1,6 @@
 @extends('layout.sidebar')
 @section('title')
-<title>Edit Audit Plan</title>
+<title>View Audit Plan</title>
 @endsection
 
 @section('page')
