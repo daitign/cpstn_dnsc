@@ -69,13 +69,17 @@ class DirectoryRepository {
                 $directories = Directory::whereHas('parent', function($q) use($parent_directory){
                     $q->where('name',  $parent_directory->name);
                 })->where('name', $current_user->role->role_name)->get();
+                
+                $directory = $directories->first();
+                $parent_directory = $directory->parent ?? null;
             }else{
                 $directories = Directory::whereHas('parent', function($q) use($parent_directory){
                     $q->where('name',  $parent_directory->name);
                 })->get();
+                
+                $directory = $parent_directory;
+                $parent_directory = null;
             }
-            $directory = $directories->first();
-            $parent_directory = $directory->parent ?? null;
         }elseif(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
             $directories = Directory::where('area_id', Auth::user()->assigned_area->id ?? '')->get();
             if(Auth::user()->role->role_name == 'Internal Auditor') {
