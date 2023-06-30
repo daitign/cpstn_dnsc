@@ -52,7 +52,8 @@ class SurveySeeder extends Seeder
             $key = array_rand($suggestions);
             $suggestion = $suggestions[$key];
             
-            if(rand(1, 5) == 3) {
+            // To Determine if user will re-survey
+            if(rand(1, 10) == 3) {
                 $name = fake()->firstName() . ' ' .fake()->lastName();
                 $email = fake()->email();
             }

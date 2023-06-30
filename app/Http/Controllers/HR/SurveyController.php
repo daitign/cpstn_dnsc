@@ -95,13 +95,13 @@ class SurveyController extends Controller
             $results['facilities'][] = $result; 
             $results['colors'][] = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
 
-            // $instance = 0;
-            // foreach($data as $row) {
-            //     if(in_array($result[0], $row)) {
-            //         $instance++;
-            //     };
-            // }
-            $results['total'][] = '0';
+            $instance = 0;
+            foreach($data as $row) {
+                if(in_array($result[0], $row)) {
+                    $instance++;
+                };
+            }
+            $results['total'][] = $instance;
         }
         return $results;
     }
