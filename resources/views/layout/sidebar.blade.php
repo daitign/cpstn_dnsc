@@ -3,7 +3,7 @@
 @section('css')
 <style>
     body {   
-        background: url('{{ asset("/media/bg.svg") }}') no-repeat center center fixed; 
+        background: url('{{ asset("/media/bg.jpg") }}') no-repeat center center fixed; 
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -19,6 +19,8 @@
         width: 100%;
         max-width: 98%;
         border-radius: 20px;
+        margin-top: 20px;
+        color: #ffff;
     }
 
     @media (min-width: 992px) {

@@ -14,7 +14,7 @@
                     <div class="col-2 text-center">
                         <div class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ Storage::url('assets/file.png') }}" alt="Folder.png" class="img-fluid">
-                            <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $report->name ?? '' }}</small></p>
+                            <p class="text-whitee" style="text-overflow: ellipsis"><small>{{ $report->name ?? '' }}</small></p>
                             
                             <a href="#" class="btn btn-success btn-confirm" data-message="Are you sure you want to approve?" data-target="#approve_report_{{ $report->id }}">Approve</button>
                                 <form id="approve_report_{{ $report->id }}" action="{{ route('cmt.consolidated-audit-reports.approve', $report->id) }}" class="d-none" method="POST">@csrf</form>

@@ -86,3 +86,7 @@ body {
     width: 100% !important;
     box-shadow: none !important;
 }
+
+p {
+    color: #fff;
+}

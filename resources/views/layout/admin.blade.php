@@ -24,6 +24,16 @@
             <a class="dropdown-item {{ request()->routeIs('admin-announcement-create') ? 'active' : '' }}" href="{{ route('admin-announcement-create') }}"><span>Create Announcement</span></a>
         </div>
   </li>
+  <li class="nav-item">
+      <a class="nav-link text-start py-1 px-0 {{ request()->routeIs('admin-survey-reports') ? 'active' : '' }}" href="{{ route('admin-survey-reports') }}">
+          <i class="fas fa-book mx-3 mx-3 mx-3"></i><span class="text-nowrap mx-2">Pending SR</span>
+      </a>
+  </li>
+  <li class="nav-item">
+      <a class="nav-link text-start py-1 px-0 {{ request()->routeIs('admin-consolidated-audit-reports') ? 'active' : '' }}" href="{{ route('admin-consolidated-audit-reports') }}">
+          <i class="fas fa-receipt mx-3 mx-3 mx-3"></i><span class="text-nowrap mx-2">Pending CR</span>
+      </a>
+  </li>
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('messages') ? 'active' : '' }}" href="{{ route('messages') }}"><i class="fa fa-envelope mx-3"></i><span class="text-nowrap mx-2">Messages</span></a></li>
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-page') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
   <!-- <li class="nav-item"><a class="nav-link text-start py-1 px-0" href="#"><i class="fas fa-chart-bar mx-3"></i><span class="text-nowrap mx-2">Statistics</span></a></li> -->

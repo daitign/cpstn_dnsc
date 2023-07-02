@@ -54,7 +54,7 @@
                     <div class="col-2 text-center">
                         <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}">
                             <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
-                            <p class="text-dark" style="text-overflow: ellipsis"><small>
+                            <p class="text-white" style="text-overflow: ellipsis"><small>
                                 @if(in_array($current_user->role->role_name, ['Process Owner', 'Internal Auditor']))
                                     {{ sprintf('%s%s%s', !empty($directory->parent->parent->name) ? $directory->parent->parent->name.' > ' : '', !empty($directory->parent->name) ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
                                 @else
@@ -108,10 +108,10 @@
                         @endif
                         <button class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
-                            <p class="text-dark mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
+                            <p class="text-whiteeee mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                         </button>
 
-                            @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports', 'consolidated_audit_reports']))
+                            @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports', 'consolidated_audit_reports', 'survey_reports']))
                                 <button class="btn btn-remarks
                                     {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
                                     data-file-id="{{ $file->id }}"
