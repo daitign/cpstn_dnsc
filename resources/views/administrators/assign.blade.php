@@ -43,8 +43,9 @@
             </div>
         </div>
     </div>
-    {{-- Transaction Messages --}}
+    
     <div class="container">
+        {{-- Transaction Messages --}}
         @if (session('success'))
             <div class="alert mt-2 alert-success alert-dismissible fade show">
                 {{ session('success') }}
@@ -62,9 +63,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-    </div>
-    <div class="container mt-3">
-        <div class="row">
+        <div class="row mt-3">
             @foreach ($data as $user)
             <div class="col-3 user-item" data-user-role="{{ $user->role->role_name }}">
                 <div class="card">

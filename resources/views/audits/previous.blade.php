@@ -11,17 +11,12 @@
         <div class="row mt-3 px-2 pb-3">
             @include('layout.alert')
             <div class="col-8">
-                <form method="POST" action="{{ route('lead-auditor.audit.save') }}">
+                <form id="auditPlanForm" method="POST" action="{{ route('lead-auditor.audit.save') }}">
                     @csrf
                     <div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Name</label>
                             <input type="text" value="{{ $audit_plan->name ?? '' }}" class="form-control" id="name" name="name" placeholder="Enter name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Select Process</label>
-                            <input type="hidden" name="areas" id="areas" value="{{ $audit_plan->areas->pluck('area_id') }}">
-                            <div id="tree"></div>
                         </div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Description</label>
@@ -31,13 +26,30 @@
                             <label for="process" class="form-label">Date</label>
                             <input type="date" value="{{ $audit_plan->date ?? '' }}" class="form-control" id="date" name="date" placeholder="Enter date" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Auditors</label>
-                            <select class="form-control select2" name="auditors[]" multiple required data-placeholder="Choose Auditors">
-                                @foreach($auditors as $user)
-                                    <option value="{{ $user->id }}" {{ in_array($user->id, $selected_users) ? 'selected' : '' }}>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
-                                @endforeach
-                            </select>
+                        <div class="mt-2">
+                            <h3>Process and Auditors</h3>
+                            <button class="btn btn-success" style="float:right" type="button" data-bs-toggle="modal" data-bs-target="#addProcessModal"><i class="fa fa-plus"></i> Add Process</button>
+                            <table class="table text-white table-process">
+                                <thead><tr><td>Process</td><td>Auditors</td><td>-</td></tr></thead>
+                                <tbody>
+                                    @foreach($audit_plan->plan_areas as $plan_area)
+                                        <tr>
+                                            <td>{{ $plan_area->area->getAreaFullName() }}</td>
+                                            <td>
+                                                @foreach($plan_area->users as $user)
+                                                    {{ $user->first_name }} {{ $user->surname }}
+                                                    @if($loop->index < count($plan_area->users) - 1)
+                                                    , 
+                                                    @endif
+                                                @endforeach
+                                            </td>
+                                            <td><button class="btn btn-danger btn-remove" type="button"><i class="fa fa-times"></i></button></td>
+                                            <input type="hidden" name="process[]" value="{{ $plan_area->area->id }}">
+                                            <input type="hidden" name="auditors[]" value="{{ $plan_area->users->pluck('id') }}">
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <div style="text-align: right" class="pb-5">
@@ -54,6 +66,37 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="addProcessModal" tabindex="-1" aria-labelledby="addProcessModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Process And Auditors</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Select Process</label>
+                            <input type="hidden" class="process" id="process">
+                            <input type="hidden" class="process_name" id="process_name">
+                            <div class="tree"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Auditors</label>
+                            <select id="auditors" class="form-control select2" multiple required data-placeholder="Choose Auditors">
+                                @foreach($auditors as $user)
+                                    <option value="{{ $user->id }}">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success btn-add-process"><i class="fa fa-plus"></i> Add</button>
+                        <button type="button" class="btn btn-close-modal btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
@@ -62,23 +105,63 @@
     
     var areas = {!! json_encode($tree_areas) !!};
 
-    var tree = $('#tree').treeview({
+    var tree = $('.tree').treeview({
         data: areas,
         levels: 1,
-        multiSelect: true,
         collapseIcon: "fa fa-minus",
         expandIcon: "fa fa-plus",
+        onNodeSelected: function(event, data) {
+            $('.process').val(data.id);
+            $('.process_name').val(data.text);
+        }
     });
 
-    $('.select2').select2();
+    $('.select2').select2({
+        'width': '100%',
+        dropdownParent: $('#addProcessModal')
+    });
 
-    $('.btn-save').on('click', function(){
-        var selected = tree.treeview('getSelected');
-        var selectedAreas = [];
-        selected.forEach(function(area){
-            selectedAreas.push(area.id)
+    $('.btn-save').on('click', function(e){
+        e.preventDefault();
+        if($('.table-process tbody > tr').length == 0) {
+            Swal.fire({
+                text: 'Please Add Process...',
+                icon: 'warning',
+            });
+        }else{
+            $('#auditPlanForm').submit();
+        }
+    });
+
+    $('.btn-add-process').on('click', function(){
+        var process_name = $('.process_name').val();
+        var process_id = $('.process').val();
+        
+        var auditors_name = '';
+        var auditors_id = '';
+        $('#auditors option:selected').each(function(i, val){
+            auditors_name += val.text;
+            auditors_id  += val.value;
+            if(i <  ($('#auditors option:selected').length -1)) {
+                auditors_name += ', ';
+                auditors_id += ',';
+            }
         });
-        $('#areas').val(selectedAreas);
+        $('.table-process tbody').append(`<tr>
+                    <td>` + process_name + `</td>
+                    <td>` + auditors_name + `</td>
+                    <td>
+                        <button class="btn btn-danger btn-remove" type="button"><i class="fa fa-times"></i></button>
+                        <input type="hidden" name="process[]" value="` + process_id + `">
+                        <input type="hidden" name="auditors[]" value="` + auditors_id + `">
+                    </td>
+            </tr>`);
+
+        $('.btn-close-modal').trigger('click');
+    });
+
+    $(document).on('click','.btn-remove', function(){
+        $(this).parents('tr').remove();
     });
 </script>
 @endsection

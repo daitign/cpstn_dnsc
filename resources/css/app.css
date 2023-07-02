@@ -91,6 +91,6 @@ p {
     color: #fff;
 }
 
-.select2-container {
+.select2-container, .alert-success p, .card {
     color: #000;
 }

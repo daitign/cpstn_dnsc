@@ -55,7 +55,7 @@
     </div>
 
     {{-- Transaction Messages --}}
-    <div class="bg-white" style="min-height: 20vh">
+    <div style="min-height: 20vh">
         <div class="container row px-3 mt-3">
             @include('layout.alert')
             <div class="col-8 mt-3 row area-container">

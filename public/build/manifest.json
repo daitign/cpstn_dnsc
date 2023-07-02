@@ -19,7 +19,7 @@
     "src": "node_modules/@mdi/font/fonts/materialdesignicons-webfont.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-15142370.css",
+    "file": "assets/app-5bfadcc5.css",
     "isEntry": true,
     "src": "resources/css/app.css"
   },
