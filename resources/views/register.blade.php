@@ -15,8 +15,11 @@
             color: #198754;
         }
         body {
-            background-image: url('/storage/assets/bg.png');
-            background-size: contain;
+            background: url('{{ asset("/media/bg.jpg") }}') no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
         }
     </style>
 @endsection

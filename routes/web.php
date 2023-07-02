@@ -10,6 +10,8 @@ use App\Http\Controllers\Administrator\ProgramController;
 use App\Http\Controllers\Administrator\RoleController;
 use App\Http\Controllers\Administrator\SurveyController as AdminSurveyController;
 use App\Http\Controllers\Administrator\UserController as AdminUserController;
+use App\Http\Controllers\Administrator\ReportsController as AdminReportsController;
+
 
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\AuthController;
@@ -127,6 +129,18 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/{id}',[AnnouncementController::class, 'edit'])->name('admin-announcement-edit');
             Route::patch('/{id}',[AnnouncementController::class, 'update'])->name('admin-announcement-update');
             Route::delete('/{id}',[AnnouncementController::class, 'delete'])->name('admin-announcement-delete');
+        });
+
+        Route::prefix('survey-reports')->group(function(){
+            Route::get('/', [AdminReportsController::class, 'surveyReports'])->name('admin-survey-reports');
+            Route::post('/{id}/approve', [AdminReportsController::class, 'approveSurveyReport'])->name('admin-survey-reports.approve');
+            Route::post('/{id}/reject', [AdminReportsController::class, 'rejectSurveyReport'])->name('admin-survey-reports.reject');
+        });
+
+        Route::prefix('consolidated-audit-reports')->group(function(){    
+            Route::get('/', [AdminReportsController::class, 'consolidatedAuditReports'])->name('admin-consolidated-audit-reports');
+            Route::post('/{id}/approve', [AdminReportsController::class, 'approveConsolidatedAuditReport'])->name('admin-consolidated-audit-reports.approve');
+            Route::post('/{id}/reject', [AdminReportsController::class, 'rejectConsolidatedAuditReport'])->name('admin-consolidated-audit-reports.reject');
         });
     });
 

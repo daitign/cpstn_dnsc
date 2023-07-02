@@ -17,16 +17,21 @@
         .steps {
             display: none !important;
         }
-        body {
-            background-image: url('/storage/assets/bg.png');
-            background-size: contain;
+        body {   
+            background: url('{{ asset("/media/bg.jpg") }}') no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
         }
     </style>
     <link rel="stylesheet" href="packages/jquery.steps-1.1.0/jquery.steps.css">
 @endsection
 @section('content')
-    <div class="green-line align-center text-center">
-        <img src="/storage/assets/dnsc-logo.png" width="200px" alt="dnsc icon" class="img-fluid">
+    <div style="padding-top: 30px;">
+        <div class="green-line align-center text-center">
+            <img src="/storage/assets/dnsc-logo.png" width="200px" alt="dnsc icon" class="img-fluid">
+        </div>
     </div>
     <div class="container">
         <div class="row">
@@ -179,7 +184,7 @@
                                 <h3>Comments/Suggestions</h3>
                                 <section>
                                     <h4>Comments/Suggestions</h4>
-                                    <textarea class="form-control" name="suggestions" rows="15">{{ old('suggestions') }}</textarea>
+                                    <textarea class="form-control" name="suggestions" rows="5">{{ old('suggestions') }}</textarea>
                                 </section>
                             </div>
                             <hr>

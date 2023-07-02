@@ -2,8 +2,25 @@
 
 @section('css')
 <style>
+    body {   
+        background: url('{{ asset("/media/bg.jpg") }}') no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
     .container {
-        margin-left: 0px !important;
+        background: rgb(15 15 15 / 40%);
+        padding-top: 30px;
+        padding-right: 30px;
+        padding: 30px;
+        margin-left: 18px !important;
+        width: 100%;
+        max-width: 98%;
+        border-radius: 20px;
+        margin-top: 20px;
+        color: #ffff;
     }
 
     @media (min-width: 992px) {
@@ -26,7 +43,7 @@
         max-width: 14rem !important;
         width: 100%;
         min-height: 100vh;
-        background-color: #005b40;
+        background: rgb(9 82 62 / 72%);
         position: fixed;
         top: 0;
         bottom: 0;
@@ -257,7 +274,7 @@
     @elseif (auth()->user()->role->role_name == 'College Management Team')
         @include('layout.cmt')
     @endif
-    <nav class="navbar navbar-light navbar-expand-md" style="background-color: #37a87f;">
+    <nav class="navbar navbar-light navbar-expand-md" style="background: rgb(9 60 47 / 90%);">
         <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
                     class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navcol-1">

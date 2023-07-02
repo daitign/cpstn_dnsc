@@ -15,7 +15,7 @@
                 <div class="col-2 text-center">
                     <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}">
                         <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
-                        <p class="text-dark" style="text-overflow: ellipsis"><small>
+                        <p class="text-white" style="text-overflow: ellipsis"><small>
                             @if(in_array($current_user->role->role_name, ['Process Owner', 'Internal Auditor']))
                                 {{ sprintf('%s%s%s', $directory->parent->parent->name ? $directory->parent->parent->name.' > ' : '', $directory->parent->name ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
                             @else
@@ -44,7 +44,7 @@
                 <div class="col-2 text-center">
                     <button class="btn align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $file->id }}">
                         <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
-                        <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
+                        <p class="text-white" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                     </button>
                     <ul class="dropdown-menu text-left px-3">
                         <li><a href="{{ route('archives-download-file', $file->id) }}" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>

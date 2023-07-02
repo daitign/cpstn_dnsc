@@ -14,13 +14,13 @@
                     <div class="col-2 text-center">
                         <div class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="{{ Storage::url('assets/file.png') }}" alt="Folder.png" class="img-fluid">
-                            <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $report->name ?? '' }}</small></p>
+                            <p class="text-white" style="text-overflow: ellipsis"><small>{{ $report->name ?? '' }}</small></p>
                             
                             <a href="#" class="btn btn-success btn-confirm" data-message="Are you sure you want to approve?" data-target="#approve_report_{{ $report->id }}">Approve</button>
-                                <form id="approve_report_{{ $report->id }}" action="{{ route('cmt.survey-reports.approve', $report->id) }}" class="d-none" method="POST">@csrf</form>
+                                <form id="approve_report_{{ $report->id }}" action="{{ route(auth()->user()->role->role_name == 'College Management Team' ? 'cmt.survey-reports.approve' : 'admin-survey-reports.approve', $report->id) }}" class="d-none" method="POST">@csrf</form>
                             </a>
                             <a href="#" class="btn btn-warning btn-confirm" data-message="Are you sure you want to reject?" data-target="#approve_report_{{ $report->id }}">Reject</button>
-                                <form id="approve_report_{{ $report->id }}" action="{{ route('cmt.survey-reports.reject', $report->id) }}" class="d-none" method="POST">@csrf</form>
+                                <form id="approve_report_{{ $report->id }}" action="{{ route(auth()->user()->role->role_name == 'College Management Team' ? 'cmt.survey-reports.reject' : 'admin-survey-reports.reject', $report->id) }}" class="d-none" method="POST">@csrf</form>
                             </a>
                         </div>
                         <ul class="dropdown-menu text-center">

@@ -19,7 +19,7 @@
                         <select name="area" class="form-control" required>
                             <option value="">Select Office</option>
                             @foreach($offices as $office)
-                                <option value="{{ $office->id }}">{{ $office->area_name }}</option>
+                                <option value="{{ $office->id }}">{{ $office->name }}</option>
                             @endforeach
                         </select>
                     </div>

@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 use Storage;
 use Carbon\Carbon;
 use App\Models\Role;
-use App\Models\Area;
 use App\Models\User;
 use App\Models\File;
+use App\Models\Facility;
 use App\Models\Directory;
 use App\Models\SurveyReport;
 use Illuminate\Support\Facades\Auth;
@@ -38,13 +38,13 @@ class SurveyReportController extends Controller
 
         $data = $this->dr->getDirectoryFiles($this->parent);
         $data['route'] = 'survey-reports';
-        $data['page_title'] = 'Audit Reports';
+        $data['page_title'] = 'Survey Reports';
         return view('archives.files', $data);
     }
 
     public function create()
     {
-        $offices = Area::offices()->get();
+        $offices = Facility::get();
         return view('HR.survey_reports.create', compact('offices'));
     }
 
@@ -54,8 +54,8 @@ class SurveyReportController extends Controller
 
         $parent_directory = $this->dr->getDirectory($this->parent, null);
 
-        $area = Area::findOrFail($request->area);
-        $survey = $this->dr->getDirectory($area->area_name, $parent_directory->id, $area->id);
+        $facility = Facility::findOrFail($request->facility);
+        $survey = $this->dr->getDirectory($facility->name, $parent_directory->id, null);
         
         $year = Carbon::parse($request->date)->format('Y');
         $directory = $this->dr->getDirectory($year, $survey->id);
@@ -84,7 +84,7 @@ class SurveyReportController extends Controller
 
         SurveyReport::create([
             'name' => $request->name,
-            'area_id' => $area->id,
+            'facility_id' => $facility->id,
             'description' => $request->description,
             'user_id' => $user->id,
             'directory_id' => $directory->id,

@@ -15,7 +15,7 @@ class DirectorySeeder extends Seeder
      */
     public function run(): void
     {
-        
+        $roles = Role::get()->pluck('role_name');
         $directories = [
             [
                 'name' => 'Manuals', 
@@ -27,6 +27,7 @@ class DirectorySeeder extends Seeder
             ],
             [
                 'name' => 'Templates',
+                'sub_directory' => $roles
             ],
             [
                 'name' => 'Audit Reports'
@@ -53,10 +54,23 @@ class DirectorySeeder extends Seeder
             {
                 foreach($item['sub_directory'] as $child)
                 {
-                    Directory::create([
+                    $child_directory = Directory::create([
                         'name' => $child,
                         'parent_id' => $directory->id
                     ]);
+
+                    if($item['name'] == 'Templates' && 
+                        in_array($child, ['Process Owner', 'Document Control Custodian'])
+                    ) {
+                        foreach($sub_directory as $child) {
+                            $dir = Directory::create([
+                                'name' => $child->area_name,
+                                'parent_id' => $child_directory->id,
+                                'area_dependent' => true,
+                                'area_id' => $child->id
+                            ]);
+                        }
+                    }
                 }
             }
 

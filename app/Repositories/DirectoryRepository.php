@@ -83,14 +83,9 @@ class DirectoryRepository {
         }elseif(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
             $directories = Directory::where('area_id', Auth::user()->assigned_area->id ?? '')->get();
             if(Auth::user()->role->role_name == 'Internal Auditor') {
-                if(Auth::user()->role->role_name == 'Internal Auditor') {
-                    $audit_plan_directories = AuditPlan::whereHas('users', function($q){
-                        $q->where('user_id',  Auth::user()->id);
-                    })->pluck('directory_id');
-                }else{
-                    $audit_plan_directories = AuditPlan::pluck('directory_id');
-                }
-    
+                $audit_plan_directories = AuditPlan::whereHas('users', function($q){
+                    $q->where('id',  Auth::user()->id);
+                })->pluck('directory_id');
                 $directories = $directories->merge(Directory::whereIn('id', $audit_plan_directories)->get());   
             }
 
@@ -174,11 +169,9 @@ class DirectoryRepository {
         if(in_array(Auth::user()->role->role_name, config('app.role_with_assigned_area'))) {
             $directories = Directory::whereIn('area_id', Auth::user()->assigned_areas->pluck('id'))->get();
             if(Auth::user()->role->role_name == 'Internal Auditor') {
-                if(Auth::user()->role->role_name == 'Internal Auditor') {
-                    $audit_plan_directories = AuditPlan::whereHas('users', function($q){
-                        $q->where('user_id',  Auth::user()->id);
-                    })->pluck('directory_id');
-                }
+                $audit_plan_directories = AuditPlan::whereHas('users', function($q){
+                    $q->where('user_id',  Auth::user()->id);
+                })->pluck('directory_id');
                 $directories = $directories->merge(Directory::whereIn('id', $audit_plan_directories)->get());
             }
         }else{

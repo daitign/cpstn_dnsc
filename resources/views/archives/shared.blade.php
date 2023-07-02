@@ -32,7 +32,7 @@
                 <div class="col-2 text-center">
                     <button class="btn align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route('archives-page') }}?directory={{ $file->id }}">
                         <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
-                        <p class="text-dark" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
+                        <p class="text-whiteee" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                     </button>
                     <ul class="dropdown-menu text-center">
                         <li><a href="{{ route('archives-download-file', $file->id) }}" class="text-decoration-none">Download</a></li>
