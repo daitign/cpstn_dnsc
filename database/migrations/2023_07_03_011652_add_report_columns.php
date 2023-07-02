@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {   
-        Schema::create('survey_reports', function (Blueprint $table) {
+        Schema::table('survey_reports', function (Blueprint $table) {
             $table->dropConstrainedForeignId('area_id');
             $table->foreignId('facility_id')->nullable()->constrained()->after('id');           
         });

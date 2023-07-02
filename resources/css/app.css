@@ -90,3 +90,7 @@ body {
 p {
     color: #fff;
 }
+
+.select2-container {
+    color: #000;
+}
