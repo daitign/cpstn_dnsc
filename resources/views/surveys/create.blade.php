@@ -24,6 +24,14 @@
             -o-background-size: cover;
             background-size: cover;
         }
+
+        .wizard > .content {
+            min-height: 33vh !important;
+            overflow: auto;
+        }
+        .wizard > .content > .body {
+            overflow-y: auto;
+        }
     </style>
     <link rel="stylesheet" href="packages/jquery.steps-1.1.0/jquery.steps.css">
 @endsection
@@ -184,7 +192,7 @@
                                 <h3>Comments/Suggestions</h3>
                                 <section>
                                     <h4>Comments/Suggestions</h4>
-                                    <textarea class="form-control" name="suggestions" rows="15">{{ old('suggestions') }}</textarea>
+                                    <textarea class="form-control" name="suggestions" rows="5">{{ old('suggestions') }}</textarea>
                                 </section>
                             </div>
                             <hr>
