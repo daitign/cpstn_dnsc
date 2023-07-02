@@ -60,7 +60,7 @@ body {
 .green-line {
     height: 137px;
     padding-top: -37px;
-    background: #005B40;
+    background: rgb(9 60 47 / 90%);
     margin-top: 30px;
     margin-bottom: 30px;
 }
@@ -70,13 +70,12 @@ body {
 }
 
 .page-header {
-    background-image: url('/storage/assets/bg-header.png');
-    background-size: cover;
     min-height: 127px;
-    padding-top: 70px;
+    padding-top: 37px;
     padding-left: 20px;
-    color: #005B40;
+    color: #005b40;
     background-position: right;
+    background: rgb(254 254 254 / 50%);
 }
 
 .text-bubble {

@@ -18,8 +18,11 @@
             display: none !important;
         }
         body {
-            background-image: url('/storage/assets/bg.png');
-            background-size: contain;
+            background: url('{{ asset("/media/bg.svg") }}') no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
         }
     </style>
 @endsection
