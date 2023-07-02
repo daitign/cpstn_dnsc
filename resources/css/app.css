@@ -2,7 +2,7 @@
 html,
 body {
     margin: 0 !important;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #eef1f4 !important;
 }
 

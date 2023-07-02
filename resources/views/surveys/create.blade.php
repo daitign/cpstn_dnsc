@@ -24,14 +24,6 @@
             -o-background-size: cover;
             background-size: cover;
         }
-
-        .wizard > .content {
-            min-height: 33vh !important;
-            overflow: auto;
-        }
-        .wizard > .content > .body {
-            overflow-y: auto;
-        }
     </style>
     <link rel="stylesheet" href="packages/jquery.steps-1.1.0/jquery.steps.css">
 @endsection
