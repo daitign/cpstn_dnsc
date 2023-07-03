@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('parent_area')->unsigned()->nullable();
             $table->foreign('parent_area')->references('id')->on('areas')->onUpdate('cascade');
             $table->string('area_name');
-            $table->string('area_description');
+            $table->string('area_description')->nullable();
             $table->string('type')->nullable();
             $table->softDeletesTz();
             $table->timestamps();

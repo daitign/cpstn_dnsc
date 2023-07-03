@@ -54,7 +54,7 @@
             </form>
             
 
-            <div class="row">
+            <div class="row bg-white">
                 <div class="col-6">
                     <canvas id="pieChart" style="width:100%"></canvas>
                 </div>
@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <div class="row mt-2">
+            <div class="row mt-2 bg-white">
                 <div class="col-12 px-2">
                     <div class="card p-3">
                         <div class="card-body pt-2 pb-5">

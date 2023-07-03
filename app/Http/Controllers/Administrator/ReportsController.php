@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\SurveyReport;
 use App\Models\ConsolidatedAuditReport;
@@ -15,7 +16,8 @@ class ReportsController extends Controller
     public function surveyReports()
     {
         $survey_reports = SurveyReport::where('status', 'pending')->get();
-        return view('survey-reports.index', compact('survey_reports'));
+        $files = File::where('type', 'survey_reports')->get();
+        return view('survey-reports.index', compact('survey_reports', 'files'));
     }
 
     public function approveSurveyReport($id)
@@ -47,7 +49,8 @@ class ReportsController extends Controller
     public function consolidatedAuditReports()
     {
         $consolidated_audit_reports = ConsolidatedAuditReport::where('status', 'pending')->get();
-        return view('consolidated-audit-reports.index', compact('consolidated_audit_reports'));
+        $files = File::where('type', 'survey_reports')->get();
+        return view('consolidated-audit-reports.index', compact('consolidated_audit_reports', 'files'));
     }
 
     public function approveConsolidatedAuditReport($id)
