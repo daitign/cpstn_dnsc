@@ -65,16 +65,16 @@
         @endif
         <div class="row mt-3">
             @foreach ($data as $user)
-            <div class="col-2 user-item" data-user-role="{{ $user->role->role_name }}">
-                <div class="card">
-                    <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top form-control" alt="User Image">
+            <div class="col-md-6 col-lg-2 user-item" data-user-role="{{ $user->role->role_name }}">
+                <div class="card"><br>
+                    <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top rounded-circle mx-auto d-block" alt="User Image" style="width: 80px; height: 80px;">
                     <div class="card-body text-center">
-                        <h5>
+                        <small style="font-size: smaller;">
                             {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}
                             {{-- <br/><small>({{ $user->username ?? ''}})</small> --}}
-                        </h5>
+                        </small>
                         {{-- <h6><Strong>{{ $user->role_name ?? ''}}</strong></h6> --}}
-                        <h6><small>
+                        <small style="font-size: smaller;">
                             {{-- Assigned on:  --}}
                             @if(!empty($user->assigned_areas))
                                 @foreach($user->assigned_areas as $area)
@@ -83,19 +83,19 @@
                             @else
                                 {{ $user->assigned_area->area_name ?? 'None' }}
                             @endif
-                            </small>
-                        </h6>
+                        </small>
+                        
                         
                         <hr>
                         <div class="text-center">
                             @if($user->role->role_name == 'Process Owner')
-                                <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assignPOModal" class="btn btn-outline-success btn-assign-po" value="{{ $user->id }}">Assign</button>
+                                <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assignPOModal" class="btn btn-outline-success btn-assign-po" value="{{ $user->id }}" style="font-size: smaller;"><small>Assign</small></button>
                             @else
-                                <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assign_modal" class="btn btn-outline-success btn-assign" value="{{ $user->id }}">Assign</button>
+                                <button type="button" data-user-id="{{ $user->id }}" data-type="{{ $user->role->role_name }}" data-bs-toggle="modal" data-bs-target="#assign_modal" class="btn btn-outline-success btn-assign" value="{{ $user->id }}" style="font-size: smaller;"><small>Assign</small></button>
                             @endif
                         </div>
                     </div>
-                </div>
+                </div><br>
             </div>
             @endforeach
             @if (count($data) == 0)

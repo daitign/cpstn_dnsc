@@ -6,7 +6,8 @@
     <div class="page-header">
         <h1>Dashboard</h1>
     </div>
-    <div class="container mt-3">
+    {{-- <div class="container mt-3"> --}}
+        <div class="container bg-transparent">
         <div class="row">
             <div class="col-8">
                 <div class="row">
@@ -47,7 +48,7 @@
                     @endif
                     
                     @if(auth()->user()->role->role_name == 'Staff')
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('staff.template.index') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -60,10 +61,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('staff.manual.index') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -76,13 +77,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                     @endif
                     
                     @if(auth()->user()->role->role_name == 'Process Owner')
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('manuals') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -95,10 +96,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('evidences') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -111,14 +112,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                     @endif
 
                     
                     @if(in_array(auth()->user()->role->role_name, ['Internal Lead Auditor', 'Internal Auditor']))
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('templates') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -131,10 +132,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('evidences') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -147,13 +148,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                     @endif
 
                     @if(auth()->user()->role->role_name =='Document Control Custodian')
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('manuals') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -166,10 +167,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('evidences') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -182,13 +183,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                     @endif
 
                     @if(auth()->user()->role->role_name == 'Human Resources')
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('hr-offices-page') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -201,10 +202,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('hr-survey-page') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -217,13 +218,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                     @endif
 
                     @if(auth()->user()->role->role_name == 'College Management Team')
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('cmt.survey-reports') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -236,10 +237,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
-                        <div class="col-4">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <a href="{{ route('cmt.consolidated-audit-reports') }}" class="text-success">
                                 <div class="card p-3 text-center">
                                     <div class="card-body pt-2">
@@ -252,7 +253,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                     @endif
