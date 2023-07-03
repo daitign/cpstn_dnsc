@@ -35,7 +35,7 @@
         <h1>Rejected Users</h1>
     </div>
     {{-- Transaction Messages --}}
-    <div class="container">
+    <div >
         @if (session('success'))
             <div class="mt-3 alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
@@ -73,7 +73,7 @@
             </div>
             @endforeach
             @if (count($data) == 0)
-                <h1>No rejected users</h1>
+                <h4>No Rejected Users</h4>
             @endif
         </div>
     </div>

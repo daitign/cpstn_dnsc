@@ -35,7 +35,7 @@
         <h1>Pending Users</h1>
     </div>
     {{-- Transaction Messages --}}
-    <div class="container">
+    <div >
         @if (session('success'))
             <div class="mt-3 alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
@@ -58,19 +58,19 @@
     <div class="container mt-3">
         <div class="row">
             @foreach ($data as $user)
-            <div class="col-3">
+            <div class="col-2">
                 <div class="card">
                     <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top form-control" alt="User Image">
                     <div class="card-body">
-                        <h4 class="text-center">
+                        <h5 class="text-center">
                             {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}
-                        </h4>
+                        </h5>
                         <div class="text-center">
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger">Delete</button>
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#approve" class="btn btn-outline-success approve" value="{{ $user->id }}">Register</button>
+                                <button type="submit" class="btn btn-outline-danger"><small>Delete</small></button>
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#approve" class="btn btn-outline-success approve" value="{{ $user->id }}"><small>Register</small></button>
                             </form>
                         </div>
                     </div>
@@ -78,7 +78,7 @@
             </div>
             @endforeach
             @if (count($data) == 0)
-                <h1>No pending users</h1>
+                <h4>No pending users</h4>
             @endif
         </div>
     </div>

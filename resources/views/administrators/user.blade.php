@@ -45,12 +45,12 @@
                 </div>
             @endforeach
         </div>
-        <div class="row g-3 bg-white mt-2" style="overflow-y: auto; height:50vh;">
+        <div class="row g-3 bg-transparent mt-2" style="overflow-y: auto; height:50vh;">
             @if(empty($users))
                 <h3 class="text-center mt-4">No User Available Yet</h3>
             @endif
             @foreach ($users as $user)
-                <div class="col-3">
+                <div class="col-2">
                     <div class="card">
                         <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top form-control" alt="User Image">
                         <div class="card-body text-center">
