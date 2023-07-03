@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('file_id')->references('id')->on('files')->onUpdate('cascade');
             
             $table->string('type', 200)->nullable(false);
-            $table->text('comments')->nullable(false);
+            $table->text('comments')->nullable();
             
             $table->bigInteger('user_id')->unsigned()->nullable(true);
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');

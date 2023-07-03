@@ -15,7 +15,7 @@ class DirectorySeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = Role::get()->pluck('role_name');
+        $roles = Role::get()->where('name', '!=', 'Administrator')->pluck('role_name');
         $directories = [
             [
                 'name' => 'Manuals', 
