@@ -35,7 +35,7 @@
         <h1>Rejected Users</h1>
     </div>
     {{-- Transaction Messages --}}
-    <div class="container">
+    <div >
         @if (session('success'))
             <div class="mt-3 alert alert-success alert-dismissible fade show">
                 {{ session('success') }}
