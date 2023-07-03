@@ -58,9 +58,9 @@
     <div class="container mt-3">
         <div class="row">
             @foreach ($data as $user)
-            <div class="col-4">
-                <div class="card">
-                    <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top form-control" alt="User Image">
+            <div class="col-md-6 col-lg-2">
+                <div class="card"><br>
+                    <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top rounded-circle mx-auto d-block" alt="User Image" style="width: 80px; height: 80px;">
                     <div class="card-body">
                         <h4 class="text-center">
                             {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}

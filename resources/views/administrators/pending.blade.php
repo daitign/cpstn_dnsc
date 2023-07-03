@@ -58,23 +58,23 @@
     <div class="container mt-3">
         <div class="row">
             @foreach ($data as $user)
-            <div class="col-2">
-                <div class="card">
-                    <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top form-control" alt="User Image">
-                    <div class="card-body">
-                        <h5 class="text-center">
+            <div class="col-md-6 col-lg-2">
+                <div class="card"><br>
+                    <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top rounded-circle mx-auto d-block" alt="User Image" style="width: 80px; height: 80px;">
+                    <div class="card-body text-center">
+                        <small class="card-title">
                             {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}
-                        </h5>
+                        </small>
                         <div class="text-center">
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger"><small>Delete</small></button>
-                                <button type="button" data-bs-toggle="modal" data-bs-target="#approve" class="btn btn-outline-success approve" value="{{ $user->id }}"><small>Register</small></button>
+                                <button type="submit" class="btn btn-outline-danger" style="font-size: smaller;"><small>Delete</small></button>
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#approve" class="btn btn-outline-success approve" value="{{ $user->id }}" style="font-size: smaller;"><small>Register</small></button>
                             </form>
                         </div>
                     </div>
-                  </div>
+                  </div><br>
             </div>
             @endforeach
             @if (count($data) == 0)
