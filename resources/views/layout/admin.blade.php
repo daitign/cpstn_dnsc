@@ -1,7 +1,11 @@
+
 <ul class="nav flex-column shadow d-flex sidebar mobile-hid">
   <li class="nav-item logo-holder">
-    <div class="text-center text-white logo py-4 mx-4"><img class="img-fluid" src="http://localhost:8000/storage/assets/dnsc-logo.png" width="130px"><a class="float-end text-white" id="sidebarToggleHolder" href="#"><i class="fas fa-bars" id="sidebarToggle" style=""></i></a></div>
-  </li>
+    <div class="text-center text-white logo py-2 mx-2"><img class="img-fluid" src="http://localhost:8000/storage/assets/dnsc-logo.png" width="100px"><a class="float-end text-white" id="sidebarToggleHolder" href="#"><i class="fas fa-bars" id="sidebarToggle" style=""></i></a></div>
+    
+        
+      
+</li>
 
 
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('user.dashboard') ? 'active' : '' }}" href="{{ route('user.dashboard') }}"><i class="fas fa-tachometer-alt mx-3"></i><span class="text-nowrap mx-2">Dashboard</span></a></li>
@@ -38,4 +42,5 @@
   <li class="nav-item"><a class="nav-link text-start py-1 px-0 {{ request()->routeIs('archives-page') ? 'active' : '' }}" href="{{ route('archives-page') }}"><i class="fas fa-archive mx-3"></i><span class="text-nowrap mx-2">Archive</span></a></li>
   <!-- <li class="nav-item"><a class="nav-link text-start py-1 px-0" href="#"><i class="fas fa-chart-bar mx-3"></i><span class="text-nowrap mx-2">Statistics</span></a></li> -->
 </ul>
+
 

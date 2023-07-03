@@ -65,17 +65,17 @@
         @endif
         <div class="row mt-3">
             @foreach ($data as $user)
-            <div class="col-3 user-item" data-user-role="{{ $user->role->role_name }}">
+            <div class="col-2 user-item" data-user-role="{{ $user->role->role_name }}">
                 <div class="card">
                     <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="card-img-top form-control" alt="User Image">
                     <div class="card-body text-center">
                         <h5>
                             {{ Str::limit($user->firstname . ' ' . ($user->middlename ? strtoupper(substr($user->middlename, 0, 1)) . '. ' : '') . $user->surname . ' ' . ($user->suffix ? $user->suffix : ''), 26, '...') }}
-                            <br/><small>({{ $user->username ?? ''}})</small>
+                            {{-- <br/><small>({{ $user->username ?? ''}})</small> --}}
                         </h5>
-                        <h6><Strong>{{ $user->role_name ?? ''}}</strong></h6>
+                        {{-- <h6><Strong>{{ $user->role_name ?? ''}}</strong></h6> --}}
                         <h6><small>
-                            Assigned on: 
+                            {{-- Assigned on:  --}}
                             @if(!empty($user->assigned_areas))
                                 @foreach($user->assigned_areas as $area)
                                     <br/>{{ sprintf("%s > %s", $area->parent->area_name ?? '', $area->area_name ?? 'None') }}

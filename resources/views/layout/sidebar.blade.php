@@ -286,10 +286,16 @@
                                 style="font-size: 10px;margin: 0px;margin-top: 0px;position: absolute;">10</span></a></li>
                     <li class="nav-item me-2"><a class="nav-link" href="#"><i class="fas fa-bell text-white"></i></a>
                     </li> -->
-                    <li class="nav-item me-2"><a class="nav-link" href="{{ route('user.profile') }}" href="#"><i class="fas fa-user text-white"></i></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{{ route('logout') }}"><i class="fas fa-power-off text-white"></i></a>
-                    </li>
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="{{ route('user.profile') }}">
+                          <img src="{{ Storage::url(auth()->user()->img) }}" alt="User Image" class="rounded-circle" style="width: 30px; height: 30px;">
+                        </a>
+                      </li>
+                      <li class="nav-item me-2">
+                        <a class="nav-link" href="{{ route('logout') }}">
+                          <i class="fas fa-power-off text-warning" style="font-size: 27px;"></i>
+                        </a>
+                      </li>
                 </ul>
             </div>
         </div>
