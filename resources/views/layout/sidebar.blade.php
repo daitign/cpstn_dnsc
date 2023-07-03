@@ -293,31 +293,36 @@
         </div>
     </ul>
     <nav class="navbar navbar-light navbar-expand-md" style="background: rgb(9 60 47 / 90%);">
-        <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
-                    class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container-fluid">
+            <!-- Move the button container to the right -->
+            <button data-bs-toggle="collapse" class="navbar-toggler ms-auto " data-bs-target="#navcol-1" style="color: #ffffff; border: none;">
+                <span class="visually-hidden" >Toggle navigation</span> 
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+        
             <div class="collapse navbar-collapse" id="navcol-1">
-                <p class="navbar-text text-white ms-5" style="margin-bottom: 0;">Office of the Director for Quality
-                    Assurance ({{ auth()->user()->role->role_name }})</p>
+                <p class="navbar-text text-white ms-5" style="margin-bottom: 0;">
+                    Office of the Director for Quality Assurance ({{ auth()->user()->role->role_name }})</p>
                 <ul class="navbar-nav ms-auto">
-                    <!-- <li class="nav-item me-2"><a class="nav-link active" href="#"><i
-                                class="fas fa-comment-alt text-warning" title="10"></i><span class="text-warning"
-                                style="font-size: 10px;margin: 0px;margin-top: 0px;position: absolute;">10</span></a></li>
-                    <li class="nav-item me-2"><a class="nav-link" href="#"><i class="fas fa-bell text-white"></i></a>
-                    </li> -->
-                    <li class="nav-item me-2">
+                    <!-- Move the user profile and logout buttons to the right -->
+                    <li class="nav-item me-2 ms-auto">
                         <a class="nav-link" href="{{ route('user.profile') }}">
-                          <img src="{{ Storage::url(auth()->user()->img) }}" alt="User Image" class="rounded-circle" style="width: 30px; height: 30px;">
+                            <img src="{{ Storage::url(auth()->user()->img) }}" alt="User Image" class="rounded-circle"
+                                style="width: 30px; height: 30px;">
                         </a>
-                      </li>
-                      <li class="nav-item me-2">
+                    </li>
+                    <li class="nav-item me-2 ms-auto">
                         <a class="nav-link" href="{{ route('logout') }}">
-                          <i class="fas fa-power-off text-warning" style="font-size: 27px;"></i>
+                            <i class="fas fa-power-off text-warning" style="font-size: 27px;"></i>
                         </a>
-                      </li>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
+    
+    
     @yield('page')
     {{-- <div class="d-flex h-100 sidebar-h">
         <div class="sidebar">
