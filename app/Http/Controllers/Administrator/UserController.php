@@ -38,7 +38,7 @@ class UserController extends Controller
         return view('administrators.user', compact('users', 'roles' ,'request_role'));
     }
 
-    public function destroy(string $id)
+    public function destroy(Request $request, $id)
     {
         User::where('id',$id)->delete();
 

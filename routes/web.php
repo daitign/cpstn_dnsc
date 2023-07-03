@@ -115,6 +115,8 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/assign_po_users',[AdminUserController::class, 'assignPOUser'])->name('admin-assign-po-user');
 
         Route::get('/users',[AdminUserController::class,'index'])->name('admin-user-list');
+        Route::delete('/users/{id}',[AdminUserController::class,'destroy'])->name('admin-user-destroy');
+
         // Route::prefix('roles')->group(function(){
         //     Route::get('/',[RoleController::class,'index'])->name('admin-role-page');
         //     Route::get('{id}',[RoleController::class,'show'])->name('admin-user-list');
