@@ -253,27 +253,45 @@
         position: absolute;
         margin-left: 120px;
     }
+
+    .nav > .nav-item {
+        width: 100%;
+    }
+
+    .nav-container {
+        height: 100%;
+        width: 100%;
+        overflow-y: auto;
+    }
     
 </style>
 @endsection
 @section('content')
-    @if (in_array(auth()->user()->role->role_name, ['Quality Assurance Director','Administrator']))
-        @include('layout.admin')
-    @elseif (auth()->user()->role->role_name == 'Document Control Custodian')
-        @include('layout.dcc')
-    @elseif (auth()->user()->role->role_name == 'Process Owner')
-        @include('layout.po')
-    @elseif (auth()->user()->role->role_name == 'Staff')
-        @include('layout.staff')
-    @elseif (auth()->user()->role->role_name == 'Human Resources')
-        @include('layout.hr')
-    @elseif (auth()->user()->role->role_name == 'Internal Lead Auditor')
-        @include('layout.lead-auditor')
-    @elseif (auth()->user()->role->role_name == 'Internal Auditor')
-        @include('layout.auditor')
-    @elseif (auth()->user()->role->role_name == 'College Management Team')
-        @include('layout.cmt')
-    @endif
+    <ul class="nav shadow d-flex sidebar mobile-hid">
+        <li class="nav-item logo-holder">
+            <div class="text-center text-white logo py-4 mx-4"><img class="img-fluid" src="http://localhost:8000/storage/assets/dnsc-logo.png" width="130px"><a class="float-end text-white" id="sidebarToggleHolder" href="#"><i class="fas fa-bars" id="sidebarToggle" style=""></i></a></div>
+        </li>
+    
+        <div class="nav-container">
+            @if (in_array(auth()->user()->role->role_name, ['Quality Assurance Director','Administrator']))
+                @include('layout.admin')
+            @elseif (auth()->user()->role->role_name == 'Document Control Custodian')
+                @include('layout.dcc')
+            @elseif (auth()->user()->role->role_name == 'Process Owner')
+                @include('layout.po')
+            @elseif (auth()->user()->role->role_name == 'Staff')
+                @include('layout.staff')
+            @elseif (auth()->user()->role->role_name == 'Human Resources')
+                @include('layout.hr')
+            @elseif (auth()->user()->role->role_name == 'Internal Lead Auditor')
+                @include('layout.lead-auditor')
+            @elseif (auth()->user()->role->role_name == 'Internal Auditor')
+                @include('layout.auditor')
+            @elseif (auth()->user()->role->role_name == 'College Management Team')
+                @include('layout.cmt')
+            @endif
+        </div>
+    </ul>
     <nav class="navbar navbar-light navbar-expand-md" style="background: rgb(9 60 47 / 90%);">
         <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
                     class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>

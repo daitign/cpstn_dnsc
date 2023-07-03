@@ -16,7 +16,7 @@
                         <input type="text" class="form-control" name="name" id="name" placeholder="Enter Report Name" required>
                     </div>
                     <div class="mb-3">
-                        <select name="area" class="form-control" required>
+                        <select name="facility" class="form-control" required>
                             <option value="">Select Office</option>
                             @foreach($offices as $office)
                                 <option value="{{ $office->id }}">{{ $office->name }}</option>

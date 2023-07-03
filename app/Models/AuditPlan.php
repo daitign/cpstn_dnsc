@@ -41,4 +41,9 @@ class AuditPlan extends Model
             'user_id'
         );
     }
+
+    public function plan_users()
+    {
+        return $this->hasMany(AuditPlanAreaUser::class);
+    }
 }

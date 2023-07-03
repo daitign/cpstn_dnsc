@@ -83,8 +83,8 @@ class DirectoryRepository {
         }elseif(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
             $directories = Directory::where('area_id', Auth::user()->assigned_area->id ?? '')->get();
             if(Auth::user()->role->role_name == 'Internal Auditor') {
-                $audit_plan_directories = AuditPlan::whereHas('users', function($q){
-                    $q->where('id',  Auth::user()->id);
+                $audit_plan_directories = AuditPlan::whereHas('plan_users', function($q){
+                    $q->where('user_id',  Auth::user()->id);
                 })->pluck('directory_id');
                 $directories = $directories->merge(Directory::whereIn('id', $audit_plan_directories)->get());   
             }
