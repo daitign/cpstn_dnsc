@@ -17,8 +17,7 @@
             @endif
         </h5>
     </div>
-    {{-- <div class="container"> --}}
-    <div class="m-3">   
+    <div class="container">
         <div style="text-align:right">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
             @if(Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
@@ -101,7 +100,7 @@
         @if(!empty($files))
             <div class="mt-3 row">
                 @foreach($files as $file)
-                    <div class="col-3 text-center">
+                    <div class="col-2 text-center">
                         @if($file->type == 'audit_reports'
                             && !empty($file->audit_report)
                             && !empty($file->audit_report->cars))
