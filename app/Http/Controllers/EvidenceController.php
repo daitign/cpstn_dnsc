@@ -28,29 +28,12 @@ class EvidenceController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $data = $this->dr->getDirectoriesAndFiles($this->parent,$user->id, $request->directory ?? null);
         
-        if(!empty($request->directory)) {
-            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
-            $data['route'] = 'evidences';
-            $data['page_title'] = $this->parent;
-            return view('archives.index', $data);
-        }else{
-            if(Auth::user()->role->role_name == 'Internal Auditor') {
-                return view('audits.auditor-areas');
-            }
-        }
-
-        $data = $this->dr->getDirectoryFiles($this->parent);
-        if($user->role->role_name == 'Process Owner') {
-            $data['parent_directory'] = null;
-            $data['directory'] = null;
-            $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
-        }
-
+        $data['route'] = strtolower($this->parent);
         $data['page_title'] = $this->parent;
-        $data['route'] = 'evidences';
 
-        return view('archives.files', $data);
+        return view('archives.index', $data);
     }
 
     public function create()

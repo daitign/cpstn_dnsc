@@ -28,23 +28,10 @@ class TemplateController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $user = Auth::user();
-        if(!empty($request->directory)) {
-            $data = $this->dr->getDirectoriesAndFiles('Templates', $request->directory);
-            $data['route'] = 'templates';
-            $data['page_title'] = $this->parent;
-            return view('archives.index', $data);
-        }
+        $data = $this->dr->getDirectoriesAndFiles($this->parent,$user->id, $request->directory ?? null);
         
-        $directory_id = null;
-        if($user->role->role_name !== 'Staff') {
-            $directory_id = Directory::whereHas('parent', function($q) {
-                $q->where('name', $this->parent);
-            })->where('name', $user->role->role_name)->firstOrFail()->id ?? null;
-        }
-        
-        $data = $this->dr->getDirectoriesAndFiles('Templates', $directory_id, $request->user);
+        $data['route'] = strtolower($this->parent);
         $data['page_title'] = $this->parent;
-        $data['route'] = 'templates';
 
         return view('archives.index', $data);
     }

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DirectoryRepository {
 
-    public function getDirectoriesAndFiles($grand_parent = null, $directory_id = null, $user_id = null)
+    public function getDirectoriesAndFiles($grand_parent = null,  $user_id = null, $directory_id = null)
     {
         $files = [];
         $parents = [];
@@ -262,5 +262,26 @@ class DirectoryRepository {
             }
         }
         return $directory;
+    }
+
+    public function getDirectoriesAssignedByGrandParent($grand_parent_name)
+    {
+        if(in_array(Auth::user()->role->role_name, config('app.role_with_assigned_area'))) {
+            $directories = Directory::whereIn('area_id', Auth::user()->assigned_areas->pluck('id'))->get();
+            if(Auth::user()->role->role_name == 'Internal Auditor') {
+                $audit_plan_directories = AuditPlan::whereHas('users', function($q){
+                    $q->where('user_id',  Auth::user()->id);
+                })->pluck('directory_id');
+                $directories = $directories->merge(Directory::whereIn('id', $audit_plan_directories)->get());
+            }
+        }else{
+            $directories = Directory::get();
+        }
+        
+        foreach($directories as $key => $directory) {
+            $directory->grand_parent = $this->getGrandParent($directory);
+        }
+        $directories = $directories->where('grand_parent', $grand_parent_name);
+        return Directory::whereIn('parent_id', $directories->pluck('id'))->get();
     }
 }
