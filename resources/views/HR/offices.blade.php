@@ -38,7 +38,8 @@
     <div class="page-header pb-2">
         <h2>Office List</h2>
     </div>
-    <div class="container pt-4">
+    {{-- <div class="container pt-4"> --}}
+        <div class="m-3">
         <div style="text-align:right">
             <button class="btn btn-success mb-5 btn-office-modal" 
                 data-action="create" data-bs-toggle="modal" 
@@ -46,40 +47,46 @@
                     Add Office
             </button>
         </div>
-        <div class="row g-3">
-            <div class="row" style="overflow-y: auto;height:60vh;">
-            @if(count($offices) == 0)
-                <h3 class="text-center mt-4">No Office Yet</h3>
-            @endif
-            @foreach ($offices as $office)
-                <div class="col-3">
-                    <div class="card p-3 text-center">
-                        <div class="card-body pt-2">
-                            <i class="fa fa-building fa-2x"></i>
-                            <h4>{{ $office->name ?? '' }}</h4>
-                            <p>{{ $office->description ?? '' }}</p>
-                            <p>Rating: {{ number_format($office->averageRating(), 2) ?? '' }}/5</p>
+        {{-- <div class="container"> --}}
+            <div class="m-3">
+            <div class="row g-3">
+                <div class="col-12">
+                    <div class="row" style="overflow-y: auto; height: 60vh;">
+                        @if(count($offices) == 0)
+                        <h3 class="text-center mt-4">No Office Yet</h3>
+                        @endif
+                        @foreach ($offices as $office)
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <div class="card p-3 text-center">
+                                <div class="card-body pt-2">
+                                    <i class="fa fa-building fa-2x"></i>
+                                    <h4>{{ $office->name ?? '' }}</h4>
+                                    {{-- <p>{{ $office->description ?? '' }}</p> --}}
+                                    <p class="text-success">⭐Rating: {{ number_format($office->averageRating(), 2) ?? '' }}/5</p>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-primary btn-office-modal" 
+                                        data-bs-toggle="modal" data-bs-target="#officeModal"
+                                        data-route="{{ route('hr-offices-update', $office->id) }}" 
+                                        data-name="{{ $office->name ?? '' }}" 
+                                        data-description="{{ $office->description ?? '' }}"><small>Update</small>
+                                            
+                                    </button>
+                                    
+                                    <button class="btn btn-danger btn-confirm" data-target="#delete_office_{{ $office->id }}"><small>Delete</small></button>
+                                    <form id="delete_office_{{ $office->id }}" action="{{ route('hr-offices-delete', $office->id) }}" class="d-none" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                    </form>
+                                </div>
+                            </div><br>
                         </div>
-                        <div class="card-footer">
-                            <button class="btn btn-primary btn-office-modal" 
-                                data-bs-toggle="modal" data-bs-target="#officeModal"
-                                data-route="{{ route('hr-offices-update', $office->id) }}" 
-                                data-name="{{ $office->name ?? '' }}" 
-                                data-description="{{ $office->description ?? '' }}">
-                                    Update
-                            </button>
-                            
-                            <button class="btn btn-danger btn-confirm" data-target="#delete_office_{{ $office->id }}">Delete</button>
-                            <form id="delete_office_{{ $office->id }}" action="{{ route('hr-offices-delete', $office->id) }}" class="d-none" method="POST">
-                                @csrf
-                                @method('DELETE')
-                            </form>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
-            @endforeach
             </div>
         </div>
+        
     </div>
 
     <div class="modal fade" id="officeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

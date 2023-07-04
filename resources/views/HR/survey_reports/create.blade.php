@@ -7,6 +7,7 @@
         <h2>Add Survey Report</h2>
     </div>
     <div class="container">
+        {{-- <div class="m-3"> --}}
         <div class="row mt-3 px-3">
             @include('layout.alert')
             <form method="POST" action="{{ route('hr.survey_report.store') }}" enctype="multipart/form-data">

@@ -5,9 +5,9 @@
 @section('page')
     <div class="page-header">
         <h1>{{ $page_title ?? 'Archives' }}</h1>
-        <h5>{{ !empty($parent_directory->name) ? $parent_directory->name.' > ' : '' }}{{ $directory->name ?? '' }}</h5>
+        {{-- <h5>{{ !empty($parent_directory->name) ? $parent_directory->name.' > ' : '' }}{{ $directory->name ?? '' }}</h5> --}}
     </div>
-    <div class="container">
+    <div class="m-3">
         @include('layout.alert')
         
         <div class="mb-4 row">
