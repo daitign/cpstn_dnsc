@@ -59,8 +59,8 @@
                         <div class="col-sm-6 col-md-4 col-lg-3">
                             <div class="card p-3 text-center">
                                 <div class="card-body pt-2">
-                                    <i class="fa fa-building fa-2x"></i>
-                                    <h4>{{ $office->name ?? '' }}</h4>
+                                    <i class="fa fa-building fa-2x text-success"></i>
+                                    <h4><small>{{ $office->name ?? '' }}</small></h4>
                                     {{-- <p>{{ $office->description ?? '' }}</p> --}}
                                     <p class="text-success">⭐Rating: {{ number_format($office->averageRating(), 2) ?? '' }}/5</p>
                                 </div>
