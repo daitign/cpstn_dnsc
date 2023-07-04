@@ -32,7 +32,7 @@
 @endsection
 @section('page')
 <div class="page-header pb-2">
-    <h1>Announcements</h1>
+    <h2>Announcements</h2>
 </div>
 <div class="container">
     <div class="row mt-2">

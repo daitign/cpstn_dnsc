@@ -3,10 +3,11 @@
 <title>Unassigned</title>
 @endsection
 @section('page')
-    <div class="page-header">
-        <h1>Unassigned</h1>
+    <div class="2">
+        <h2>Unassigned</h2>
     </div>
-    <div class="container">
+    {{-- <div class="container"> --}}
+    <div class="m-3">
         
         <div class="px-4 text-center">
             <i class="text-danger fa fa-times fa-3x mb-3 mt-3"></i>

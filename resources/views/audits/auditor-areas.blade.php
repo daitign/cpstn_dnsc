@@ -4,7 +4,7 @@
 @endsection
 @section('page')
     <div class="page-header">
-        <h1>Audit Evidence > {{ $audit_plan->name }}</h1>
+        <h2>Audit Evidence > {{ $audit_plan->name }}</h2>
     </div>
     <div class="container">
         @include('layout.alert')

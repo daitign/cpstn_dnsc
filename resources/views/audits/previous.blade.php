@@ -4,8 +4,8 @@
 @endsection
 
 @section('page')
-    <div class="page-header">
-        <h1>Use Previous Audit Plan</h1>
+    <div class="2">
+        <h2>Use Previous Audit Plan</h2>
     </div>
     <div class="container">
         <div class="row mt-3 px-2 pb-3">

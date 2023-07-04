@@ -4,7 +4,7 @@
 @endsection
 @section('page')
     <div class="page-header">
-        <h1>Shared with me</h1>
+        <h2>Shared with me</h2>
     </div>
     <div class="container">
         @include('layout.alert')

@@ -5,7 +5,7 @@
 
 @section('page')
     <div class="page-header">
-        <h1>Add Audit Plan</h1>
+        <h2>Add Audit Plan</h2>
     </div>
     <div class="container">
         <div class="row mt-3 px-2 pb-3">

@@ -56,7 +56,7 @@
 
     {{-- Transaction Messages --}}
     <div style="min-height: 20vh">
-        <div class="container row px-3 mt-3">
+        <div class="m-3">
             @include('layout.alert')
             <div class="col-8 mt-3 row area-container">
                 
@@ -140,13 +140,13 @@
                 if (child_areas.length > 0) 
                 {
                     var type = area.area_name == 'Administration' ? 'Offices' : 'Institute';
-                    area_container.html('<h2 class="my-3">' + type + '</h2>');
+                    area_container.html('<h2 class="my-3 text-white">' + type + '</h2>');
 
                     child_areas.forEach(function (i) {
                         area_container.append(`
                         <div class="col-md-2 col-sm-4 col-6 mb-4 text-center"> <!-- Adjust the column widths based on your requirements -->
                             <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-building fa-4x text-success"></i> <!-- Increased the icon size to 3x -->
+                            <i class="fa fa-building fa-4x text-warning"></i> <!-- Increased the icon size to 3x -->
                             <p style="text-overflow: ellipsis; font-size: 14px;"><small>` + i.area_name + `</small></p> <!-- Increased the font size to 14px -->
                             </button>
                             <ul class="dropdown-menu text-left">
@@ -175,12 +175,12 @@
 
                 var program_areas = areas.filter(i => i.parent_area == area_id && i.type == 'program');
                 if(program_areas.length > 0) {
-                    program_container.html('<h2 class="my-3">Program</h2>');
+                    program_container.html('<h2 class="my-3 text-success">Programs</h2>');
 
                     program_areas.forEach(function(i){
                         program_container.append(`<div class="col-2 text-center">
                             <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa fa-book fa-2x"></i>
+                                <i class="fa fa fa-book fa-2x text-warning"></i>
                                 <p style="text-overflow: ellipsis"><small>` + i.area_name + `</small></p>
                             </button>
                             <ul class="dropdown-menu text-left">
@@ -264,7 +264,7 @@
                     }
                     if(type == 'program') {
                         $('.select-container').append(`<div class="mb-3">
-                            <label for="parent_area" class="form-label">Institute</label>
+                            <label for="parent_area" class="form-label text-success">Institute</label>
                             <select class="form-control area-select" name="parent_area" required></select>
                         </div>`);
                         var parent_areas = areas.filter(i => i.type == 'institute');

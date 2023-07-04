@@ -302,8 +302,7 @@
             
         
             <div class="collapse navbar-collapse" id="navcol-1">
-                <p class="navbar-text text-white ms-5" style="margin-bottom: 0;">
-                    Office of the Director for Quality Assurance ({{ auth()->user()->role->role_name }})</p>
+                <p class="navbar-text text-white ms-5" style="margin-bottom: 0;">OFFICE OF THE DIRECTOR FOR QUALITY ASSURANCE | <span class="fw-bold text-uppercase text-warning">{{ auth()->user()->role->role_name }}</span></p>
                 <ul class="navbar-nav ms-auto">
                     <!-- Move the user profile and logout buttons to the right -->
                     <li class="nav-item me-2 ms-auto">

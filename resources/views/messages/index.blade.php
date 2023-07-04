@@ -6,7 +6,7 @@
   <link href="{{ asset('css/chatbox.css') }}" rel="stylesheet" />
 @endsection
 @section('page')
-<div class="content">
+<div class="m-3">
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">

@@ -32,7 +32,7 @@
 @endsection
 @section('page')
     <div class="page-header pb-2">
-        <h1>User Profile</h1>
+        <h2>User Profile</h2>
     </div>
     <div class="container">
         <div class="g-3 bg-white mt-2" style="overflow-y: auto; height:50vh;">

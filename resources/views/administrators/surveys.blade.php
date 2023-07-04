@@ -37,7 +37,7 @@
 @endsection
 @section('page')
     <div class="page-header pb-2">
-        <h1>Survey List</h1>
+        <h2>Survey List</h2>
     </div>
     <div class="container pt-2">
         <div class="row g-3">

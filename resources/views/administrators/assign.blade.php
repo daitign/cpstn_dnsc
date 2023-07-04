@@ -44,7 +44,8 @@
         </div>
     </div>
     
-    <div class="container">
+    {{-- <div class="container"> --}}
+        <div class="m-3">
         {{-- Transaction Messages --}}
         @if (session('success'))
             <div class="alert mt-2 alert-success alert-dismissible fade show">

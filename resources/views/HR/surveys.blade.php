@@ -36,7 +36,7 @@
 @endsection
 @section('page')
     <div class="page-header pb-2">
-        <h1>Survey List</h1>
+        <h2>Survey List</h2>
     </div>
     <form action="{{ route('hr-survey-page') }}">
         @csrf
@@ -49,7 +49,8 @@
             </div>
         </div>
     </form> 
-    <div class="container pt-2">
+    {{-- <div class="container pt-2"> --}}
+        <div class="m-3">
         <div class="row g-3">
             <div style="overflow-y: auto;height:60vh;">
                 @if(count($surveys) == 0)

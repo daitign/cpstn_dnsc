@@ -39,7 +39,7 @@
 
         @section('page')
             <div class="page-header pb-2">
-                <h1>Survey Report</h1>
+                <h2>Survey Report</h2>
             </div>
             <div class="container pt-2">
                 <div class="row g-3">

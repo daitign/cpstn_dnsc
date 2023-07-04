@@ -32,7 +32,7 @@
 @endsection
 @section('page')
     <div class="page-header pb-2">
-        <h1>Pending Users</h1>
+        <h2>Pending Users</h2>
     </div>
     {{-- Transaction Messages --}}
     <div >
@@ -55,7 +55,8 @@
         @endif
     </div>
 
-    <div class="container mt-3">
+    {{-- <div class="container mt-3"> --}}
+        <div class="m-3">
         <div class="row">
             @foreach ($data as $user)
             <div class="col-md-6 col-lg-2">

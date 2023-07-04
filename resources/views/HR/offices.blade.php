@@ -36,7 +36,7 @@
 @endsection
 @section('page')
     <div class="page-header pb-2">
-        <h1>Office List</h1>
+        <h2>Office List</h2>
     </div>
     <div class="container pt-4">
         <div style="text-align:right">

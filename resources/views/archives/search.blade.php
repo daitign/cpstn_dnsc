@@ -4,7 +4,7 @@
 @endsection
 @section('page')
     <div class="page-header">
-        <h1>Archives File Search</h1>
+        <h2>Archives File Search</h2>
     </div>
     <div class="container">
         @include('layout.alert')

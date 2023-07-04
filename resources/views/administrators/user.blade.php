@@ -32,9 +32,11 @@
 @endsection
 @section('page')
     <div class="page-header pb-2">
-        <h1>User List</h1>
+        <h2>User List</h2>
     </div>
-    <div class="container">
+    {{-- <div class="container"> --}}
+        <div class="m-3">
+
         <div class="row mt-3">
             <div class="col-3 mb-2">
                 <a href="{{ route('admin-user-list') }}" class="btn w-100 {{ $request_role == '' ? 'btn-success' : 'btn-primary' }}">All</a>
