@@ -14,6 +14,63 @@ use Illuminate\Support\Facades\Auth;
 
 class DirectoryRepository {
 
+    public function getDirectoriesAndFiles($directory_id = null, $user_id = null, $grand_parent = null)
+    {
+        $users = [];
+        $files = [];
+        $parents = [];
+        $directories = [];
+        $current_directory = [];
+        $current_user = !empty($user_id) ? User::findOrFail($user_id) : Auth::user();
+        $role = $current_user->role->role_name;
+
+        if(empty($grand_parent)) {
+            $directories = Directory::where('parent_id', null)->whereIn('name', $current_user->role->directories)->get();
+        }else{
+            $grand_parent = Directory::where('parent_id', null)->whereIn('name', $grand_parent)->get();
+            $directories = Directory::where('parent_id', $grand_parent->id)->get();
+        }
+
+        if($directory_id) {
+            $current_directory = Directory::where('id', $directory_id)->first();
+
+            $parents = $this->getDirectoryTree($current_directory);
+            $parents[] = $current_directory->toArray();
+
+            $directories = Directory::where('parent_id', $directory_id)->get();
+        }
+
+        if(in_array($current_user->role->role_name, config('app.role_with_assigned_area'))) {
+            // Check if directories are assign or parent of assigned
+            $allowed_directories = [];
+            $areas = $current_user->assigned_areas;
+            foreach($directories as $directory) {
+                
+            }
+        }
+
+        return compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user');
+    }
+
+    public function getDirectoryTree($directory)
+    {
+        $directories = $this->getParentDirectory($directory);
+        krsort($directories);
+
+        return $directories;
+    }
+
+    public function getParentDirectory($directory)
+    {
+        $directories = [];
+        if(!empty($directory->parent)) {
+            $directories = [$directory->parent->toArray()];
+            $directories = array_merge($directories, $this->getParentDirectory($directory->parent));
+        }
+
+        return $directories;
+    }
+
     public function getArchiveDirectoryaAndFiles($request_directory = null, $request_user = null, $directory_name = '')
     {
         $users = [];

@@ -26,6 +26,11 @@ class Directory extends Model
         return $this->belongsTo(Directory::class, 'parent_id');
     }
 
+    public function children()
+    {
+        return $this->hasMany(Directory::class, 'parent_id');
+    }
+
     public function parents()
     {
         $parents = [$this];

@@ -11,8 +11,11 @@
             @endif
             @if(!empty($parents))
                 @foreach($parents as $parent) 
-                    {{ $parent->name }}
-                    @if(!$loop->last) > @endif
+                    @if(!$loop->last)
+                        <a href="{{ route($route ?? 'archives-page') }}?directory={{ $parent['id'] }}&user={{ $current_user->id }}">{{ $parent['name'] }}</a> >
+                    @else
+                        {{ $parent['name'] }}
+                    @endif
                 @endforeach
             @endif
         </h5>
@@ -54,13 +57,7 @@
                     <div class="col-2 text-center">
                         <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}">
                             <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
-                            <p class="text-white" style="text-overflow: ellipsis"><small>
-                                @if(in_array($current_user->role->role_name, ['Process Owner', 'Internal Auditor']))
-                                    {{ sprintf('%s%s%s', !empty($directory->parent->parent->name) ? $directory->parent->parent->name.' > ' : '', !empty($directory->parent->name) ? $directory->parent->name.' > ' : '', $directory->name ?? '') }}
-                                @else
-                                    {{ $directory->name ?? '' }}
-                                @endif
-                            </small></p>
+                            <p class="text-white" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
                         </button>
                         <ul class="dropdown-menu text-center">
                             <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
@@ -111,15 +108,15 @@
                             <p class="text-whiteeee mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
                         </button>
 
-                            @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports', 'consolidated_audit_reports', 'survey_reports']))
-                                <button class="btn btn-remarks
-                                    {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
-                                    data-file-id="{{ $file->id }}"
-                                    {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian', 'College Management Team', 'Quality Assurance Director']))
-                                    ? 'data-route='.route('save-remarks', $file->id) : '' }}>
-                                            <i class="fa fa-email"></i> Remarks
-                                </button>
-                            @endif
+                        @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports', 'consolidated_audit_reports', 'survey_reports']))
+                            <button class="btn btn-remarks
+                                {{ !empty($file->remarks) ? 'btn-success' : 'btn-secondary' }}" data-bs-toggle="modal" data-bs-target="#remarksModal"
+                                data-file-id="{{ $file->id }}"
+                                {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian', 'College Management Team', 'Quality Assurance Director']))
+                                ? 'data-route='.route('save-remarks', $file->id) : '' }}>
+                                        <i class="fa fa-email"></i> Remarks
+                            </button>
+                        @endif
                         <ul class="dropdown-menu text-left px-3">
                             <li><a href="{{ route('archives-download-file', $file->id) }}" target="_blank" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></li>
                             <li>
