@@ -14,28 +14,23 @@ use Illuminate\Support\Facades\Auth;
 
 class DirectoryRepository {
 
-    public function getDirectoriesAndFiles($directory_id = null, $user_id = null, $grand_parent = null)
+    public function getDirectoriesAndFiles($grand_parent = null, $directory_id = null, $user_id = null)
     {
-        $users = [];
         $files = [];
         $parents = [];
         $directories = [];
         $current_directory = [];
+        $users = !empty($user_id) ? User::get() : [];
         $current_user = !empty($user_id) ? User::findOrFail($user_id) : Auth::user();
+        $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
         $role = $current_user->role->role_name;
 
-        if(empty($grand_parent)) {
-            $directories = Directory::where('parent_id', null)->whereIn('name', $current_user->role->directories)->get();
-        }else{
-            $grand_parent = Directory::where('parent_id', null)->whereIn('name', $grand_parent)->get();
-            $directories = Directory::where('parent_id', $grand_parent->id)->get();
-        }
+        $directories = Directory::where('parent_id', null)->whereIn('name', $grand_parents)->get();
+
         if($directory_id) {
             $current_directory = Directory::where('id', $directory_id)->firstOrFail();
-            if(!empty($grand_parent)) { // Make sure current directory is equal to grand parent
-                if($grand_parent->name == $this->getGrandParent($directory)) {
-                    return abort(404);
-                }
+            if(!in_array($this->getGrandParent($current_directory), $grand_parents)) {
+                return abort(404);
             }
 
             $parents = $this->getRootDirectories($current_directory);
@@ -43,23 +38,44 @@ class DirectoryRepository {
             $parents[] = $current_directory->toArray();
 
             $directories = Directory::where('parent_id', $directory_id)->get();
-
-            $files = $this->getDirectoryFiles($current_directory, $current_user);
+            $files = $this->getFiles($current_user, $current_directory);
         }
 
         // Check if directories are assign or parent of assigned
-        $allowed_directories = [];
-        foreach($directories as $directory) {
-            if($this->allowedDirectory($directory, $current_user)) {
-                $allowed_directories[] = $directory;
-            }
-        }
-        $directories = $allowed_directories;
+        $directories = $directories->filter(function ($directory) use($grand_parents, $current_user) {
+            return in_array($this->getGrandParent($directory), $grand_parents) && $this->allowedDirectory($directory, $current_user);
+        });
 
         return compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user');
     }
 
-    public function getDirectoryFiles($current_directory,  $current_user) {
+    public function searchFilesAndDirectories($keyword = '', $grand_parent = null) {
+        $files = [];
+        $parents = [];
+        $directories = [];
+        $current_directory = [];
+        $role = $current_user->role->role_name;
+        $users = !empty($user_id) ? User::get() : [];
+        $current_user = !empty($user_id) ? User::findOrFail($user_id) : Auth::user();
+        
+        $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
+        $directories = Directory::where('parent_id', null)
+                        ->where('name', 'LIKE', "%$keyword%")
+                        ->get();
+
+        $directories = $directories->filter(function ($directory) use($grand_parents, $current_user) {
+            return in_array($this->getGrandParent($directory), $grand_parents) && $this->allowedDirectory($directory, $current_user);
+        });
+
+        $files = $this->getFiles($current_user, null, $keyword);
+        $files = $files->filter(function ($file) use($grand_parents, $current_user) {
+            return in_array($this->getGrandParent($file->directory), $grand_parents) && $this->allowedDirectory($file->directory, $current_user);
+        });
+
+        return compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user');
+    }
+
+    public function getFiles($current_user, $current_directory = null, $keyword = null) {
         $role_file_access = [
             'Internal Auditor', 
             'Internal Lead Auditor', 
@@ -67,18 +83,22 @@ class DirectoryRepository {
             'College Management Team',
             'Quality Assurance Director'
         ];
-
-        if(in_array($current_user->role->role_name, $role_file_access)){
-            $files = File::where('directory_id', $current_directory->id)->get();
-        }else{
-            $files = File::where('directory_id', $current_directory->id)
-                ->where(function($q) use($current_user, $current_directory) {
+        $files = File::where(function($q) use($keyword, $current_user, $current_directory, $role_file_access){
+            if(!empty($keyword)) {
+                $q->where('name', "%$keyword%");
+            }
+            if(!empty($current_directory)) {
+                $q->where('directory_id', $current_directory->id);
+            }
+            if(!in_array($current_user->role->role_name, $role_file_access)) {
+                $q->where(function($q) use($current_user, $current_directory) {
                     $q->where('user_id', $current_user->id);
                     if($current_user->role->role_name !== 'Staff') {
                         $q->orWhere('type', 'templates');
                     }
-                })->get();
-        }
+                });
+            }
+        })->get();
 
         return $files;
     }

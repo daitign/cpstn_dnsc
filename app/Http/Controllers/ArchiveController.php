@@ -26,7 +26,7 @@ class ArchiveController extends Controller
     {
         $user = Auth::user();
         $role_name = $user->role->role_name;
-        $data = $this->dr->getDirectoriesAndFiles($request->directory, $request->user);
+        $data = $this->dr->getDirectoriesAndFiles(null, $request->directory, $request->user);
 
         return view('archives.index', $data);
     }
