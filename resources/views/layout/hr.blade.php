@@ -4,7 +4,7 @@
 <li class="nav-item dropdown {{ request()->is('survey/*') || request()->is('survey') ? 'show' : '' }}">
   <a data-bs-auto-close="false" class="dropdown-toggle nav-link text-start py-1 px-0 position-relative {{ request()->is('survey/*') || request()->is('survey') ? 'active' : '' }}" 
       aria-expanded="true" data-bs-toggle="dropdown" href="#"><i class="fas fa-chart-bar mx-3"></i>
-      <span class="text-nowrap mx-2">Survey</span></a>
+      <span class="text-nowrap mx-2">Survey</span><i class="fas fa-caret-down float-none float-lg-end me-3"></i></a>
       <div class="dropdown-menu drop-menu border-0 animated fadeIn {{ request()->is('hr/survey/*') || request()->is('hr/survey') ? 'show' : '' }}" data-bs-popper="none">
           <a class="dropdown-item {{ request()->routeIs('hr-survey-page') ? 'active' : '' }}" href="{{ route('hr-survey-page') }}"><span>List</span></a>
           <a class="dropdown-item {{ request()->routeIs('hr-survey-report') ? 'active' : '' }}" href="{{ route('hr-survey-report') }}"><span>Reports</span></a>
