@@ -32,6 +32,7 @@
             width: 30px;
             text-align: center;
         }
+       
     </style>
 @endsection
 @section('page')
@@ -52,7 +53,7 @@
             @if(count($surveys) == 0)
                 <h3 class="mt-4">No Survey Submitted Yet</h3>
             @endif
-            @foreach ($surveys as $survey)
+            {{-- @foreach ($surveys as $survey)
                 <div class="card p-3">
                     <div class="row">
                         <div class="col-6">
@@ -71,7 +72,43 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @endforeach --}}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"> <!-- Added row-cols classes for responsive columns and g-4 class for gap -->
+                @foreach ($surveys as $survey)
+                    <div class="col mb-4"> <!-- Added mb-4 class for margin-bottom between cards -->
+                        <div class="card p-3">
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <h4>{{ $survey->name ?? ''}}</h4>
+                                    <h6>{{ sprintf('%s: %s',$survey->type ?? '', $survey->type == 'Student' ? $survey->course_year : $survey->occupation) }}</h6>
+                                    <h5>Office: {{ $survey->score->office->office_name ?? ''}}</h5>
+                                    <h5>Ratings:</h5>
+                                    <h6>Promptness of Service: <input class="input-grade" type="text" value="{{ $survey->score->promptness }}" disabled></h6>
+                                    <h6>Quality of Engagement: <input class="input-grade" type="text" value="{{ $survey->score->engagement }}" disabled></h6>
+                                    <h6>Cordiality of Personnel: <input class="input-grade" type="text" value="{{ $survey->score->cordiality }}" disabled></h6>
+                                </div>
+                                
+                                <div class="col-12 col-md-6">
+                                    <h5>Comments:</h5>
+                                    <textarea class="form-control" rows="7" disabled>{{ $survey->suggestions ?? ''}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
+            
+            
+
+            
+            
+            
+            
+        
+
+
+
             </div>
         </div>
     </div>

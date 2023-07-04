@@ -38,46 +38,51 @@
     <div class="page-header pb-2">
         <h1>Survey List</h1>
     </div>
+    <form action="{{ route('hr-survey-page') }}">
+        @csrf
+        <div class="input-group mb-3 col-6">
+            <input type="text" name="keyword" class="form-control" placeholder="Input Office..." aria-describedby="basic-addon2" value="{{ $keyword ?? '' }}">
+            <input type="date" name="date_from" class="form-control">
+            <input type="date" name="date_to" class="form-control">
+            <div class="input-group-append">
+                <button class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
+            </div>
+        </div>
+    </form> 
     <div class="container pt-2">
         <div class="row g-3">
-            <form action="{{ route('hr-survey-page') }}">
-                @csrf
-                <div class="input-group mb-3 col-6">
-                    <input type="text" name="keyword" class="form-control" placeholder="Input Office..." aria-describedby="basic-addon2" value="{{ $keyword ?? '' }}">
-                    <input type="date" name="date_from" class="form-control">
-                    <input type="date" name="date_to" class="form-control">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
-                    </div>
-                </div>
-            </form>
-
             <div style="overflow-y: auto;height:60vh;">
-            @if(count($surveys) == 0)
-                <h3 class="text-center mt-4">No Survey Submitted Yet</h3>
-            @endif
-            @foreach ($surveys as $survey)
-                <div class="card p-3">
-                    <div class="row">
-                        <div class="col-6">
-                            <h4>{{ $survey->name ?? ''}}</h4>
-                            <h4>Email: {{ $survey->email ?? ''}}</h4>
-                            <h4>Contact Number: {{ $survey->contact_number ?? ''}}</h4>
-                            <h6>{{ sprintf('%s: %s',$survey->type ?? '', $survey->type == 'Student' ? $survey->course .' '.$survey->course_year : $survey->occupation) }}<h6>
-                            <h5>Office: {{ $survey->facility->name ?? ''}}<h5>
-                            <h5>Ratings:<h5>
-                            <h6>Promptness of Service: <input class="input-grade" type="text" value="{{ $survey->promptness }}" disabled><h6>
-                            <h6>Quality of Engagement: <input class="input-grade" type="text" value="{{ $survey->engagement }}" disabled><h6>
-                            <h6>Cordiality of Personnel: <input class="input-grade" type="text" value="{{ $survey->cordiality }}" disabled><h6>
-                        </div>
-                        
-                        <div class="col-6">
-                            <h5>Comments:</h5>
-                            <textarea class="form-control" rows="7" disabled>{{ $survey->suggestions ?? ''}}</textarea>
-                        </div>
-                    </div>
+                @if(count($surveys) == 0)
+                    <h3 class="text-center mt-4">No Survey Submitted Yet</h3>
+                @endif
+                <div class="card-container">
+                    @foreach ($surveys as $survey)
+    <div class="card p-3 mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <h6><i class="fas fa-user text-success"></i> : <small>{{ $survey->name ?? ''}}</small></h6>
+                <h6><i class="fas fa-address-card text-success"></i> : <small>{{ sprintf('%s: %s',$survey->type ?? '', $survey->type == 'Student' ? $survey->course .' '.$survey->course_year : $survey->occupation) }}</small></h6>
+                <h6><i class="fas fa-envelope text-success"></i> : <small>{{ $survey->email ?? ''}}</small></h6>
+                <h6><i class="fas fa-phone text-success"></i> : {{ $survey->contact_number ?? ''}}</h6>
+                <h6><i class="fas fa-building text-success"></i> : <small>{{ $survey->facility->name ?? ''}}</small></h6>
+                <hr>
+                <h6 class="text-success">RATINGS ⭐</h6>
+                
+                <h6><small>&nbsp&nbsp&nbsp&nbsp&nbspPromptness of Service: &nbsp&nbsp<input class="input-grade round-circle text-success" type="text" value="{{ $survey->promptness }}" disabled style="border-radius: 100%"></small></h6>
+                <h6><small>&nbsp&nbsp&nbsp&nbsp&nbspQuality of Engagement: &nbsp<input class="input-grade text-success" type="text" value="{{ $survey->engagement }}" disabled style="border-radius: 100%"></small></h6>
+                <h6><small>&nbsp&nbsp&nbsp&nbsp&nbspCordiality of Personnel: &nbsp&nbsp<input class="input-grade text-success" type="text" value="{{ $survey->cordiality }}" disabled style="border-radius: 100%"></small></h6>
+            </div>
+            
+            <div class="col-md-6">
+                <h5 class="text-success">Comments:</h5>
+                <textarea class="form-control" rows="7" disabled>{{ $survey->suggestions ?? ''}}</textarea>
+            </div>
+        </div>
+    </div>
+@endforeach
+
                 </div>
-            @endforeach
+            
             </div>
         </div>
     </div>

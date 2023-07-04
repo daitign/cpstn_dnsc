@@ -121,22 +121,43 @@
                 sub_area_container.html('');
 
                 var child_areas = areas.filter(i => i.parent_area == area_id);
-                if(child_areas.length > 0) {
+                // if(child_areas.length > 0) {
+                //     var type = area.area_name == 'Administration' ? 'Offices' : 'Institute';
+                //     area_container.html('<h2 class="my-3">' + type + '</h2>');
+
+                //     child_areas.forEach(function(i){
+                //         area_container.append(`<div class="col-2 text-center">
+                //             <button class=" pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
+                //                 <i class="fa fa-building fa-2x text-success"></i>
+                //                 <p style="text-overflow: ellipsis"><small>` +  i.area_name + `</small></p>
+                //             </button>
+                //             <ul class="dropdown-menu text-left">
+                //                 <li><button type="button" class="dropdown-item btn-edit" data-type="` + i.type + `" data-area-id="` + i.id + `" data-bs-toggle="modal" data-bs-target="#areaModal">Edit</button></li>
+                //             </ul>
+                //         </div>`);
+                //     });
+                // }
+                if (child_areas.length > 0) 
+                {
                     var type = area.area_name == 'Administration' ? 'Offices' : 'Institute';
                     area_container.html('<h2 class="my-3">' + type + '</h2>');
 
-                    child_areas.forEach(function(i){
-                        area_container.append(`<div class="col-2 text-center">
-                            <button class="form-control pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa-building fa-2x"></i>
-                                <p style="text-overflow: ellipsis"><small>` +  i.area_name + `</small></p>
+                    child_areas.forEach(function (i) {
+                        area_container.append(`
+                        <div class="col-md-2 col-sm-4 col-6 mb-4 text-center"> <!-- Adjust the column widths based on your requirements -->
+                            <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-building fa-4x text-success"></i> <!-- Increased the icon size to 3x -->
+                            <p style="text-overflow: ellipsis; font-size: 14px;"><small>` + i.area_name + `</small></p> <!-- Increased the font size to 14px -->
                             </button>
                             <ul class="dropdown-menu text-left">
-                                <li><button type="button" class="dropdown-item btn-edit" data-type="` + i.type + `" data-area-id="` + i.id + `" data-bs-toggle="modal" data-bs-target="#areaModal">Edit</button></li>
+                            <li><button type="button" class="dropdown-item btn-edit" data-type="` + i.type + `" data-area-id="` + i.id + `" data-bs-toggle="modal" data-bs-target="#areaModal">Edit</button></li>
                             </ul>
-                        </div>`);
+                        </div>
+                        `);
                     });
                 }
+
+
             }
             loadArea(main_areas[0].id);
 

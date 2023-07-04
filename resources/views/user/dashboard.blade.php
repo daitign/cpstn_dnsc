@@ -26,7 +26,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                         <div class="col-lg-4 col-md-6 col-sm-12">
@@ -42,7 +42,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div><br>
                             </a>
                         </div>
                     @endif
