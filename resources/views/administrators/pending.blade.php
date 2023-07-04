@@ -69,7 +69,7 @@
                             <form action="{{ route('admin-user-destroy', $user->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger" style="font-size: smaller;"><small>Delete</small></button>
+                                <button type="submit" class="btn btn-outline-danger" style="font-size: smaller;"><small>Reject</small></button>
                                 <button type="button" data-bs-toggle="modal" data-bs-target="#approve" class="btn btn-outline-success approve" value="{{ $user->id }}" style="font-size: smaller;"><small>Register</small></button>
                             </form>
                         </div>
