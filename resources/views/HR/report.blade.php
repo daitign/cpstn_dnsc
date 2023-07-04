@@ -41,7 +41,8 @@
             <div class="page-header pb-2">
                 <h2>Survey Report</h2>
             </div>
-            <div class="container pt-2">
+            {{-- <div class="container pt-2"> --}}
+            <div class="m-4">
                 <div class="row g-3">
                     <form action="{{ route('hr-survey-report') }}">
                         @csrf
