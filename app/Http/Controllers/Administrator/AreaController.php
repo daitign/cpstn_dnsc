@@ -47,28 +47,7 @@ class AreaController extends Controller
 
         $directories = Directory::where('area_id', $parent_id)->get();
         foreach($directories as $directory) {
-            $dir = Directory::create([
-                'name' => $area_name,
-                'parent_id' => $directory->id,
-                'area_id' => $area->id
-            ]);
-
-            if($area_type == 'program') {
-                $semesters = ['1st Semester', '2nd Semester'];
-                for($y = 2021; $y <= date('Y'); $y++) {
-                    $year = Directory::create([
-                        'name' => $y,
-                        'parent_id' => $dir->id
-                    ]);
-
-                    foreach($semesters as $sem) {
-                        Directory::create([
-                            'name' => $sem,
-                            'parent_id' => $year->id
-                        ]);
-                    }
-                }
-            }
+            $this->dr->makeAreaRootDirectories($area, $directory->id);
         }
 
         return redirect()->back()->with('success', ucfirst($area_type).' created successfully');

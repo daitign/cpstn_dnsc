@@ -29,17 +29,24 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
         if(!empty($request->directory)) {
-            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
+            $data = $this->dr->getDirectoriesAndFiles('Templates', $request->directory);
             $data['route'] = 'templates';
             $data['page_title'] = $this->parent;
             return view('archives.index', $data);
         }
-
-        $data = $this->dr->getDirectoryFiles($this->parent);
+        
+        $directory_id = null;
+        if($user->role->role_name !== 'Staff') {
+            $directory_id = Directory::whereHas('parent', function($q) {
+                $q->where('name', $this->parent);
+            })->where('name', $user->role->role_name)->firstOrFail()->id ?? null;
+        }
+        
+        $data = $this->dr->getDirectoriesAndFiles('Templates', $directory_id, $request->user);
         $data['page_title'] = $this->parent;
         $data['route'] = 'templates';
 
-        return view('archives.files', $data);
+        return view('archives.index', $data);
     }
 
     public function create()
@@ -74,7 +81,7 @@ class TemplateController extends Controller
                 $selected_areas = $role->role_name == 'Process Owner' ? explode(',', $request->process) : $request->institutes;
                 $areas = Area::whereIn('id', $selected_areas)->get();
                 foreach($areas as $area) {
-                    $dir = $this->dr->getDirectory($area->area_name, $directory->id);
+                    $dir = $this->dr->makeAreaRootDirectories($area, $directory->id);
                     
                     File::create([
                         'directory_id' => $dir->id,

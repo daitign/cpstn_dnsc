@@ -74,7 +74,7 @@ class EvidenceController extends Controller
             $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
 
             $user = Auth::user();
-            $dir = $this->dr->makeDirectory($user->assigned_area, $parent_directory->id);
+            $dir = $this->dr->makeAreaRootDirectories($user->assigned_area, $parent_directory->id);
             $year = Carbon::parse($request->date)->format('Y');
             $directory = $this->dr->getDirectory($year, $dir->id);    
         }

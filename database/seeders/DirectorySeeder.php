@@ -68,6 +68,12 @@ class DirectorySeeder extends Seeder
                                 'area_dependent' => true,
                                 'area_id' => $child->id
                             ]);
+
+                            if(!empty($child->children)) {
+                                foreach($child->children as $row) {
+                                    $this->saveAreaDirectory($row, $dir->id);
+                                }
+                            }
                         }
                     }
                 }

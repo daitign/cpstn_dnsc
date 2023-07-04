@@ -24,9 +24,14 @@ class DirectoryRepository {
         $current_user = !empty($user_id) ? User::findOrFail($user_id) : Auth::user();
         $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
         $role = $current_user->role->role_name;
-
-        $directories = Directory::where('parent_id', null)->whereIn('name', $grand_parents)->get();
-
+        
+        if(!empty($grand_parent)) {
+            $directories = Directory::whereHas('parent', function($q) use($grand_parent){
+                $q->where('name', $grand_parent);
+            })->get();
+        }else{
+            $directories = Directory::where('parent_id', null)->whereIn('name', $grand_parents)->get();
+        }
         if($directory_id) {
             $current_directory = Directory::where('id', $directory_id)->firstOrFail();
             if(!in_array($this->getGrandParent($current_directory), $grand_parents)) {
@@ -45,6 +50,8 @@ class DirectoryRepository {
         $directories = $directories->filter(function ($directory) use($grand_parents, $current_user) {
             return in_array($this->getGrandParent($directory), $grand_parents) && $this->allowedDirectory($directory, $current_user);
         });
+
+        // dd(implode(',', collect($directories)->pluck('name')->toArray()));
 
         return compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user');
     }
@@ -194,7 +201,7 @@ class DirectoryRepository {
         }
     }
 
-    public function makeDirectory($area, $parent_directory)
+    public function makeAreaRootDirectories($area, $parent_directory)
     {
         $parents = $this->getAreaTree($area);
         $last_parent = $parent_directory;
