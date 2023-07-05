@@ -32,6 +32,27 @@
             width: 30px;
             text-align: center;
         }
+        .card-container {
+        overflow-y: auto;
+        height: 60vh;
+    }
+
+    .card-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .card-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .card-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .card-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
     </style>
 @endsection
 @section('page')

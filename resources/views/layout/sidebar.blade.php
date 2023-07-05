@@ -38,6 +38,7 @@
     }
 
     /* Sidebar Styles */
+    
 
     .sidebar {
         max-width: 14rem !important;
@@ -263,6 +264,37 @@
         width: 100%;
         overflow-y: auto;
     }
+    /* Scrollbar Styles */
+/* For Chrome, Safari, and Opera browsers */
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* For Firefox browser */
+::-moz-scrollbar {
+    width: 8px;
+    background-color: #f5f5f5;
+}
+
+::-moz-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+::-moz-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
     
 </style>
 @endsection
