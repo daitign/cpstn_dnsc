@@ -58,16 +58,13 @@ class DirectoryRepository {
 
     public function searchFilesAndDirectories($keyword = '', $grand_parent = null) {
         $files = [];
-        $parents = [];
         $directories = [];
-        $current_directory = [];
+        $current_user = Auth::user();
         $role = $current_user->role->role_name;
-        $users = !empty($user_id) ? User::get() : [];
-        $current_user = !empty($user_id) ? User::findOrFail($user_id) : Auth::user();
         
         $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
-        $directories = Directory::where('parent_id', null)
-                        ->where('name', 'LIKE', "%$keyword%")
+        $directories = Directory::where('parent_id', '!=', null)
+                        ->where('name', 'LIKE', "$keyword%")
                         ->get();
 
         $directories = $directories->filter(function ($directory) use($grand_parents, $current_user) {
@@ -79,7 +76,7 @@ class DirectoryRepository {
             return in_array($this->getGrandParent($file->directory), $grand_parents) && $this->allowedDirectory($file->directory, $current_user);
         });
 
-        return compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user');
+        return compact('directories', 'files');
     }
 
     public function getFiles($current_user, $current_directory = null, $keyword = null) {
@@ -90,9 +87,9 @@ class DirectoryRepository {
             'College Management Team',
             'Quality Assurance Director'
         ];
-        $files = File::where(function($q) use($keyword, $current_user, $current_directory, $role_file_access){
+        $files = File::with('directory')->where(function($q) use($keyword, $current_user, $current_directory, $role_file_access){
             if(!empty($keyword)) {
-                $q->where('name', "%$keyword%");
+                $q->where('file_name','LIKE',"$keyword%");
             }
             if(!empty($current_directory)) {
                 $q->where('directory_id', $current_directory->id);
@@ -218,7 +215,7 @@ class DirectoryRepository {
         if(!empty($directory->parent)) {
             return $this->getGrandParent($directory->parent);
         }else{
-            return $directory->name;
+            return $directory->name ?? '';
         }
     }
 

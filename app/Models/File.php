@@ -21,6 +21,11 @@ class File extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function directory()
+    {
+        return $this->belongsTo(Directory::class);
+    }
+
     public function file_users()
     {
         return $this->hasMany(FileUser::class);

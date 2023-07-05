@@ -84,31 +84,15 @@ class ArchiveController extends Controller
         return view('archives.index', compact('files', 'user', 'users'));
     }
 
-    public function search(Request $request)
+    public function search(Request $request, $parent_name = '')
     {
-        $users = [];
-        $current_user = !empty($request->userSearch) ? User::findOrFail($request->userSearch) : Auth::user();
-        if(in_array(Auth::user()->role->role_name, config('app.manage_archive'))) {
-           $current_user = !empty($request->userSearch) ? $current_user->id : '';
-        }
-        $fileSearch = $request->fileSearch;
-        $files = File::where('file_name', 'LIKE', "%$request->fileSearch%");
-
-        $role_file_access = [
-            'Internal Auditor', 
-            'Internal Lead Auditor', 
-            'Document Control Custodian',
-            'College Management Team',
-        ];
-        if(!empty($current_user) && !in_array($current_user->role->role_name, $role_file_access)) {
-            $files = $files->where(function($q) use($current_user){
-                $q->where('user_id', $current_user->id);
-            });
-        }
-
-        $files = $files->get();
-
-        return view('archives.search', compact('users', 'files', 'current_user', 'fileSearch'));
+        $keyword = $request->keyword;
+        $parent_name = $parent_name == 'archives' ? null : $parent_name;
+        $data = $this->dr->searchFilesAndDirectories($keyword, $parent_name);
+        $data['page_title'] = $parent_name ?? 'archives';
+        $data['keyword'] = $keyword;
+        
+        return view('archives.search', $data);
     }
 
     public function sharedWithMe(Request $request)

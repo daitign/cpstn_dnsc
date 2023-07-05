@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Directory extends Model
 {
     use HasFactory;
-
+    
     protected $guarded = [];
 
     protected $dates = [
@@ -58,5 +58,12 @@ class Directory extends Model
     public function area()
     {
         return $this->belongsTo(Area::class);
+    }
+
+    public function fullPath()
+    {
+        $root = collect($this->getParentDirectory($this))->pluck('name')->toArray();
+        krsort($root);
+        return implode(' > ', $root);
     }
 }
