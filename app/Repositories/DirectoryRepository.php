@@ -14,14 +14,14 @@ use Illuminate\Support\Facades\Auth;
 
 class DirectoryRepository {
 
-    public function getDirectoriesAndFiles($grand_parent = null,  $user_id = null, $directory_id = null)
+    public function getDirectoriesAndFiles($grand_parent = null, $directory_id = null)
     {
         $files = [];
         $parents = [];
         $directories = [];
         $current_directory = [];
         $users = !empty($user_id) ? User::get() : [];
-        $current_user = !empty($user_id) ? User::findOrFail($user_id) : Auth::user();
+        $current_user = Auth::user();
         $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
         $role = $current_user->role->role_name;
         

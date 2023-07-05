@@ -12,7 +12,7 @@
             @if(!empty($parents))
                 @foreach($parents as $parent) 
                     @if(!$loop->last)
-                        <a href="{{ route($route ?? 'archives-page') }}?directory={{ $parent['id'] }}&user={{ $current_user->id }}">{{ $parent['name'] }}</a> >
+                        <a href="{{ route($route ?? 'archives-page') }}?directory={{ $parent['id'] }}">{{ $parent['name'] }}</a> >
                     @else
                         {{ $parent['name'] }}
                     @endif
@@ -24,8 +24,15 @@
         <div style="text-align:right">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
             @if(
-                    (Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
-                ||  (Auth::user()->role->role_name == 'Staff' && !empty($current_directory) && $page_title == 'Templates'))
+                    (Auth::user()->role->role_name == 'Document Control Custodian'
+                        && !empty($current_directory)
+                        && in_array($page_title, ['Evidence', 'Manuals'])
+                    )
+                ||  (Auth::user()->role->role_name == 'Staff' 
+                        && !empty($current_directory) 
+                        && $page_title == 'Templates'
+                    )
+                )
                 <button class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-plus"></i> New</button>
                 <ul class="dropdown-menu text-left">
                     <li>
@@ -47,7 +54,7 @@
             @endif
         </div>
         @include('layout.alert')
-        @if(!empty($users) && in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
+        <!-- @if(!empty($users) && in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
             <h5>User:</h5>
             <select class="form-control userSelection">
                 <option value="">All Users</option>
@@ -60,17 +67,17 @@
                     </optgroup>
                 @endforeach
             </select>
-        @endif
+        @endif -->
         @if(!empty($directories))
             <div class="mb-4 row">
                 @foreach($directories as $directory)
                     <div class="col-2 text-center">
-                        <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}">
+                        <button class="btn align-items-center justify-content-center btn-directory" data-bs-toggle="dropdown" aria-expanded="false" data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}">
                             <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
                             <p class="text-white" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
                         </button>
                         <ul class="dropdown-menu text-center">
-                            <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
+                            <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}" class="text-decoration-none">Open Directory</a></li>
                             <li><a href="#" class="text-decoration-none btn-property"
                                 data-bs-toggle="modal" data-bs-target="#propertyModal"
                                 data-name="{{ $directory->name }}"
@@ -600,7 +607,7 @@
         if(userID == '') {
             location.href = "{{ route('archives-page') }}";
         }else{
-            location.href = "{{ route('archives-page') }}?user=" + userID;
+            location.href = "{{ route('archives-page') }}";
         }
     });
 

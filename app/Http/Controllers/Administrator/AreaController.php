@@ -48,20 +48,27 @@ class AreaController extends Controller
 
         // Create Folder
         if(in_array($area_type, ['process', 'program', 'institute', 'office'])) {
-            
-            $template_dir = $this->dr->getDirectory('Templates');
-            if(in_array($area_type, ['process', 'program'])) {
-                $directory = $this->dr->getDirectory('Process Owner', $template_dir->id);
-            }else{
-                $directory = $this->dr->getDirectory('Document Control Custodian', $template_dir->id);
-            }
+            $root_areas = $this->dr->getAreaTree($parent);
 
             // Create OR Get Last Parent Directory for Templates
-            $root_areas = $this->dr->getAreaTree($parent);
-            foreach($root_areas as $root_area) {
-                $directory = $this->dr->getDirectory($root_area['area_name'], $directory->id, $root_area['id']);
+            $template_dir = $this->dr->getDirectory('Templates');
+            if(in_array($area_type, ['process', 'program'])) {
+                $template_directory = $this->dr->getDirectory('Process Owner', $template_dir->id);
+            }else{
+                $template_directory = $this->dr->getDirectory('Document Control Custodian', $template_dir->id);
             }
-            $directory = $this->dr->getDirectory($parent->area_name, $directory->id, $parent->id);
+            foreach($root_areas as $root_area) {
+                $template_directory = $this->dr->getDirectory($root_area['area_name'], $template_directory->id, $root_area['id']);
+            }
+            $template_directory = $this->dr->getDirectory($parent->area_name, $template_directory->id, $parent->id);
+
+
+            // Create OR Get Last Parent Directory for Manuals
+            $manual_directory = $this->dr->getDirectory('Manuals');
+            foreach($root_areas as $root_area) {
+                $manual_directory = $this->dr->getDirectory($root_area['area_name'], $manual_directory->id, $root_area['id']);
+            }
+            $manual_directory = $this->dr->getDirectory($parent->area_name, $manual_directory->id, $parent->id);
         }
         $area = Area::create([
             'area_name' => $area_name,
@@ -70,7 +77,8 @@ class AreaController extends Controller
             'type' => $area_type
         ]);
 
-        $directory = $this->dr->getDirectory($area_name, $directory->id, $area->id);
+        $this->dr->getDirectory($area_name, $template_directory->id, $area->id);
+        $this->dr->getDirectory($area_name, $manual_directory->id, $area->id);
 
         return redirect()->back()->with('success', ucfirst($area_type).' created successfully');
     }

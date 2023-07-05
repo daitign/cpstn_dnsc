@@ -26,7 +26,7 @@ class ArchiveController extends Controller
     {
         $user = Auth::user();
         $role_name = $user->role->role_name;
-        $data = $this->dr->getDirectoriesAndFiles(null, $request->directory, $request->user);
+        $data = $this->dr->getDirectoriesAndFiles(null, $request->directory);
 
         return view('archives.index', $data);
     }
@@ -35,7 +35,7 @@ class ArchiveController extends Controller
     {
         $user = Auth::user();
         $role_name = $user->role->role_name;
-        $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory, $request->user);
+        $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
         if(in_array($role_name,['Process Owner', 'Internal Auditor'])) {
             if(!empty($request->directory)) {
                 $directory = Directory::find($request->directory);

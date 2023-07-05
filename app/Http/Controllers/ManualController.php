@@ -27,25 +27,12 @@ class ManualController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $data = $this->dr->getDirectoriesAndFiles($this->parent, $request->directory ?? null);
         
-        if(!empty($request->directory)) {
-            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
-            $data['route'] = 'manuals';
-            $data['page_title'] = $this->parent;
-            return view('archives.index', $data);
-        }
-
-        $data = $this->dr->getDirectoryFiles($this->parent);
-        if($user->role->role_name == 'Process Owner') {
-            $data = $this->dr->getDirectoryFiles($this->parent);
-            $data['parent_directory'] = null;
-            $data['directory'] = null;
-            $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
-        }
-        
-        $data['route'] = 'manuals';
+        $data['route'] = strtolower($this->parent);
         $data['page_title'] = $this->parent;
-        return view('archives.files', $data);
+
+        return view('archives.index', $data);
     }
 
     public function create()

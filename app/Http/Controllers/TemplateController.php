@@ -29,11 +29,11 @@ class TemplateController extends Controller
     {
         $user = Auth::user();
         if(in_array($user->role->role_name, ['Quality Assurance Director', 'Staff']) || !empty($request->directory)) {
-            $data = $this->dr->getDirectoriesAndFiles($this->parent,$user->id, $request->directory ?? null);
+            $data = $this->dr->getDirectoriesAndFiles($this->parent, $request->directory ?? null);
         }else{
             $template_dir = $this->dr->getDirectory('Templates');
             $directory = $this->dr->getDirectory($user->role->role_name, $template_dir->id);
-            $data = $this->dr->getDirectoriesAndFiles($this->parent,$user->id, $directory->id ?? null);
+            $data = $this->dr->getDirectoriesAndFiles($this->parent, $directory->id ?? null);
         }
         
         $data['route'] = strtolower($this->parent);
