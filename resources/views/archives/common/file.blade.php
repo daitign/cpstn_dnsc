@@ -5,7 +5,7 @@
             <a href="{{ route('archives-download-file', $file->audit_report->cars->file->id) }}" class="cars"><img src="{{ asset('media/info.png') }}" width="40px"></a>
     @endif
     <button 
-        data-toggle="tooltip" title="{{ $file->directory->fullPath() ?? '' }} > {{ $file->name ?? '' }}" 
+        data-toggle="tooltip" title="{{ $file->directory->fullPath() ?? '' }} > {{ $file->file_name ?? '' }}" 
         class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" 
         aria-expanded="false">
             <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
@@ -28,6 +28,7 @@
                 data-bs-toggle="modal" data-bs-target="#propertyModal"
                 data-name="{{ $file->file_name }}"
                 data-type="{{ $file->file_mime }}"
+                data-full-path="{{ $file->directory->fullPath() ?? '' }} > {{ $file->file_name ?? '' }}"
                 data-created-by="{{ $file->user->username }}"
                 data-created-at="{{ $file->created_at->format('M d, Y h:i A') }}"
                 data-updated-at="{{ $file->created_at->format('M d, Y h:i A') }}"

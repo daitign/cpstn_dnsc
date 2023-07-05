@@ -42,6 +42,7 @@
         
         $('#propertyName').html($(this).data('name'));
         $('#propertyType').html($(this).data('type'));
+        $('#propertyFullPath').html($(this).data('full-path'));
         $('#propertyCreatedBy').html($(this).data('created-by'));
         $('#propertyCreated').html($(this).data('created-at'));
         $('#propertyUpdated').html($(this).data('updated-at'));

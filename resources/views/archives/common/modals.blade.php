@@ -9,6 +9,7 @@
                     <table class="table">
                         <tr><td><strong>Name:</strong></td><td id="propertyName"></td></tr>
                         <tr><td><strong>Type:</strong></td><td id="propertyType"></td></tr>
+                        <tr><td><strong>Full Path:</strong></td><td id="propertyFullPath"></td></tr>
                         <tr><td><strong>Created By:</strong></td><td id="propertyCreatedBy"></td></tr>
                         <tr><td><strong>Created:</strong></td><td id="propertyCreated"></td></tr>
                         <tr><td><strong>Updated:</strong></td><td id="propertyUpdated"></td></tr>
