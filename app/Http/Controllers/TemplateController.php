@@ -28,11 +28,17 @@ class TemplateController extends Controller
     public function index(Request $request, $directory_name = '')
     {
         $user = Auth::user();
-        $data = $this->dr->getDirectoriesAndFiles($this->parent,$user->id, $request->directory ?? null);
+        if(in_array($user->role->role_name, ['Quality Assurance Director', 'Staff']) || !empty($request->directory)) {
+            $data = $this->dr->getDirectoriesAndFiles($this->parent,$user->id, $request->directory ?? null);
+        }else{
+            $template_dir = $this->dr->getDirectory('Templates');
+            $directory = $this->dr->getDirectory($user->role->role_name, $template_dir->id);
+            $data = $this->dr->getDirectoriesAndFiles($this->parent,$user->id, $directory->id ?? null);
+        }
         
         $data['route'] = strtolower($this->parent);
         $data['page_title'] = $this->parent;
-
+        
         return view('archives.index', $data);
     }
 
@@ -49,13 +55,8 @@ class TemplateController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $role = Role::findOrFail($request->role);
-        $areas = $role->role_name == 'Process Owner' ? explode(',', $request->process) : $request->institutes;
         
-        $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
-        $role = Role::findOrFail($request->role);
-        $directory = $this->dr->getDirectory($role->role_name, $parent_directory->id);
-        
+        $directory = Directory::findOrFail($request->current_directory);        
         if ($request->hasFile('file_attachment')) {
             $now = Carbon::now();
             $file = $request->file('file_attachment');
@@ -64,42 +65,22 @@ class TemplateController extends Controller
             $path = Storage::put($target_path, $file);
             $file_name = $request->name.".".$file->getClientOriginalExtension();
 
-            if(in_array($role->role_name, ['Process Owner', 'Document Control Custodian'])) {
-                $selected_areas = $role->role_name == 'Process Owner' ? explode(',', $request->process) : $request->institutes;
-                $areas = Area::whereIn('id', $selected_areas)->get();
-                foreach($areas as $area) {
-                    $dir = $this->dr->makeAreaRootDirectories($area, $directory->id);
-                    
-                    File::create([
-                        'directory_id' => $dir->id,
-                        'user_id' => $user->id,
-                        'file_name' => $file_name,
-                        'file_mime' => $file->getClientMimeType(),
-                        'container_path' => $path,
-                        'description' => $request->description ?? '',
-                        'type' => 'templates'
-                    ]);
-                }
-            }else{
-                $file = File::create([
-                    'directory_id' => $directory->id,
-                    'user_id' => $user->id,
-                    'file_name' => $file_name,
-                    'file_mime' => $file->getClientMimeType(),
-                    'container_path' => $path,
-                    'description' => $request->description ?? '',
-                    'type' => 'templates'
-                ]);
-            }
+            $file = File::create([
+                'directory_id' => $directory->id,
+                'user_id' => $user->id,
+                'file_name' => $file_name,
+                'file_mime' => $file->getClientMimeType(),
+                'container_path' => $path,
+                'description' => $request->description ?? '',
+                'type' => 'templates'
+            ]);
         }
 
         Template::create([
             'name' => $request->name,
             'description' => $request->description ?? '',
             'user_id' => $user->id,
-            'date' => $request->date,
-            'role_id' => $request->role,
-            'areas' => !empty($areas) ? implode(',', $areas->pluck('id')->toArray()) : ''
+            'date' => $request->date
         ]);
 
         

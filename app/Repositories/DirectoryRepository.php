@@ -168,8 +168,8 @@ class DirectoryRepository {
     {
         return Directory::firstOrcreate([
             'name' =>  $name,
-            'parent_id' => $parent_id,
-            'area_id' => $area_id
+            'parent_id' => $parent_id ?? null,
+            'area_id' => $area_id ?? null
         ]);
     }
 

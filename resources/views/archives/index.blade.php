@@ -23,7 +23,9 @@
     <div class="container">
         <div style="text-align:right">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
-            @if(Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
+            @if(
+                    (Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
+                ||  (Auth::user()->role->role_name == 'Staff' && !empty($current_directory) && $page_title == 'Templates'))
                 <button class="btn btn-success" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-plus"></i> New</button>
                 <ul class="dropdown-menu text-left">
                     <li>
@@ -33,6 +35,14 @@
                                 Directory
                         </button>
                     </li>
+                    @if(Auth::user()->role->role_name == 'Staff')
+                    <li>
+                        <button class="btn"
+                            data-bs-toggle="modal" data-bs-target="#templateModal">
+                                Template
+                        </button>
+                    </li>
+                    @endif
                 </ul>
             @endif
         </div>
@@ -480,7 +490,45 @@
             </div>
         </div>
     </div>
-
+    
+    @if(Auth::user()->role->role_name == 'Staff' && !empty($current_directory) && $page_title == 'Templates')
+        <div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="templateModalModalLabel">Upload Template</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{{ route('staff.template.store') }}" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" id="current_directory" name="current_directory" value="{{ $current_directory->id ?? '' }}">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Enter Filename" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date:</label>
+                                <input type="date" id="date" class="form-control" name="date" max="{{ date('Y-m-d') }}"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="file_attachment" class="form-label">Attachment</label>
+                                <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                            </div>
+                            <div class="mb-3">
+                                <label for="search" class="form-label">Description:</label>
+                                <textarea name="description" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
     
     <div class="modal fade" id="editFileModal" tabindex="-1" aria-labelledby="editFileModalLabel" aria-hidden="true">
         <div class="modal-dialog">

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('templates', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->foreignId('role_id')->nullable()->constrained();
             $table->text('description')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->date('date')->nullable();
