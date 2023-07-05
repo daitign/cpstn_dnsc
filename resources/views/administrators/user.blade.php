@@ -47,6 +47,8 @@
                 </div>
             @endforeach
         </div>
+        
+        @include('layout.alert')
         <div class="row g-3 bg-transparent mt-2" style="overflow-y: auto; height:50vh;">
             @if(empty($users))
                 <h3 class="text-center mt-4">No User Available Yet</h3>
@@ -62,10 +64,11 @@
                         <h6><strong>{{ $user->role_name ?? ''}}</strong></h6>
                         <hr>
                         <div class="text-center">
-                            <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                            <a href="#"
+                                class="btn btn-outline-danger btn-confirm" style="font-size: smaller;" data-target="#delete-user-{{ $user->id }}" data-message="Are you sure you wan't to disable this user?"><i class="fa fa-trash"></i> Disable</a>
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" id="delete-user-{{ $user->id }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger btn-sm" style="font-size: smaller;"><small>Disable</small></button>
                             </form>
                         </div>
                     </div>

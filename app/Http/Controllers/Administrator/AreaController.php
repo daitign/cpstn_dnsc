@@ -9,9 +9,15 @@ use Illuminate\Database\Query\Builder;
 
 use App\Models\Area;
 use App\Models\Directory;
+use App\Repositories\DirectoryRepository;
 
 class AreaController extends Controller
 {
+    public function __construct() 
+    {
+        $this->dr = new DirectoryRepository;
+    }
+    
     public function index()
     {
         $main_areas = Area::with(['children'])->whereNull('parent_area')->get();
@@ -27,17 +33,43 @@ class AreaController extends Controller
         $area_description = ucwords($request->area_description);
 
         if($area_type == 'office') {
-            $parent_id = Area::where('area_name', 'Administration')->firstOrFail()->id;
+            $parent = Area::where('area_name', 'Administration')->firstOrFail();
         }elseif($area_type == 'institute') {
-            $parent_id = Area::where('area_name', 'Academics')->firstOrFail()->id;
+            $parent = Area::where('area_name', 'Academics')->firstOrFail();
         }else{
-            $parent_id = Area::findOrFail($request->parent_area)->id;
+            $parent = Area::findOrFail($request->parent_area);
         }
+        $parent_id = $parent->id;
+        
 
         if(Area::where('area_name', $area_name)->where('parent_area', $parent_id)->exists()) {
-           return redirect()->back()->with('error', ucfirst($area_type).' already exists');
+            return redirect()->back()->with('error', ucfirst($area_type).' already exists');
         }
 
+        // Create Folder
+        if(in_array($area_type, ['process', 'program', 'institute', 'office'])) {
+            $root_areas = $this->dr->getAreaTree($parent);
+
+            // Create OR Get Last Parent Directory for Templates
+            $template_dir = $this->dr->getDirectory('Templates');
+            if(in_array($area_type, ['process', 'program'])) {
+                $template_directory = $this->dr->getDirectory('Process Owner', $template_dir->id);
+            }else{
+                $template_directory = $this->dr->getDirectory('Document Control Custodian', $template_dir->id);
+            }
+            foreach($root_areas as $root_area) {
+                $template_directory = $this->dr->getDirectory($root_area['area_name'], $template_directory->id, $root_area['id']);
+            }
+            $template_directory = $this->dr->getDirectory($parent->area_name, $template_directory->id, $parent->id);
+
+
+            // Create OR Get Last Parent Directory for Manuals
+            $manual_directory = $this->dr->getDirectory('Manuals');
+            foreach($root_areas as $root_area) {
+                $manual_directory = $this->dr->getDirectory($root_area['area_name'], $manual_directory->id, $root_area['id']);
+            }
+            $manual_directory = $this->dr->getDirectory($parent->area_name, $manual_directory->id, $parent->id);
+        }
         $area = Area::create([
             'area_name' => $area_name,
             'area_description' => $area_description,
@@ -45,31 +77,8 @@ class AreaController extends Controller
             'type' => $area_type
         ]);
 
-        $directories = Directory::where('area_id', $parent_id)->get();
-        foreach($directories as $directory) {
-            $dir = Directory::create([
-                'name' => $area_name,
-                'parent_id' => $directory->id,
-                'area_id' => $area->id
-            ]);
-
-            if($area_type == 'program') {
-                $semesters = ['1st Semester', '2nd Semester'];
-                for($y = 2021; $y <= date('Y'); $y++) {
-                    $year = Directory::create([
-                        'name' => $y,
-                        'parent_id' => $dir->id
-                    ]);
-
-                    foreach($semesters as $sem) {
-                        Directory::create([
-                            'name' => $sem,
-                            'parent_id' => $year->id
-                        ]);
-                    }
-                }
-            }
-        }
+        $this->dr->getDirectory($area_name, $template_directory->id, $area->id);
+        $this->dr->getDirectory($area_name, $manual_directory->id, $area->id);
 
         return redirect()->back()->with('success', ucfirst($area_type).' created successfully');
     }

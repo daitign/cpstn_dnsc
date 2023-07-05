@@ -70,9 +70,9 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/profile',[UserController::class, 'profile'])->name('user.profile');
 
     Route::get('/directories/{name}',[ArchiveController::class,'index'])->name('directories');
+    Route::get('/{parent}/search',[ArchiveController::class, 'search'])->name('search');
     Route::prefix('archives')->middleware('area_assigned')->group(function() {
         Route::get('/',[ArchiveController::class,'index'])->name('archives-page');
-        Route::post('/search',[ArchiveController::class,'search'])->name('archives-search');
         Route::post('/directory',[ArchiveController::class,'storeDirectory'])->name('archives-store-directory');
         Route::post('/directory/{id}/update',[ArchiveController::class,'updateDirectory'])->name('archives-update-directory');
         Route::delete('/directory/{id}/delete',[ArchiveController::class,'deleteDirectory'])->name('archives-delete-directory');

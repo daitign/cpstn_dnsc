@@ -28,29 +28,12 @@ class EvidenceController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
+        $data = $this->dr->getDirectoriesAndFiles($this->parent, $request->directory ?? null);
         
-        if(!empty($request->directory)) {
-            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
-            $data['route'] = 'evidences';
-            $data['page_title'] = $this->parent;
-            return view('archives.index', $data);
-        }else{
-            if(Auth::user()->role->role_name == 'Internal Auditor') {
-                return view('audits.auditor-areas');
-            }
-        }
-
-        $data = $this->dr->getDirectoryFiles($this->parent);
-        if($user->role->role_name == 'Process Owner') {
-            $data['parent_directory'] = null;
-            $data['directory'] = null;
-            $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent($this->parent);
-        }
-
+        $data['route'] = strtolower($this->parent);
         $data['page_title'] = $this->parent;
-        $data['route'] = 'evidences';
 
-        return view('archives.files', $data);
+        return view('archives.index', $data);
     }
 
     public function create()
@@ -74,7 +57,7 @@ class EvidenceController extends Controller
             $parent_directory = Directory::where('name', $this->parent)->whereNull('parent_id')->firstOrFail();
 
             $user = Auth::user();
-            $dir = $this->dr->makeDirectory($user->assigned_area, $parent_directory->id);
+            $dir = $this->dr->makeAreaRootDirectories($user->assigned_area, $parent_directory->id);
             $year = Carbon::parse($request->date)->format('Y');
             $directory = $this->dr->getDirectory($year, $dir->id);    
         }

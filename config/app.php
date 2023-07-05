@@ -143,9 +143,9 @@ return [
         // 'store'  => 'redis',
     ],
 
-    'manage_archive' => ['Administrator'],
+    'manage_archive' => ['Administrator', 'Quality Assurance Director'],
 
-    'role_with_assigned_area' => ['Document Control Custodian', 'Process Owner', 'Internal Auditor'],
+    'role_with_assigned_area' => ['Document Control Custodian', 'Process Owner'],
 
     /*
     |--------------------------------------------------------------------------

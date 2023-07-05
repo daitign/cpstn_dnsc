@@ -52,15 +52,14 @@ class DirectorySeeder extends Seeder
 
             if(!empty($item['sub_directory']))
             {
-                foreach($item['sub_directory'] as $child)
+                foreach($item['sub_directory'] as $role)
                 {
                     $child_directory = Directory::create([
-                        'name' => $child,
+                        'name' => $role,
                         'parent_id' => $directory->id
                     ]);
-
                     if($item['name'] == 'Templates' && 
-                        in_array($child, ['Process Owner', 'Document Control Custodian'])
+                        in_array($role, ['Process Owner', 'Document Control Custodian'])
                     ) {
                         foreach($sub_directory as $child) {
                             $dir = Directory::create([
@@ -69,6 +68,12 @@ class DirectorySeeder extends Seeder
                                 'area_dependent' => true,
                                 'area_id' => $child->id
                             ]);
+
+                            if(!empty($child->children)) {
+                                foreach($child->children as $row) {
+                                    $this->saveAreaDirectory($row, $dir->id);
+                                }
+                            }
                         }
                     }
                 }
