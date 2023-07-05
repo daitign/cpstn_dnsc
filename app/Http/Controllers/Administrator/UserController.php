@@ -27,7 +27,7 @@ class UserController extends Controller
     {
         $roles = Role::get();
         $request_role = $request->role ?? '';
-        $users = User::with('role');
+        $users = User::withTrashed()->with('role');
         if(!empty($request_role)) {
             $users = $users->whereHas('role', function($q) use($request_role){
                 $q->where('role_name', $request_role);
@@ -38,11 +38,19 @@ class UserController extends Controller
         return view('administrators.user', compact('users', 'roles' ,'request_role'));
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        User::where('id',$id)->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
 
-        return redirect()->route('admin-pending-users-page')->with('success', 'User removed successfully');
+        return redirect()->back()->with('success', 'User has been disabled successfully');
+    }
+
+    public function enable($id)
+    {
+        $user = User::withTrashed()->findOrFail($id)->restore();
+
+        return redirect()->back()->with('success', 'User has been enabled successfully');
     }
 
     public function pending()

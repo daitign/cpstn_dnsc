@@ -64,12 +64,22 @@
                         <h6><strong>{{ $user->role_name ?? ''}}</strong></h6>
                         <hr>
                         <div class="text-center">
-                            <a href="#"
-                                class="btn btn-outline-danger btn-confirm" style="font-size: smaller;" data-target="#delete-user-{{ $user->id }}" data-message="Are you sure you wan't to disable this user?"><i class="fa fa-trash"></i> Disable</a>
-                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" id="delete-user-{{ $user->id }}">
-                                @csrf
-                                @method('DELETE')
-                            </form>
+                            @if(empty($user->deleted_at))
+                                <a href="#"
+                                    class="btn btn-outline-danger btn-confirm" style="font-size: smaller;" data-target="#delete-user-{{ $user->id }}" data-message="Are you sure you wan't to disable this user?"><i class="fa fa-trash"></i> Disable</a>
+                                <form action="{{ route('admin-user-destroy', $user->id) }}" method="POST" id="delete-user-{{ $user->id }}">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            @endif
+
+                            @if(!empty($user->deleted_at))
+                                <a href="#"
+                                    class="btn btn-outline-success btn-confirm" style="font-size: smaller;" data-target="#enable-user-{{ $user->id }}" data-message="Are you sure you wan't to enable this user?"><i class="fa fa-refresh"></i> Enable</a>
+                                <form action="{{ route('admin-user-enable', $user->id) }}" method="POST" id="enable-user-{{ $user->id }}">
+                                    @csrf
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>

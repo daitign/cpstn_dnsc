@@ -118,12 +118,4 @@ class UserController extends Controller
         
         return redirect()->back()->with('success', 'Your remarks has been saved successfully');
     }
-
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
-        $user->delete();
-
-        return redirect()->back()->with('success', 'User has been disabled successfully');
-    }
 }

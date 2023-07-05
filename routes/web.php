@@ -116,6 +116,7 @@ Route::middleware(['auth'])->group(function(){
 
         Route::get('/users',[AdminUserController::class,'index'])->name('admin-user-list');
         Route::delete('/users/{id}',[AdminUserController::class,'destroy'])->name('admin-user-destroy');
+        Route::post('/users/{id}/enable',[AdminUserController::class,'enable'])->name('admin-user-enable');
 
         // Route::prefix('roles')->group(function(){
         //     Route::get('/',[RoleController::class,'index'])->name('admin-role-page');
