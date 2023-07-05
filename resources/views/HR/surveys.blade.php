@@ -40,7 +40,7 @@
     </div>
     <div class="container pt-2">
         <div class="row g-3">
-            <form action="{{ route('hr-survey-page') }}">
+            <form action="{{ route(auth()->user()->role->role_name == 'Human Resources' ? 'hr-survey-page' : 'admin-surveys-list') }}">
                 @csrf
                 <div class="input-group mb-3 col-6">
                     <input type="text" name="keyword" class="form-control" placeholder="Input Office..." aria-describedby="basic-addon2" value="{{ $keyword ?? '' }}">

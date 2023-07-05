@@ -28,9 +28,32 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         @yield('js')
+
+        
         @yield('js-page')
         <div id="loading">
             <div class="spinner"></div>
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                $('.btn-confirm').on('click', function(){
+                    var form = $(this).data('target');
+                    var message = $(this).data('message') ?? "Are you sure you wan't save changes?";
+                    Swal.fire({
+                        text: message,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $(form).submit();
+                            }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
