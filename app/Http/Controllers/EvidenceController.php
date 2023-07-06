@@ -27,15 +27,8 @@ class EvidenceController extends Controller
 
     public function index(Request $request)
     {
-        
         $data = $this->dr->getDirectoriesAndFiles($this->parent, $request->directory ?? null);
-        
-        $user = Auth::user();
         $data['route'] = strtolower($this->parent);
-        if($user->role->role_name == 'Internal Auditor') {
-            $data['route'] = strtolower('auditor.audit.evidence.index');
-        }
-        
         $data['page_title'] = $this->parent;
 
         return view('archives.index', $data);
