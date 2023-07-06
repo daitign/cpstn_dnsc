@@ -7,7 +7,11 @@
         <h1>{{ $page_title ?? 'Archives' }}</h1>
         <h5 class="text-decoration-none">
             @if(empty($page_title) || $page_title == 'Archives')
-                <a href="{{ route('archives-page') }}">Archives</a> >
+                <a href="{{ route('archives-page') }}">Archives</a>
+                
+                @if(!empty($parents))
+                    >
+                @endif
             @endif
             @if(!empty($parents))
                 @foreach($parents as $parent) 
