@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\FileUser;
 use App\Models\Directory;
 use App\Models\AuditPlan;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 class DirectoryRepository {
@@ -81,7 +82,7 @@ class DirectoryRepository {
 
     public function getFiles($current_user, $current_directory = null, $keyword = null) {
         $role_file_access = [
-            'Internal Auditor', 
+            'Internal Auditor',
             'Internal Lead Auditor', 
             'Document Control Custodian',
             'College Management Team',
@@ -102,11 +103,12 @@ class DirectoryRepository {
                     }
                 });
             }
-
-            if($current_user->role->role_name == 'Internal Auditor') {
+            
+            $route = Route::getFacadeRoot()->current()->uri() ?? '';
+            if($current_user->role->role_name == 'Internal Auditor' && $route == 'archives') {
                 $q->where(function($q) use($current_user, $current_directory) {
                     $q->where('user_id', $current_user->id)
-                    ->orWhereHas('remarks', function($q2) {
+                    ->orWhereHas('remarks', function($q2) use($current_user) {
                         $q2->where('user_id', $current_user->id);
                     })->orWhere('type', 'templates');
                 });
