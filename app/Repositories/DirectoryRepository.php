@@ -121,10 +121,9 @@ class DirectoryRepository {
     public function allowedDirectory($directory, $current_user)
     {
         $allowed = true;
-        $route = Route::getFacadeRoot()->current()->uri() ?? '';
         if(
             in_array($current_user->role->role_name, config('app.role_with_assigned_area'))
-            || ($current_user->role->role_name == 'Internal Auditor' && $route == 'archives')
+            || ($current_user->role->role_name == 'Internal Auditor')
         ) {
             $assigned_areas = $current_user->assigned_areas->pluck('id')->toArray();
             if(!in_array($directory->area_id, $assigned_areas)) {
