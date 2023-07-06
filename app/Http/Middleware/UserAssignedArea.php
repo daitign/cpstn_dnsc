@@ -19,7 +19,7 @@ class UserAssignedArea
         if (
             Auth::guard($guard)->check() && 
             in_array(Auth::user()->role->role_name, config('app.role_with_assigned_area')) && 
-            empty(Auth::user()->assigned_areas->area_name)){
+            empty(Auth::user()->assigned_areas)){
                 return redirect(route('unassigned'));
         }
         return $next($request);

@@ -102,6 +102,15 @@ class DirectoryRepository {
                     }
                 });
             }
+
+            if($current_user->role->role_name == 'Internal Auditor') {
+                $q->where(function($q) use($current_user, $current_directory) {
+                    $q->where('user_id', $current_user->id)
+                    ->orWhereHas('remarks', function($q2) {
+                        $q2->where('user_id', $current_user->id);
+                    })->orWhere('type', 'templates');
+                });
+            }
         })->get();
 
         return $files;
