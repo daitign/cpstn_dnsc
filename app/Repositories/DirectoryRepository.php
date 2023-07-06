@@ -254,6 +254,7 @@ class DirectoryRepository {
         $directories = Directory::where('area_id', $area_id)->get();
         $directory = null;
         foreach($directories as $key => $dir) {
+            $dir->grand_parent = $this->getGrandParent($dir);
             if($this->getGrandParent($dir) == $grandParent) {
                 $directory = $dir;
             }

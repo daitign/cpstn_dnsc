@@ -26,7 +26,6 @@ class ManualController extends Controller
 
     public function index(Request $request)
     {
-        $user = Auth::user();
         $data = $this->dr->getDirectoriesAndFiles($this->parent, $request->directory ?? null);
         
         $data['route'] = strtolower($this->parent);

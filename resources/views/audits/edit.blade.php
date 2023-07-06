@@ -33,10 +33,10 @@
                                 <tbody>
                                     @foreach($audit_plan->plan_areas as $plan_area)
                                         <tr>
-                                            <td>{{ $plan_area->area->getAreaFullName() }}</td>
+                                            <td>{{ $plan_area->area->getAreaFullName() }}{{ $plan_area->area->area_name ?? '' }}</td>
                                             <td>
                                                 @foreach($plan_area->users as $user)
-                                                    {{ $user->first_name }} {{ $user->surname }}
+                                                    {{ $user->firstname ?? '' }} {{ $user->surname ?? ''}}
                                                     @if($loop->index < count($plan_area->users) - 1)
                                                     , 
                                                     @endif

@@ -11,6 +11,14 @@ use App\Models\Directory;
 use App\Models\FileHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+
+use App\Models\Manual;
+use App\Models\Evidence;
+use App\Models\Template;
+use App\Models\AuditReport;
+
+
 use App\Repositories\DirectoryRepository;
 
 class ArchiveController extends Controller
@@ -24,9 +32,8 @@ class ArchiveController extends Controller
 
     public function index(Request $request)
     {
-        $user = Auth::user();
-        $role_name = $user->role->role_name;
         $data = $this->dr->getDirectoriesAndFiles(null, $request->directory);
+        $data['page_title'] = 'Archives';
 
         return view('archives.index', $data);
     }
@@ -88,7 +95,7 @@ class ArchiveController extends Controller
     {
         $keyword = $request->keyword;
         $parent_name = $parent_name == 'archives' ? null : $parent_name;
-        $data = $this->dr->searchFilesAndDirectories($keyword, $parent_name);
+        $data = $this->dr->searchFilesAndDirectories($keyword, ucwords($parent_name));
         $data['page_title'] = $parent_name ?? 'archives';
         $data['keyword'] = $keyword;
         
@@ -266,8 +273,22 @@ class ArchiveController extends Controller
     {
         $file = File::findOrFail($id);
         $user = Auth::user();
-        if($file->user_id !== $user->id && !in_array($user->role->role_name, config('app.manage_archive'))) {
+        if($file->user_id !== $user->id) {
             return back()->withError("You don't have permission to delete the file");
+        }
+
+        if($file->type == 'manuals') {
+            Manual::where('file_id', $file->id)->delete();
+        }elseif($file->type == 'evidences') {
+            Evidence::where('file_id', $file->id)->delete();
+        }elseif($file->type == 'templates') {
+            Template::where('file_id', $file->id)->delete();
+        }elseif($file->type == 'audit_reports') {
+            AuditReport::where('file_id', $file->id)->delete();
+        }elseif($file->type == 'consolidated_audit_reports') {
+            ConsolidatedAuditReport::where('file_id', $file->id)->delete();
+        }elseif($file->type == 'survey_reports') {
+            SurveyReport::where('file_id', $file->id)->delete();
         }
 
         $file->delete();

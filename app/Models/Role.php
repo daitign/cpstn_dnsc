@@ -17,21 +17,21 @@ class Role extends Model
 
     public function getDirectoriesAttribute()
     {
-        $directories = ['Manuals', 'Templates'];
+        $directories = ['Manuals'];
         if($this->role_name == 'Staff') {
-            $directories = ['Manuals', 'Templates'];
+            $directories = ['Manuals'];
         }elseif(in_array($this->role_name, ['Process Owner', 'Document Control Custodian'])) {
-            $directories = ['Templates', 'Manuals', 'Evidences'];
+            $directories = ['Manuals', 'Evidences'];
         }elseif(in_array($this->role_name, ['Internal Auditor'])) {
-            $directories = ['Templates', 'Audit Reports', 'Evidences', 'Template'];
+            $directories = ['Audit Reports', 'Evidences'];
         }elseif(in_array($this->role_name, ['Internal Lead Auditor'])) {
-            $directories = ['Templates', 'Audit Reports', 'Evidences', 'Template', 'Consolidated Audit Reports'];
+            $directories = ['Audit Reports', 'Evidences', 'Consolidated Audit Reports'];
         }elseif($this->role_name == 'Quality Assurance Director') {
-            $directories = ['Templates', 'Manuals', 'Audit Reports', 'Survey Reports', 'Consolidated Audit Reports'];
+            $directories = ['Manuals', 'Audit Reports', 'Survey Reports', 'Consolidated Audit Reports'];
         }elseif($this->role_name == 'Human Resources') {
-            $directories = ['Templates', 'Survey Reports'];
+            $directories = ['Survey Reports'];
         }elseif($this->role_name == 'College Management Team') {
-            $directories = ['Templates', 'Consolidated Audit Reports', 'Survey Reports'];
+            $directories = ['Consolidated Audit Reports', 'Survey Reports'];
         }
 
         return $directories;

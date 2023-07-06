@@ -286,7 +286,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/', [ManualController::class, 'index'])->name('manuals');
     });
 
-    Route::prefix('audit-reports')->middleware('directory:Templates')->group(function(){
+    Route::prefix('audit-reports')->middleware('directory:Audit Reports')->group(function(){
         Route::get('/', [AuditController::class, 'auditReports'])->name('audit-reports');
     });
 

@@ -88,15 +88,15 @@
                 data-bs-toggle="modal" data-bs-target="#historyModal"
             ><i class="fa fa-history"></i> History</a>
         </li>
-        @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
-        <!-- <li>
-            <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i>Delete</button>
+        @if($file->user_id == Auth::user()->id)
+        <li>
+            <a href="#" class="text-decoration-none btn-confirm" data-message="Are you sure you wan't to delete this file?" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i> Delete</button>
                 <form id="delete_file_{{ $file->id }}" action="{{ route('archives-delete-file', $file->id) }}" class="d-none" method="POST">
                     @csrf
                     @method('DELETE')
                 </form>
             </a>
-        </li> -->
+        </li>
         @endif
     </ul>
 </div>

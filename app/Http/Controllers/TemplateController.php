@@ -80,7 +80,8 @@ class TemplateController extends Controller
             'name' => $request->name,
             'description' => $request->description ?? '',
             'user_id' => $user->id,
-            'date' => $request->date
+            'date' => $request->date,
+            'file_id' => $file->id ?? null
         ]);
 
         

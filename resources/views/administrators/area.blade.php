@@ -92,7 +92,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="process" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="area_description" name="area_description" placeholder="Enter description" required>
+                            <textarea class="form-control" rows="3" id="area_description" name="area_description" placeholder="Enter description" required></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -192,12 +192,12 @@
 
                 var process_areas = areas.filter(i => i.parent_area == area_id && i.type == 'process');
                 if(process_areas.length > 0) {
-                    process_container.html('<h2 class="my-3">Process</h2>');
+                    process_container.html('<h2 class="my-3 text-success">Process</h2>');
 
                     process_areas.forEach(function(i){
                         process_container.append(`<div class="col-2 text-center">
                             <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa fa-book fa-2x"></i>
+                                <i class="fa fa fa-book fa-2x text-warning"></i>
                                 <p style="text-overflow: ellipsis"><small>` + i.area_name + `</small></p>
                             </button>
                             <ul class="dropdown-menu text-left">
@@ -221,12 +221,12 @@
                 process_container.html('');
                 var process_areas = areas.filter(i => i.parent_area == area_id && i.type == 'process');
                 if(process_areas.length > 0) {
-                    process_container.html('<h2 class="my-3">Process</h2>');
+                    process_container.html('<h2 class="my-3 text-success">Process</h2>');
 
                     process_areas.forEach(function(i){
                         process_container.append(`<div class="col-2 text-center">
                             <button class="pt-3 btn align-items-center justify-content-center btn-sub-area" data-area-id="` + i.id + `" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa fa fa-book fa-2x"></i>
+                                <i class="fa fa fa-book fa-2x text-warning"></i>
                                 <p style="text-overflow: ellipsis"><small>` + i.area_name + `</small></p>
                             </button>
                             <ul class="dropdown-menu text-left">
@@ -249,7 +249,7 @@
                     $('#areaModalLabel').html('Edit ' + type);
                     $('#area_id').val(area.id);
                     $('#area_name').val(area.area_name);
-                    $('#area_description').val(area.area_description);
+                    $('#area_description').html(area.area_description);
                 }else{
                     if(type == 'process') {
                         $('.select-container').append(`<div class="mb-3">
@@ -280,7 +280,7 @@
                 initModal(type);
             });
 
-            $('.container').on('click', '.btn-edit', function(){
+            $('div').on('click', '.btn-edit', function(){
                 var area_id = $(this).data('area-id');
                 var type = $(this).data('type');
                 

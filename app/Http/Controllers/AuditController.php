@@ -144,27 +144,12 @@ class AuditController extends Controller
 
     public function auditReports(Request $request, $directory_name = '')
     {
-        $user = Auth::user();
+        $parent = 'Audit Reports';
+        $data = $this->dr->getDirectoriesAndFiles($parent, $request->directory ?? null);
+        $data['route'] = \Str::slug($parent);
+        $data['page_title'] = $parent;
 
-        $data = $this->dr->getDirectoryFiles('Audit Reports');
-        if(!empty($request->directory)) {
-            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
-            $data['route'] = 'audit-reports';
-            $data['page_title'] = 'Audit Reports';
-
-            return view('archives.index', $data);
-        }
-
-        if($user->role->role_name == 'Internal Auditor') {
-            $data['parent_directory'] = null;
-            $data['directory'] = null;
-            $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent('Audit Reports');
-        }
-
-        $data['page_title'] = 'Audit Reports';
-        $data['route'] = 'audit-reports';
-
-        return view('archives.files', $data);
+        return view('archives.index', $data);
     }
 
     public function createAuditReport()
@@ -265,24 +250,13 @@ class AuditController extends Controller
 
     public function consolidatedAuditReports(Request $request, $directory_name = '')
     {
-        $user = Auth::user();
+        $parent = 'Consolidated Audit Reports';
+        $data = $this->dr->getDirectoriesAndFiles($parent, $request->directory ?? null);
+        
+        $data['route'] = strtolower($parent);
+        $data['page_title'] = $parent;
 
-        $data = $this->dr->getDirectoryFiles('Consolidated Audit Reports');
-        if(!empty($request->directory)) {
-            $data = $this->dr->getArchiveDirectoryaAndFiles($request->directory);
-            $data['route'] = 'audit-reports';
-            $data['page_title'] = 'Consolidated Audit Reports';
-
-            return view('archives.index', $data);
-        }
-
-        $data['parent_directory'] = null;
-        $data['directory'] = null;
-        $data['directories'] = $this->dr->getDirectoriesAssignedByGrandParent('Consolidated Audit Reports');
-        $data['page_title'] = 'Consolidated Audit Reports';
-        $data['route'] = 'audit-reports';
-
-        return view('archives.files', $data);
+        return view('archives.index', $data);
     }
 
     public function createConsolidatedAuditReport()
