@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\SurveyReport;
 use Illuminate\Support\Facades\Auth;
@@ -14,7 +15,8 @@ class CMTController extends Controller
     public function surveyReports()
     {
         $survey_reports = SurveyReport::where('status', 'pre-approved')->get();
-        return view('survey-reports.index', compact('survey_reports'));
+        $files = File::where('type', 'survey_reports')->get();
+        return view('survey-reports.index', compact('survey_reports', 'files'));
     }
 
     public function approveSurveyReport($id)
@@ -46,7 +48,8 @@ class CMTController extends Controller
     public function consolidatedAuditReports()
     {
         $consolidated_audit_reports = ConsolidatedAuditReport::where('status', 'pre-approved')->get();
-        return view('consolidated-audit-reports.index', compact('consolidated_audit_reports'));
+        $files = File::where('type', 'consolidated_audit_reports')->get();
+        return view('consolidated-audit-reports.index', compact('consolidated_audit_reports', 'files'));
     }
 
     public function approveConsolidatedAuditReport($id)

@@ -49,7 +49,7 @@ class ReportsController extends Controller
     public function consolidatedAuditReports()
     {
         $consolidated_audit_reports = ConsolidatedAuditReport::where('status', 'pending')->get();
-        $files = File::where('type', 'survey_reports')->get();
+        $files = File::where('type', 'consolidated_audit_reports')->get();
         return view('consolidated-audit-reports.index', compact('consolidated_audit_reports', 'files'));
     }
 
