@@ -6,7 +6,7 @@
     <div class="page-header">
         <h1>{{ $page_title ?? 'Archives' }}</h1>
         <h5 class="text-decoration-none">
-            @if(empty($page_title))
+            @if(empty($page_title) || $page_title == 'Archives')
                 <a href="{{ route('archives-page') }}">Archives</a> >
             @endif
             @if(!empty($parents))
