@@ -27,4 +27,8 @@ class AuditPlanArea extends Model
             'user_id'
         );
     }
+
+    public function area_users() {
+        return $this->hasMany(AuditPlanAreaUser::class);
+    }
 }

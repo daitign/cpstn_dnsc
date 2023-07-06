@@ -51,9 +51,17 @@ class AuditController extends Controller
     public function areas(Request $request, $id)
     {
         $user = Auth::user();
-        $audit_plan = AuditPlan::whereHas('users', function($q) { $q->where('user_id', Auth::user()->id); })
-                            ->where('id', $id)->firstOrFail();
-        $areas = $audit_plan->areas;
+        $audit_plan = AuditPlan::whereHas('plan_users', function($q) {
+                            $q->where('user_id', Auth::user()->id); 
+                        })->where('id', $id)
+                        ->firstOrFail();
+        
+        $areas = Area::whereHas('audit_plan_area', function($q) use($audit_plan){
+            $q->where('audit_plan_id', $audit_plan->id)
+                ->whereHas('area_users', function($q2) {
+                    $q2->where('user_id', Auth::user()->id); 
+                }); 
+        })->get();
 
         foreach($areas as $area) {
             $area->directory = $this->dr->getDirectoryByAreaAndGrandParent($area->id, 'Evidences');

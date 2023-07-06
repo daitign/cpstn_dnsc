@@ -54,4 +54,9 @@ class Area extends Model
         
        return implode(' > ', $parents);
     }
+
+    public function audit_plan_area()
+    {
+        return $this->hasMany(AuditPlanArea::class);
+    }
 }
