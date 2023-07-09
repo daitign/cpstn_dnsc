@@ -69,8 +69,8 @@
         $('#process').html('<option value="">Select Process</option>');
         if(plan_id != '') {
             var audit_plan = audit_plans.find(item => item.id === plan_id);
-            audit_plan.areas.forEach(function(i){
-                $('#process').append(`<option value="` + i.id + `">` + i.area_name + `</option`);
+            audit_plan.plan_areas.forEach(function(i){
+                $('#process').append(`<option value="` + i.area_id + `">` + i.area.parent.area_name + ` > ` + i.area.area_name + `</option`);
             }); 
         }
     });

@@ -164,7 +164,11 @@ class AuditController extends Controller
     {
         $audit_plans = AuditPlan::whereHas('users', function($q) {
                             $q->where('user_id', Auth::user()->id); 
-                        })->with('areas')
+                        })->with('plan_areas', function($q) {
+                            $q->whereHas('area_users', function($q2) {
+                                $q2->where('user_id', Auth::user()->id); 
+                            });
+                        })
                         ->get();
         return view('audit-reports.create', compact('audit_plans'));
     }

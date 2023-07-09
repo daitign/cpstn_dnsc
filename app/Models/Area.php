@@ -15,6 +15,8 @@ class Area extends Model
     
     protected $guarded = [];
     
+    protected $with = ['parent'];
+    
     public function parent()
     {
         return $this->belongsTo(Area::class, 'parent_area');

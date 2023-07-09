@@ -9,6 +9,8 @@ class AuditPlanArea extends Model
 {
     use HasFactory;
     
+    protected $with = ['area'];
+    
     protected $guarded = [];
     
     public function area()
