@@ -274,7 +274,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('download-evidence/{id}',[DownloadController::class,'evidenceDownload'])->name('download-evidence');
     
 
-    Route::prefix('templates')->middleware('directory:Templates')->group(function(){
+    Route::prefix('templates')->group(function(){
         Route::get('/', [TemplateController::class, 'index'])->name('templates');
     });
 
