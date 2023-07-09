@@ -176,12 +176,12 @@ class AuditController extends Controller
     public function storeAuditReport(Request $request)
     {
         $user = Auth::user();
-
-        $audit_plan = AuditPlan::findOrFail($request->audit_plan);        
+        
+        $audit_plan = AuditPlan::findOrFail($request->audit_plan);
         $dir = Directory::findOrFail($audit_plan->directory_id);     
         $process = Area::findOrFail($request->process);
 
-        $directory = $this->dr->getDirectory($process->area_name, $dir->id);
+        $directory = $this->dr->makeAreaRootDirectories($process, $dir->id);
         $file_id = null;
         if ($request->hasFile('file_attachment')) {
             $now = Carbon::now();
