@@ -22,7 +22,8 @@
             @endif
         </h5>
     </div>
-    <div class="container">
+    {{-- <div class="container"> --}}
+    <div class="m-3">
         <div style="text-align:right">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
             @if(
