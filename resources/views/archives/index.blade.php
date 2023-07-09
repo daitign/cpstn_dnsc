@@ -29,7 +29,7 @@
                     (Auth::user()->role->role_name == 'Document Control Custodian'
                         && !empty($current_directory)
                         && in_array($page_title, ['Evidences', 'Manuals'])
-                        && (!empty($current_directory->are) && $current_directory->area->type == 'process')
+                        && (!empty($current_directory->area) && $current_directory->area->type == 'process')
                     )
                 ||  (Auth::user()->role->role_name == 'Staff' 
                         && !empty($current_directory) 
