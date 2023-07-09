@@ -57,7 +57,7 @@ class DirectoryRepository {
         return compact('users', 'directories', 'current_directory', 'files', 'parents', 'current_user');
     }
 
-    public function searchFilesAndDirectories($keyword = '', $grand_parent = null) {
+    public function searchFilesAndDirectories($keyword = '', $grand_parent = null, $date_from = null, $date_to = null) {
         $files = [];
         $directories = [];
         $current_user = Auth::user();
@@ -80,14 +80,14 @@ class DirectoryRepository {
         return compact('directories', 'files');
     }
 
-    public function searchFiles($keyword = '', $grand_parent = null) {
+    public function searchFiles($keyword = '', $grand_parent = null, $date_from = null, $date_to = null) {
         $files = [];
         $directories = [];
         $current_user = Auth::user();
         $role = $current_user->role->role_name;
         
         $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
-        $files = $this->getFiles($current_user, null, $keyword);
+        $files = $this->getFiles($current_user, null, $keyword, $date_from, $date_to);
         $files = $files->filter(function ($file) use($grand_parents, $current_user) {
             return in_array($this->getGrandParent($file->directory), $grand_parents) && $this->allowedDirectory($file->directory, $current_user);
         });
@@ -95,7 +95,7 @@ class DirectoryRepository {
         return compact('files');
     }
 
-    public function getFiles($current_user, $current_directory = null, $keyword = null) {
+    public function getFiles($current_user, $current_directory = null, $keyword = null, $date_from = null, $date_to = null) {
         $role_file_access = [
             'Internal Auditor',
             'Internal Lead Auditor', 
@@ -128,7 +128,7 @@ class DirectoryRepository {
                     })->orWhere('type', 'templates');
                 });
             }
-        })->get();
+        })->whereBetween('created_at', [$date_from, $date_to])->get();
 
         return $files;
     }

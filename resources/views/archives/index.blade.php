@@ -158,6 +158,14 @@
                             <label for="keyword" class="form-label">File Name</label>
                             <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Enter File Name" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="keyword" class="form-label">Date From</label>
+                            <input type="date" name="date_from" class="date-from form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="keyword" class="form-label">Date To</label>
+                            <input type="date" name="date_to" class="date-to form-control">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-success"><i class="fa fa-search"></i> Search</button>
@@ -212,4 +220,21 @@
 
 @section('js')
     @include('archives.common.js')
+    <script>
+        $('.date-from').flatpickr({
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            defaultDate: "{{ Carbon\Carbon::now()->startOfMonth()->format('Y-m-d') }}",
+            maxDate: "{{ date('Y-m-d') }}"
+        });
+
+        $('.date-to').flatpickr({
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            defaultDate: "today",
+            maxDate: "{{ date('Y-m-d') }}"
+        });
+    </script>
 @endsection

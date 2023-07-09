@@ -10,14 +10,22 @@
         @include('layout.alert')
         <form method="GET" action="{{ route('search', $page_title) }}" id="searchModalForm">
             <div class="row mt-3">
-                <div class="mb-3 col-8">
-                    <label for="keyword" class="form-label">FileName</label>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control py-2" name="keyword" id="keyword" value="{{ $keyword ?? '' }}" placeholder="Enter File Name" required>
-                        <div class="input-group-append">&nbsp;                         
-                            <button type="submit" class="btn btn-success px-4 py-2"><i class="fa fa-search"></i> Search</button>
-                            <a href="{{ route('archives-page') }}" class="btn btn-warning px-4 py-2"><i class="fa fa-refresh"></i> Clear</a>
-                        </div>
+                <div class="mb-3 col-8 row">
+                    <div class="col-12 mb-3">
+                        <label for="keyword" class="form-label">File Name</label>
+                        <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Enter File Name" value="{{ $keyword ?? '' }}" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label for="keyword" class="form-label">Date From</label>
+                        <input type="date" name="date_from" class="date-from form-control" value="{{ $date_from ?? ''}}">
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label for="keyword" class="form-label">Date To</label>
+                        <input type="date" name="date_to" class="date-to form-control" value="{{ $date_to ?? ''}}">
+                    </div>      
+                    <div class="col-12 mb-3">                  
+                        <button type="submit" class="btn btn-success px-4 py-2"><i class="fa fa-search"></i> Search</button>
+                        <a href="{{ route('archives-page') }}" class="btn btn-warning px-4 py-2"><i class="fa fa-refresh"></i> Clear</a>
                     </div>
                 </div>
             </div>
@@ -53,5 +61,22 @@
 @endsection
 
 @section('js')
+    <script>
+        $('.date-from').flatpickr({
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            defaultDate: "{{ $date_from ?? Carbon\Carbon::now()->startOfMonth()->format('Y-m-d') }}",
+            maxDate: "{{ date('Y-m-d') }}"
+        });
+
+        $('.date-to').flatpickr({
+            altInput: true,
+            altFormat: "F j, Y",
+            dateFormat: "Y-m-d",
+            defaultDate: "{{ $date_to ?? 'today' }}",
+            maxDate: "{{ date('Y-m-d') }}"
+        });
+    </script>
     @include('archives.common.js')
 @endsection
