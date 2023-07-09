@@ -15,16 +15,16 @@
                     @csrf
                     <div>
                         <div class="mb-3">
-                            <label for="process_name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="process_name" name="name" placeholder="Enter name" required>
+                            <label for="audit_plan_name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="audit_plan_name" name="name" placeholder="Enter name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="process_description" class="form-label">Description</label>
-                            <textarea class="form-control" rows="3" id="process_description" name="description" placeholder="Enter description"></textarea>
+                            <label for="audit_plan_description" class="form-label">Description</label>
+                            <textarea class="form-control" rows="3" id="audit_plan_description" name="description" placeholder="Enter description" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="process_date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="process_date" name="date" placeholder="Enter date" required>
+                            <label for="audit_plan_date" class="form-label">Date</label>
+                            <input type="date" class="form-control date" id="audit_plan_date" name="date" placeholder="Enter date" required>
                         </div>
 
                         <div class="mt-2">
@@ -62,11 +62,9 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Select Process</label>
-                            <input type="hidden" class="process" id="process">
-                            <input type="hidden" class="process_name" id="process_name">
                             <div class="tree"></div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 auditors-panel">
                             <label for="name" class="form-label">Auditors</label>
                             <select id="auditors" class="form-control select2" multiple required data-placeholder="Choose Auditors">
                                 @foreach($auditors as $user)
@@ -92,29 +90,29 @@
 
     var tree = $('.tree').treeview({
         data: areas,
-        levels: 1,
+        multiSelect: true,
         collapseIcon: "fa fa-minus",
         expandIcon: "fa fa-plus",
-        onNodeSelected: function(event, data) {
-            $('.process').val(data.id);
-            $('.process_name').val(data.text);
-        }
+        // onNodeSelected: function(event, data) {
+        //     $('.process').val(data.id);
+        //     $('.process_name').val(data.text);
+        // }
     });
+
+    tree.treeview('expandAll', { levels: 1});
 
     $('.select2').select2({
         'width': '100%',
-        dropdownParent: $('#addProcessModal')
+        dropdownParent: $('.auditors-panel')
     });
 
     $('.btn-save').on('click', function(e){
-        e.preventDefault();
         if($('.table-process tbody > tr').length == 0) {
+            e.preventDefault();
             Swal.fire({
                 text: 'Please Add Process...',
                 icon: 'warning',
             });
-        }else{
-            $('#auditPlanForm').submit();
         }
     });
 
@@ -132,15 +130,21 @@
                 auditors_id += ',';
             }
         });
-        $('.table-process tbody').append(`<tr>
-                    <td>` + process_name + `</td>
+
+        var selected = tree.treeview('getSelected');
+        var selectedAreas = [];
+        selected.forEach(function(area){
+            $('.table-process tbody').append(`<tr>
+                    <td>` + area.text + `</td>
                     <td>` + auditors_name + `</td>
                     <td>
                         <button class="btn btn-danger btn-remove" type="button"><i class="fa fa-times"></i></button>
-                        <input type="hidden" name="process[]" value="` + process_id + `">
+                        <input type="hidden" name="process[]" value="` + area.id + `">
                         <input type="hidden" name="auditors[]" value="` + auditors_id + `">
                     </td>
             </tr>`);
+        });
+        
 
         $('.btn-close-modal').trigger('click');
     });

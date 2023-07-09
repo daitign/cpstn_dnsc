@@ -52,14 +52,3 @@
         </div>
     </div>
 @endsection
-
-@section('js')
-<script>
-    $("#date").flatpickr({
-        altInput: true,
-        altFormat: "F j, Y",
-        dateFormat: "Y-m-d",
-        maxDate: "{{ date('Y-m-d') }}"
-    });
-</script>
-@endsection

@@ -45,7 +45,7 @@
                                             </td>
                                             <td><button class="btn btn-danger btn-remove" type="button"><i class="fa fa-times"></i></button></td>
                                             <input type="hidden" name="process[]" value="{{ $plan_area->area->id }}">
-                                            <input type="hidden" name="auditors[]" value="{{ $plan_area->users->pluck('id') }}">
+                                            <input type="hidden" name="auditors[]" value="{{ implode(',', $plan_area->users->pluck('id')->toArray()) }}">
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -81,7 +81,7 @@
                             <input type="hidden" class="process_name" id="process_name">
                             <div class="tree"></div>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 auditors-panel">
                             <label for="name" class="form-label">Auditors</label>
                             <select id="auditors" class="form-control select2" multiple required data-placeholder="Choose Auditors">
                                 @foreach($auditors as $user)
@@ -118,7 +118,7 @@
 
     $('.select2').select2({
         'width': '100%',
-        dropdownParent: $('#addProcessModal')
+        dropdownParent: $('.auditors-panel')
     });
 
     $('.btn-save').on('click', function(e){
