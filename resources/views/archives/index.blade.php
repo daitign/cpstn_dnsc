@@ -149,13 +149,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="searchModalLabel">Search File or Directory</h5>
+                    <h5 class="modal-title" id="searchModalLabel">Search File</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="GET" action="{{ route('search', strtolower($page_title ?? 'Archives')) }}" id="searchModalForm">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="keyword" class="form-label">File or Directory Name</label>
+                            <label for="keyword" class="form-label">File Name</label>
                             <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Enter File Name" required>
                         </div>
                     </div>
