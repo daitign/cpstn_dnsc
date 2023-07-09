@@ -30,17 +30,22 @@
                 data-type="{{ $file->file_mime }}"
                 data-full-path="{{ $file->directory->fullPath() ?? '' }} > {{ $file->file_name ?? '' }}"
                 data-created-by="{{ $file->user->username }}"
-                data-created-at="{{ $file->created_at->format('M d, Y h:i A') }}"
-                data-updated-at="{{ $file->created_at->format('M d, Y h:i A') }}"
+                data-created-at="{{ $file->created_at->format('F d, Y h:i A') }}"
+                data-updated-at="{{ $file->created_at->format('F d, Y h:i A') }}"
                 data-description="{{ $file->description ?? ''}}"
             ><i class="fa fa-cog"></i> Properties</a>
         </li>
         @if(!empty($file->trackings()))
         <li>
             <a href="#" class="text-decoration-none btn-tracking"
-            data-bs-toggle="modal" data-bs-target="#trackingModal"
+                data-bs-toggle="modal" data-bs-target="#trackingModal"
             ><i class="fa fa-search"></i> Track</a>
             <div class="d-none file-tracking-info">
+                <div class="px-5 mb-4 text-center">
+                    Name: {{ $file->file_name }}<br/>
+                    Uploaded By: {{ $file->user->username }}<br/>
+                    Uploaded At: {{ $file->created_at->format('F d, Y h:i A') }}
+                </div>
                 <div class="tracking-container">
                     @foreach($file->trackings() as $track)
                         <div class="tracking-item">

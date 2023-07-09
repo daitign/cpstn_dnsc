@@ -215,7 +215,8 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'Notification' => App\Helpers\NotificationHelper::class,
-        'FileRoles' => App\Constants\FileRoles::class
+        'FileRoles' => App\Constants\FileRoles::class,
+        'Roles' => App\Constants\Roles::class
     ])->toArray(),
 
 ];

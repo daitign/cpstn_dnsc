@@ -84,35 +84,15 @@
                     <h5 class="modal-title">Remarks</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="" id="remarksForm">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="remarksDetailForm">
-                                <div class="col-12 mb-3">
-                                    <label class="form-label">Choose Remarks:</label><br/>
-                                    <input type="radio" class="btn-check" name="type" id="remarks-success" value="success" autocomplete="off" checked>
-                                    <label class="btn btn-outline-success p-2 px-4" for="remarks-success"></label>
-
-                                    <input type="radio" class="btn-check" name="type" id="remarks-danger" value="danger" autocomplete="off">
-                                    <label class="btn btn-outline-danger p-2 px-4" for="remarks-danger"></label>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label" for="comments">Comments:</label>
-                                    <textarea class="form-control" rows="3" name="comments" id="remarks-comments"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label" for="comments">Recent Remarks:</label>
-                                <table class="table recent-remarks-table"></table>
-                            </div>
-                        </div>
+                <div class="modal-body">
+                    <div class="col-12">
+                        <label class="form-label" for="comments">Recent Remarks:</label>
+                        <table class="table recent-remarks-table"></table>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success btn-submit-remarks">Save</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
@@ -131,23 +111,6 @@
         $('#propertyCreated').html($(this).data('created-at'));
         $('#propertyUpdated').html($(this).data('updated-at'));
         $('#propertyDescription').html($(this).data('description'));
-    });
-
-    $('.btn-confirm').on('click', function(){
-        var form = $(this).data('target');
-        var message = $(this).data('message') ?? "Are you sure you wan't save changes?";
-        Swal.fire({
-            text: message,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $(form).submit();
-                }
-        });
     });
 
     $('.btn-remarks').on('click', function(){

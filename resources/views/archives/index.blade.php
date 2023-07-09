@@ -26,12 +26,12 @@
         <div style="text-align:right">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i> Search</button>
             @if(
-                    (Auth::user()->role->role_name == 'Document Control Custodian'
+                    (Auth::user()->role->role_name == Roles::DOCUMENT_CONTROL_CUSTODIAN
                         && !empty($current_directory)
                         && in_array($page_title, ['Evidences', 'Manuals'])
                         && (!empty($current_directory->area) && $current_directory->area->type == 'process')
                     )
-                ||  (Auth::user()->role->role_name == 'Staff' 
+                ||  (Auth::user()->role->role_name == Roles::STAFF 
                         && !empty($current_directory) 
                         && $page_title == 'Templates'
                     )
@@ -45,7 +45,7 @@
                                 Directory
                         </button>
                     </li>
-                    @if(Auth::user()->role->role_name == 'Staff')
+                    @if(Auth::user()->role->role_name == Roles::STAFF)
                     <li>
                         <button class="btn"
                             data-bs-toggle="modal" data-bs-target="#templateModal">
@@ -167,7 +167,7 @@
         </div>
     </div>
     
-    @if(Auth::user()->role->role_name == 'Staff' && !empty($current_directory) && $page_title == 'Templates')
+    @if(Auth::user()->role->role_name == Roles::STAFF && !empty($current_directory) && $page_title == 'Templates')
         <div class="modal fade" id="templateModal" tabindex="-1" aria-labelledby="templateModalModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

@@ -10,4 +10,9 @@ class SurveyReport extends Model
     use HasFactory;
     
     protected $guarded = [];
+
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
 }

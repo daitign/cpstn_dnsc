@@ -107,8 +107,8 @@ class UserController extends Controller
         }
 
         FileRemark::updateOrCreate(
-            ['type' => $request->type, 'comments' => $request->comments],
-            ['file_id' => $file_id, 'user_id' => Auth::user()->id]
+            ['file_id' => $file_id, 'user_id' => Auth::user()->id],
+            ['type' => $request->type, 'comments' => $request->comments]
         );
 
         if($file->user_id !== Auth::user()->id) {

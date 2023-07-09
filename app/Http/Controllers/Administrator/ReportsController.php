@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\File;
 use App\Models\User;
+use App\Models\FileRemark;
 use App\Models\SurveyReport;
 use App\Models\ConsolidatedAuditReport;
 
@@ -26,6 +27,11 @@ class ReportsController extends Controller
         $report->status = 'pre-approved';
         $report->updated_by = Auth::user()->id;
         $report->save();
+
+        FileRemark::updateOrCreate(
+            ['file_id' => $report->file_id, 'user_id' => Auth::user()->id],
+            ['type' => 'success', 'comments' => '']
+        );
         
         $user = User::find($report->user_id);
         \Notification::notify($user, 'Pre-approved survey report');
@@ -39,6 +45,11 @@ class ReportsController extends Controller
         $report->status = 'rejected';
         $report->updated_by = Auth::user()->id;
         $report->save();
+
+        FileRemark::updateOrCreate(
+            ['file_id' => $report->file_id, 'user_id' => Auth::user()->id],
+            ['type' => 'danger', 'comments' => '']
+        );
         
         $user = User::find($report->user_id);
         \Notification::notify($user, 'Rejected survey report');
@@ -60,6 +71,11 @@ class ReportsController extends Controller
         $report->updated_by = Auth::user()->id;
         $report->save();
 
+        FileRemark::updateOrCreate(
+            ['file_id' => $report->file_id, 'user_id' => Auth::user()->id],
+            ['type' => 'success', 'comments' => '']
+        );
+
         $user = User::find($report->user_id);
         \Notification::notify($user, 'Pre-approved consolidated audit report');
         
@@ -72,6 +88,11 @@ class ReportsController extends Controller
         $report->status = 'rejected';
         $report->updated_by = Auth::user()->id;
         $report->save();
+
+        FileRemark::updateOrCreate(
+            ['file_id' => $report->file_id, 'user_id' => Auth::user()->id],
+            ['type' => 'danger', 'comments' => '']
+        );
 
         
         $user = User::find($report->user_id);
