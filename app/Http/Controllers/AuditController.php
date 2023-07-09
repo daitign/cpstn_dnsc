@@ -178,7 +178,7 @@ class AuditController extends Controller
         $user = Auth::user();
         
         $audit_plan = AuditPlan::findOrFail($request->audit_plan);
-        $dir = Directory::findOrFail($audit_plan->directory_id);     
+        $dir = Directory::findOrFail($audit_plan->directory_id);
         $process = Area::findOrFail($request->process);
 
         $directory = $this->dr->makeAreaRootDirectories($process, $dir->id);

@@ -78,7 +78,7 @@
                             ><i class="fa fa-edit"></i> Edit</a>
                         </li>
                         @endif
-                        <!-- @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
+                        @if($file->user_id == Auth::user()->id || in_array(Auth::user()->role->role_name, Config::get('app.manage_archive')))
                         <li>
                             <a href="#" class="text-decoration-none btn-confirm" data-target="#delete_file_{{ $file->id }}"><i class="fa fa-trash"></i>Delete</button>
                                 <form id="delete_file_{{ $file->id }}" action="{{ route('archives-delete-file', $file->id) }}" class="d-none" method="POST">
@@ -87,7 +87,7 @@
                                 </form>
                             </a>
                         </li>
-                        @endif -->
+                        @endif
                     </ul>
                 </div>
             @endforeach

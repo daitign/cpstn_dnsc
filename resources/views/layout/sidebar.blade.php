@@ -338,6 +338,49 @@
                 <ul class="navbar-nav ms-auto">
                     <!-- Move the user profile and logout buttons to the right -->
                     <li class="nav-item me-2 ms-auto">
+                        <div class="dropdown d-inline-block ms-2">
+                            <button type="button" class="btn btn-sm text-warning" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-fw fa-bell fa-2x"></i>
+                            @if(!empty(auth()->user()->unreadNotifications) && count(auth()->user()->unreadNotifications) > 0)
+                                <span class="fs-xs fw-semibold d-inline-block rounded-pill bg-success text-white px-2 align-top">{{ count(auth()->user()->unreadNotifications) }}</span>
+                            @endif
+                            </button>
+                            <div class="dropdown-notification dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 border-0 fs-sm" aria-labelledby="page-header-notifications-dropdown" style="">
+                                <div class="p-2 bg-body-light border-bottom text-center rounded-top">
+                                    <h5 class="dropdown-header text-uppercase">Notifications</h5>
+                                </div>
+                                <ul class="nav-items no-bullets mb-0">
+                                @if(!empty(auth()->user()->unreadNotifications) && count(auth()->user()->unreadNotifications) > 0)
+                                    @foreach(auth()->user()->unreadNotifications->take(5) as $notification)
+                                    <li>
+                                        <a class="text-dark d-flex py-2" href="{{ route('notifications') }}">
+                                        <div class="flex-shrink-0 me-2 ms-3">
+                                            <i class="fa fa-fw fa-check-circle text-success"></i>
+                                        </div>
+                                        <div class="flex-grow-1 pe-2">
+                                            <div class="fw-semibold">{{ $notification->data['message'] }}</div>
+                                            <span class="fw-medium text-muted" data-toggle="tooltip" title="{{ $notification->created_at->format('d/m/Y h:i A') }}">{{ $notification->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        </a>
+                                    </li>
+                                    @endforeach
+                                @else
+                                <li>
+                                    <div class="text-center">
+                                        NO UNREAD NOTIFICATIONS FOUND
+                                    </div>
+                                    </li>
+                                @endif
+                                </ul>
+                                <div class="p-2 border-top text-center">
+                                    <a class="d-inline-block fw-medium" href="{{ route('notifications') }}">
+                                    <i class="fa fa-fw fa-arrow-down me-1 opacity-50"></i> View More
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item me-2 ms-auto">
                         <a class="nav-link" href="{{ route('user.profile') }}">
                             <img src="{{ Storage::url(auth()->user()->img) }}" alt="User Image" class="rounded-circle"
                                 style="width: 30px; height: 30px;">

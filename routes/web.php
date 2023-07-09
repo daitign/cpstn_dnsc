@@ -294,6 +294,10 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/', [SurveyReportController::class, 'index'])->name('survey-reports');
     });
 
+    Route::prefix('notifications')->group(function(){
+        Route::get('/', [UserController::class, 'notifications'])->name('notifications');
+    });
+
     Route::prefix('messages')->middleware('staff_qad')->group(function(){
         Route::get('/', [MessageController::class, 'index'])->name('messages');
         Route::post('/send', [MessageController::class, 'store'])->name('messages.send');

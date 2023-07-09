@@ -94,3 +94,13 @@ p {
 .select2-container, .alert-success p, .card {
     color: #000;
 }
+
+.dropdown-notification {
+    width: 300px;
+}
+
+.no-bullets li {
+    list-style-type: none; 
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margins */
+}

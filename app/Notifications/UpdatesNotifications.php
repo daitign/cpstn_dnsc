@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -22,6 +23,7 @@ class UpdatesNotifications extends Notification
         $this->message = $message;
         $this->user_id = $user_id;
         $this->username = $username;
+        
     }
 
     /**

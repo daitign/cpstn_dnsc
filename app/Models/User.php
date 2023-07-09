@@ -18,6 +18,8 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $appends = ['full_name'];
+
     protected $fillable = [
         'firstname',
         'middlename',
@@ -75,5 +77,10 @@ class User extends Authenticatable
             $areas[] = sprintf("%s%s", $area->parent->area_name ? $area->parent->area_name.' > ' : '', $area->area_name ?? '');
         }
         return $areas;
+    }
+
+    public function getFullNameAttribute()
+    {
+        return $this->firstname.' '.$this->surname;
     }
 }

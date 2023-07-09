@@ -118,4 +118,11 @@ class UserController extends Controller
         
         return redirect()->back()->with('success', 'Your remarks has been saved successfully');
     }
+
+    public function notifications()
+    {
+        $notifications = Auth::user()->unreadNotifications;
+        $notifications->markAsRead();
+        return view('user.notifications', compact('notifications'));
+    }
 }

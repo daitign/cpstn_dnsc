@@ -28,9 +28,9 @@ class AnnouncementController extends Controller
             'date' => $request->date,
             'description' => $request->description,
         ]);
-
-        $users = User::get();
-        \Notification::notify($users, 'Admin post an announcement');
+        
+        $users = User::whereHas('role', function($q){ $q->where('role_name', '!=', 'Quality Assurance Director');})->get();
+        \Notification::notify($users, 'post an announcement');
 
         return redirect()->back()->with('message', 'You have successfully created announcement');
     }
