@@ -80,6 +80,21 @@ class DirectoryRepository {
         return compact('directories', 'files');
     }
 
+    public function searchFiles($keyword = '', $grand_parent = null) {
+        $files = [];
+        $directories = [];
+        $current_user = Auth::user();
+        $role = $current_user->role->role_name;
+        
+        $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
+        $files = $this->getFiles($current_user, null, $keyword);
+        $files = $files->filter(function ($file) use($grand_parents, $current_user) {
+            return in_array($this->getGrandParent($file->directory), $grand_parents) && $this->allowedDirectory($file->directory, $current_user);
+        });
+
+        return compact('files');
+    }
+
     public function getFiles($current_user, $current_directory = null, $keyword = null) {
         $role_file_access = [
             'Internal Auditor',

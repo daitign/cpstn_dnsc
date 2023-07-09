@@ -95,7 +95,7 @@ class ArchiveController extends Controller
     {
         $keyword = $request->keyword;
         $parent_name = $parent_name == 'archives' ? null : $parent_name;
-        $data = $this->dr->searchFilesAndDirectories($keyword, ucwords($parent_name));
+        $data = $this->dr->searchFiles($keyword, ucwords($parent_name));
         $data['page_title'] = $parent_name ?? 'archives';
         $data['keyword'] = $keyword;
         

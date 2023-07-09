@@ -11,7 +11,7 @@
         <form method="GET" action="{{ route('search', $page_title) }}" id="searchModalForm">
             <div class="row mt-3">
                 <div class="mb-3 col-8">
-                    <label for="keyword" class="form-label">File or Directory Name</label>
+                    <label for="keyword" class="form-label">FileName</label>
                     <div class="input-group mb-3">
                         <input type="text" class="form-control py-2" name="keyword" id="keyword" value="{{ $keyword ?? '' }}" placeholder="Enter File Name" required>
                         <div class="input-group-append">&nbsp;                         
@@ -24,18 +24,20 @@
         </form>
        
 
-        @if(count($directories) == 0 && count($files) == 0)
+        @if(count($files) == 0)
             <h4>Result: No Result Found on keyword <strong>{{ $keyword ?? '' }}</strong></h4>
         @endif
 
-        @if(count($directories) > 0)
+        <!--
+            {{--  @if(count($directories) > 0)
             <div class="mt-4 mb-4 row">
                 <h4>Directory Result: Found {{ count($directories) }} on keyword <strong>{{ $keyword ?? '' }}</strong></h4>
                 @foreach($directories as $directory)
                    @include('archives.common.directory')
                 @endforeach
             </div>
-        @endif
+        @endif --}}
+        -->
 
         @if(count($files) > 0)
         <div class="mt-3 row">
