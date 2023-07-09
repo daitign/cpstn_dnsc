@@ -28,11 +28,35 @@
                         <div class="msg_history" style="overflow: auto;height: 50vh;"></div>
                             <div class="type_msg">
                                 <div class="input_msg_write">
-                                    <form id="chat_form" action='{{ route("messages.send") }}' method="POST" data-send-to="">
+                                    <style>
+                                        .input-group .form-control {
+                                          border-top-right-radius: 0;
+                                          border-bottom-right-radius: 0;
+                                        }
+                                      
+                                        .input-group-append .btn {
+                                          border-top-left-radius: 0;
+                                          border-bottom-left-radius: 0;
+                                        }
+                                      
+                                        .gap {
+                                          margin-left: 10px;
+                                        }
+                                      </style>
+                                      
+                                      <form id="chat_form" action="{{ route('messages.send') }}" method="POST" class="text-right">
                                         @csrf
-                                        <textarea id="contact_message" name="message" class="form-control write_msg" placeholder="Type a message" required></textarea>
-                                        <button class="btn btn-primary float-right" type="submit"><i class="fa fa-send" aria-hidden="true"></i> Submit</button>
-                                    </form>
+                                        <div class="input-group">
+                                          <textarea class="form-control" name="message" placeholder="Type your message..." rows="1"></textarea>
+                                          <div class="input-group-append">
+                                            <button class="btn btn-primary gap" type="submit"><i class="fas fa-paper-plane"></i></button>
+                                          </div>
+                                        </div><br>
+                                      </form>
+                                      
+                                      
+                                      
+                                      
                                 </div>
                             </div>
                         </div>
