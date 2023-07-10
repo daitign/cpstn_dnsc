@@ -88,4 +88,9 @@ class User extends Authenticatable
     {
         return $this->firstname.' '.$this->surname;
     }
+
+    public function audit_plan_area_user()
+    {
+        return $this->hasMany(AuditPlanAreaUser::class);
+    }
 }

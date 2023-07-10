@@ -88,7 +88,15 @@ class AuditController extends Controller
     public function editAuditPlan($id)
     {
         $audit_plan = AuditPlan::findOrFail($id);
-        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })->get();
+        $auditors = User::whereHas('role', function($q) { $q->where('role_name', 'Internal Auditor'); })
+                        ->whereHas('audit_plan_area_user', function($q) use($audit_plan){
+                            $q->where('audit_plan_id', $audit_plan->id);
+                        })->with('audit_plan_area_user')->get();
+
+        foreach($auditors as $auditor) {
+            $auditor->audit_report = AuditReport::where('audit_plan_id', $audit_plan->id)
+                    ->where('user_id', $auditor->id)->first() ?? null;
+        }
         return view('audits.edit', compact('auditors', 'audit_plan'));
     }
 

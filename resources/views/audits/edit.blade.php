@@ -58,10 +58,18 @@
                     </div>
             </div>
             <div class="col-4 mt-2 alert alert-success">
-                <h3 class="mb-2">Internal Auditors</h3>
+                <h3 class="mb-2">Checklist</h3>
                 @foreach($auditors as $user)
-                    <h4 class="mb-0">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</h4>
-                    <p class="mb-2 mt-0"><small>Assigned on: {{ sprintf("%s > %s", $user->assigned_area->parent->area_name ?? '', $user->assigned_area->area_name ?? 'None') }}</small></p>
+                    <h4 class="mb-1">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</h4>
+                    <h6>Submitted Report: {{ !empty($user->audit_report) ? 'YES' : 'Not Yet'}} </h6>
+                    @if(!empty($user->audit_report))
+                        <h6>Submitted On: {{ $user->audit_report->created_at->format('F d, Y h:i A') }} </h6>
+                    @endif
+                    <p class="mb-2 mt-0"><small>Assigned on: 
+                        @foreach($user->audit_plan_area_user as $area_user)
+                            {{ sprintf("%s > %s", $area_user->audit_plan_area->area->parent->area_name ?? '', $area_user->audit_plan_area->area->area_name ?? 'None') }}<br/>
+                        @endforeach
+                    </small></p>
                 @endforeach
             </div>
         </div>
