@@ -97,7 +97,7 @@ class ArchiveController extends Controller
         $parent_name = $parent_name == 'archives' ? null : $parent_name;
         $date_from = $request->date_from;
         $date_to = $request->date_to;
-        $data = $this->dr->searchFiles($keyword, ucwords($parent_name), $date_from, $date_to);
+        $data = $this->dr->searchFilesAndDirectories($keyword, ucwords($parent_name), $date_from, $date_to);
         $data['date_from'] = $date_from;
         $data['date_to'] = $date_to;
         $data['page_title'] = $parent_name ?? 'archives';
@@ -170,7 +170,7 @@ class ArchiveController extends Controller
     {
         $directory = Directory::findOrFail($id);
         $user = Auth::user();
-        if($directory->user_id !== $user->id && !in_array($user->role->role_name, config('app.manage_archive'))) {
+        if($directory->user_id !== $user->id && $directory->area->type !== 'process') {
             return back()->withError("You don't have permission to delete the directory");
         }
 

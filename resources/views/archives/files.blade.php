@@ -24,12 +24,12 @@
                         </small></p>
                     </button>
                     <ul class="dropdown-menu text-center">
-                        <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Directory</a></li>
+                        <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}&user={{ $current_user->id }}" class="text-decoration-none">Open Folder</a></li>
                         <li><a href="#" class="text-decoration-none btn-property"
                             data-bs-toggle="modal" data-bs-target="#pro
                             pertyModal"
                             data-name="{{ $directory->name }}"
-                            data-type="Directory"
+                            data-type="Folder"
                             data-created-by="{{ $directory->user->username ?? 'Admin' }}"
                             data-created-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
                             data-updated-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"

@@ -43,7 +43,7 @@
                         <button class="btn toggleDirectoryModal"
                             data-route="{{ route('archives-store-directory') }}" 
                             data-bs-toggle="modal" data-bs-target="#directoryModal">
-                                Directory
+                                Folder
                         </button>
                     </li>
                     @if(Auth::user()->role->role_name == Roles::STAFF)
@@ -94,7 +94,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="directoryModalLabel">Add Directory</h5>
+                    <h5 class="modal-title" id="directoryModalLabel">Add Folder</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" action="{{ route('archives-store-directory') }}" id="directoryModalForm">
@@ -103,7 +103,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="directory" class="form-label">Name</label>
-                            <input type="text" class="form-control" name="directory" id="directory" placeholder="Enter Directory Name" required>
+                            <input type="text" class="form-control" name="directory" id="directory" placeholder="Enter Folder Name" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -129,7 +129,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="file_name" class="form-label">Name</label>
-                            <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Enter Filename" required>
+                            <input type="text" class="form-control" name="file_name" id="file_name" placeholder="Enter File" required>
                         </div>
                         <div class="mb-3">
                             <label for="file_attachment" class="form-label">Attachment</label>
@@ -149,13 +149,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="searchModalLabel">Search File</h5>
+                    <h5 class="modal-title" id="searchModalLabel">Search File or Folder</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="GET" action="{{ route('search', strtolower($page_title ?? 'Archives')) }}" id="searchModalForm">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="keyword" class="form-label">File Name</label>
+                            <label for="keyword" class="form-label">File or Folder Name</label>
                             <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Enter File Name" required>
                         </div>
                         <div class="mb-3">

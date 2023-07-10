@@ -32,20 +32,19 @@
         </form>
        
 
-        @if(count($files) == 0)
+        @if(count($directories) == 0 && count($files) == 0)
             <h4>Result: No Result Found on keyword <strong>{{ $keyword ?? '' }}</strong></h4>
         @endif
-
-        <!--
-            {{--  @if(count($directories) > 0)
+        
+        @if(count($directories) > 0)
             <div class="mt-4 mb-4 row">
-                <h4>Directory Result: Found {{ count($directories) }} on keyword <strong>{{ $keyword ?? '' }}</strong></h4>
+                <h4>Folder Result: Found {{ count($directories) }} on keyword <strong>{{ $keyword ?? '' }}</strong></h4>
                 @foreach($directories as $directory)
                    @include('archives.common.directory')
                 @endforeach
             </div>
-        @endif --}}
-        -->
+        @endif
+       
 
         @if(count($files) > 0)
         <div class="mt-3 row">

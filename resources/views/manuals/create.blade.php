@@ -25,9 +25,9 @@
                     </div>
                     @if(Auth::user()->role->role_name == 'Process Owner')
                         <div class="mb-3">
-                            <label for="directory" class="form-label">Directory (If empty, coordinate with DCC):</label>
+                            <label for="directory" class="form-label">Folder (If empty, coordinate with DCC):</label>
                             <select id="directory" name="directory" class="form-control" required>
-                                <option value="">Select Directory</option>
+                                <option value="">Select Folder</option>
                                 @foreach($directories as $directory)
                                     <option value="{{ $directory->id }}">
                                         @if(in_array(auth()->user()->role->role_name, ['Process Owner', 'Internal Auditor']))

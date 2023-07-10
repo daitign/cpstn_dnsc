@@ -22,7 +22,7 @@
                         <li><a href="#" class="text-decoration-none btn-property"
                             data-bs-toggle="modal" data-bs-target="#propertyModal"
                             data-name="{{ $directory->name }}"
-                            data-type="Directory"
+                            data-type="Folder"
                             data-created-by="{{ $directory->user->username ?? 'Admin' }}"
                             data-created-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
                             data-updated-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
