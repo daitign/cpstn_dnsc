@@ -34,6 +34,12 @@
                 dateFormat: "Y-m-d",
                 maxDate: "{{ date('Y-m-d') }}"
             });
+
+            $(".btn-clear-date").click(function() {
+                var target = $(this).data('target');
+                $(target)[0]._flatpickr.clear();
+            });
+
         </script>
         @yield('js')
         

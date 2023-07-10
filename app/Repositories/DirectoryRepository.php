@@ -66,8 +66,11 @@ class DirectoryRepository {
         $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
         $directories = Directory::where('parent_id', '!=', null)
                         ->where('name', 'LIKE', "$keyword%")
-                        ->whereBetween('created_at', [$date_from, $date_to])
-                        ->get();
+                        ->where(function($q) use($date_from, $date_to) {
+                            if(!empty($date_from) && !empty($date_to)) {
+                                $q->whereBetween('created_at', [$date_from, $date_to]);
+                            }
+                        })->get();
 
         $directories = $directories->filter(function ($directory) use($grand_parents, $current_user) {
             return in_array($this->getGrandParent($directory), $grand_parents) && $this->allowedDirectory($directory, $current_user);
@@ -89,7 +92,9 @@ class DirectoryRepository {
         
         $grand_parents = !empty($grand_parent) ? [$grand_parent] : $current_user->role->directories;
         $files = $this->getFiles($current_user, null, $keyword, $date_from, $date_to);
-        $files = $files->whereBetween('created_at', [$date_from, $date_to]);
+        if(!empty($date_from) && !empty($date_to)) {
+            $files = $files->whereBetween('created_at', [$date_from, $date_to]);
+        }
         $files = $files->filter(function ($file) use($grand_parents, $current_user) {
             return in_array($this->getGrandParent($file->directory), $grand_parents) && $this->allowedDirectory($file->directory, $current_user);
         });

@@ -158,13 +158,33 @@
                             <label for="keyword" class="form-label">File or Folder Name</label>
                             <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Enter File Name" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="keyword" class="form-label">Date From</label>
-                            <input type="date" name="date_from" class="date-from form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="keyword" class="form-label">Date To</label>
-                            <input type="date" name="date_to" class="date-to form-control">
+                        <div class="accordion" id="dateFilterAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#searchCollapse">Search Date</button>
+                                </h2>
+                                <div id="searchCollapse" class="accordion-collapse collapse m-2" data-bs-parent="#dateFilterAccordion">
+                                    <div class="mb-3">
+                                        <label for="keyword" class="form-label">Date From</label>
+                                        <div class="input-group mb-3">
+                                            <input type="date" name="date_from" class="date-from form-control" id="date_from">
+                                            <div class="input-group-append">
+                                                <button type="button" class="input-group btn btn-warning btn-clear-date" data-target="#date_from">Clear</span>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="keyword" class="form-label">Date To</label>
+                                        <div class="input-group mb-3">
+                                            <input type="date" name="date_to" class="date-to form-control" id="date_to">
+                                            <div class="input-group-append">
+                                                <button type="button" class="input-group btn btn-warning btn-clear-date" data-target="#date_to">Clear</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -221,19 +241,18 @@
 @section('js')
     @include('archives.common.js')
     <script>
-        $('.date-from').flatpickr({
+        var dateFrom = $('.date-from').flatpickr({
             altInput: true,
             altFormat: "F j, Y",
             dateFormat: "Y-m-d",
-            defaultDate: "{{ Carbon\Carbon::now()->startOfMonth()->format('Y-m-d') }}",
             maxDate: "{{ date('Y-m-d') }}"
         });
 
-        $('.date-to').flatpickr({
+        
+        var dateTo = $('.date-to').flatpickr({
             altInput: true,
             altFormat: "F j, Y",
             dateFormat: "Y-m-d",
-            defaultDate: "today",
             maxDate: "{{ date('Y-m-d') }}"
         });
     </script>
