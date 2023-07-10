@@ -404,7 +404,7 @@
                                     </li>
                                 @endif
                                 </ul>
-                                <div class="p-2 border-top">
+                                <div class="p-2 border-top text-center">
                                     <a class="d-inline-block fw-medium" href="{{ route('notifications') }}" style="text-decoration: none;">
                                       <i class=" me-1 opacity-50"></i>&nbsp;&nbsp; View More
                                     </a>

@@ -70,6 +70,11 @@ class User extends Authenticatable
         );
     }
 
+    public function user_areas()
+    {
+        return $this->hasMany(AreaUser::class);
+    }
+
     public function getAssignedAreas()
     {
         $areas = [];

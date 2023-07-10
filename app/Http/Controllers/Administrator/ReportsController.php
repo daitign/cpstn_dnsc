@@ -36,6 +36,9 @@ class ReportsController extends Controller
         $user = User::find($report->user_id);
         \Notification::notify($user, 'Pre-approved survey report');
         
+        $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::COLLEGE_MANAGEMENT_TEAM); })->get();
+        \Notification::notify($users, 'Pre-approved survey report');
+        
         return back()->withMessage('Survey report pre-approved successfully');
     }
 
@@ -78,6 +81,9 @@ class ReportsController extends Controller
 
         $user = User::find($report->user_id);
         \Notification::notify($user, 'Pre-approved consolidated audit report');
+        
+        $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::COLLEGE_MANAGEMENT_TEAM); })->get();
+        \Notification::notify($users, 'Pre-approved consolidated audit report');
         
         return back()->withMessage('Consolidated audit report approved successfully');
     }

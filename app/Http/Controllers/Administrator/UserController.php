@@ -123,7 +123,7 @@ class UserController extends Controller
         ]);
 
         $user = User::find($request->user_id);
-        \Notification::notify($user, 'Assigned to area '.$area->area_name);
+        \Notification::notify($user, 'Assigned you to area '.$area->area_name);
 
         return redirect(URL::previous())->with('success', 'User has been assigned successfully');
     }
@@ -140,7 +140,7 @@ class UserController extends Controller
                 'area_id' => $area->id,
             ]);
             $user = User::find($request->user_id);
-            \Notification::notify($user, 'Assigned to area '.$area->area_name);    
+            \Notification::notify($user, 'Assigned you to area '.$area->area_name);    
         }
 
         return redirect(URL::previous())->with('success', 'User has been assigned successfully');

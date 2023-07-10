@@ -334,7 +334,7 @@ class AuditController extends Controller
             'file_id' => $file_id
         ]);
 
-        $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::CONSOLIDATED_AUDIT_REPORTS); })->get();
+        $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::QUALITY_ASSURANCE_DIRECTOR); })->get();
         \Notification::notify($users, 'Submitted Consolidated Audit Report');
 
         

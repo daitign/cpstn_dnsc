@@ -86,7 +86,9 @@ class SurveyReportController extends Controller
             'file_id' => $file_id
         ]);
 
-        
+        $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::QUALITY_ASSURANCE_DIRECTOR); })->get();
+        \Notification::notify($users, 'Submitted Survey Reports');
+
         return back()->withMessage('Survey Report created successfully');
     }
 }

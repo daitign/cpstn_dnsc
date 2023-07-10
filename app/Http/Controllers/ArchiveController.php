@@ -129,6 +129,7 @@ class ArchiveController extends Controller
 
     public function storeDirectory(Request $request)
     {
+        $parent = Directory::findOrFail($request->parent_directory);
         if(Directory::where('name', $request->directory)
             ->where('parent_id', $request->parent_directory)
             ->exists()){
@@ -140,11 +141,21 @@ class ArchiveController extends Controller
            $user = null;
         }
 
-        Directory::create([
+        $directory = Directory::create([
             'parent_id' => $request->parent_directory ?? null,
             'name' => $request->directory,
             'user_id' => $user->id ?? null,
+            'area_id' => $parent->area_id ?? null,
         ]);
+
+        $grand_parent = $this->dr->getGrandParent($parent);
+
+        $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::PROCESS_OWNER); })->get();
+        foreach($users as $user) {
+            if($this->dr->allowedDirectory($parent, $user)) {
+                \Notification::notify([$user], "Created ".ucfirst($grand_parent)." Folder");
+            }
+        }
 
         return back()->withMessage('Directory created successfully');
     }

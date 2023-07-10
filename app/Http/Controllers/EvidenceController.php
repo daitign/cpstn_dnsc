@@ -92,7 +92,11 @@ class EvidenceController extends Controller
         ]);
 
         $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::EVIDENCES); })->get();
-        \Notification::notify($users, 'Submitted Evidence');
+        foreach($users as $user) {
+            if($this->dr->allowedDirectory($directory, $user)) {
+                \Notification::notify([$user], 'Submitted Evidence');
+            }
+        }
         
         return back()->withMessage('Evidence created successfully');
     }

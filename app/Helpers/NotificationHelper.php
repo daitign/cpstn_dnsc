@@ -13,7 +13,7 @@ class NotificationHelper {
         $user_id = !empty($username) ? '' : Auth::user()->id;
 
         if(empty($username)) {
-            $username = !empty(Auth::user()) && Auth::user()->role->role_name !== Roles::QUALITY_ASSURANCE_DIRECTOR ? Auth::user()->full_name : 'Admin';
+            $username = !empty(Auth::user()) && Auth::user()->role->role_name !== Roles::QUALITY_ASSURANCE_DIRECTOR ? Auth::user()->full_name : Roles::QUALITY_ASSURANCE_DIRECTOR;
         }
         $message = $username.' '.$message;
 
