@@ -106,6 +106,14 @@
         dropdownParent: $('.auditors-panel')
     });
 
+    $("#audit_plan_date").flatpickr({
+        altInput: true,
+        altFormat: "F j, Y",
+        dateFormat: "Y-m-d",
+    });
+
+    
+
     $('.btn-save').on('click', function(e){
         if($('.table-process tbody > tr').length == 0) {
             e.preventDefault();
