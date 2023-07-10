@@ -3,12 +3,12 @@
         data-toggle="tooltip" title="{{ $directory->fullPath() ?? '' }}" 
         class="btn align-items-center justify-content-center btn-directory" 
         data-bs-toggle="dropdown" aria-expanded="false" 
-        data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}">
+        data-route="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}" style="border:none">
             <img src="{{ Storage::url('assets/folder.png') }}" alt="Folder.png" class="img-fluid">
             <p class="text-white" style="text-overflow: ellipsis"><small>{{ $directory->name ?? '' }}</small></p>
     </button>
-    <ul class="dropdown-menu text-center">
-        <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}" class="text-decoration-none">Open Directory</a></li>
+    <ul class="dropdown-menu text-left">
+        <li><a href="{{ route($route ?? 'archives-page') }}?directory={{ $directory->id }}" class="text-decoration-none" style="padding: 10px"><i class="fa fa-folder"></i> Open Directory</a></li>
         <li><a href="#" class="text-decoration-none btn-property"
             data-bs-toggle="modal" data-bs-target="#propertyModal"
             data-name="{{ $directory->name }}"
@@ -17,7 +17,7 @@
             data-created-by="{{ $directory->user->username ?? 'Admin' }}"
             data-created-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
             data-updated-at="{{ $directory->created_at ? $directory->created_at->format('M d, Y h:i A') : '' }}"
-        >Properties</a></li>
+            style="padding: 10px"><i class="fa fa-cog"></i> Properties</a></li>
         
         @if(Auth::user()->role->role_name == 'Document Control Custodian' && !empty($current_directory->area) && $current_directory->area->type == 'process')
         <li>
