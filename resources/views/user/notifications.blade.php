@@ -31,7 +31,7 @@
                                                         <td>{{ $notification->created_at->diffForHumans() }}</td>
                                                 @endforeach
                                             @else
-                                                <tr><td colspan="2"><h5>NO NOTIFICATIONS FOUND</h5></td></tr>
+                                                <tr><td colspan="2"><h6>NO NOTIFICATIONS FOUND</h6></td></tr>
                                             @endif
                                         </tbody>
                                     </div>

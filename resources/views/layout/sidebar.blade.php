@@ -331,6 +331,7 @@
                 <span class="visually-hidden" >Toggle navigation</span> 
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             
         
             <div class="collapse navbar-collapse" id="navcol-1">
@@ -339,44 +340,75 @@
                     <!-- Move the user profile and logout buttons to the right -->
                     <li class="nav-item me-2 ms-auto">
                         <div class="dropdown d-inline-block ms-2">
-                            <button type="button" class="btn btn-sm text-warning" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-fw fa-bell fa-2x"></i>
-                            @if(!empty(auth()->user()->unreadNotifications) && count(auth()->user()->unreadNotifications) > 0)
-                                <span class="fs-xs fw-semibold d-inline-block rounded-pill bg-success text-white px-2 align-top">{{ count(auth()->user()->unreadNotifications) }}</span>
-                            @endif
+
+                            {{-- <button type="button" class="btn btn-sm text-warning position-relative m-3" id="page-header-notifications-dropdown" data-bs-toggle="dropdown">
+                                <i class="fa fa-bell fa-2x"></i>
+                                @if(!empty(auth()->user()->unreadNotifications) && count(auth()->user()->unreadNotifications) > 0)
+                                <span class="position-absolute top-50 start-40 translate-middle badge rounded-pill" id="counter">
+                                    <span id="output" class="badge rounded-pill bg-danger badge-lg">
+                                        <span class="badge-count">{{ count(auth()->user()->unreadNotifications) }}</span>
+                                    </span>
+                                </span>
+                                @endif
                             </button>
+                            
+                            <style>
+                                .badge-count {
+                                    font-size: .7rem; /* Adjust the font size to make it larger */
+                                }
+                            </style> --}}
+
+
+
+                            <button type="button" class="btn btn-sm text-warning position-relative m-2" id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-top: 1px; border:none">
+                                <i class="fa fa-fw fa-bell fa-2x" style="font-size: 25px"></i>
+                                @if(!empty(auth()->user()->unreadNotifications) && count(auth()->user()->unreadNotifications) > 0)
+                                    <span class="fs-xs fw-semibold d-inline-block rounded-pill bg-danger text-white px-2 align-top position-absolute top-10 start-40 translate-middle" >{{ count(auth()->user()->unreadNotifications) }}</span>
+                                @endif
+                            </button>
+
                             <div class="dropdown-notification dropdown-menu dropdown-menu-lg dropdown-menu-end p-0 border-0 fs-sm" aria-labelledby="page-header-notifications-dropdown" style="">
-                                <div class="p-2 bg-body-light border-bottom text-center rounded-top">
-                                    <h5 class="dropdown-header text-uppercase">Notifications</h5>
-                                </div>
+                                <div class="p-2 bg-body-light border-bottom rounded-top">
+                                    <h1 class="dropdown-header" style="font-size: 1.2em;">Notifications</h1>
+                                  </div>
                                 <ul class="nav-items no-bullets mb-0">
                                 @if(!empty(auth()->user()->unreadNotifications) && count(auth()->user()->unreadNotifications) > 0)
-                                    @foreach(auth()->user()->unreadNotifications->take(5) as $notification)
-                                    <li>
-                                        <a class="text-dark d-flex py-2" href="{{ route('notifications') }}">
-                                        <div class="flex-shrink-0 me-2 ms-3">
-                                            <i class="fa fa-fw fa-check-circle text-success"></i>
+                                @foreach(auth()->user()->unreadNotifications->take(5) as $notification)
+                                <li class="d-flex align-items-center py-2">
+                                    <a href="{{ route('notifications') }}" style="text-decoration: none;" class="d-flex align-items-center">
+                                        @if (isset($notification->data['image']) && !empty($notification->data['image']))
+                                            <div class="me-2">
+                                                <img src="{{ Storage::url(auth()->user()->img) }}" alt="User Image" class="rounded-circle">
+                                            </div>
+                                        @else
+                                            <div class="me-2">
+                                                <img src="/media/logo.png" alt="Fallback Image" style="width: 24px; height: 24px; border-radius: 50%;">
+                                            </div>
+                                        @endif
+                                        <div>
+                                            <div class="fw-semibold">
+                                                {{ $notification->data['message'] }}
+                                            </div>
+                                            <div class="fw-medium text-muted">
+                                                {{ $notification->created_at->diffForHumans() }}
+                                            </div>
                                         </div>
-                                        <div class="flex-grow-1 pe-2">
-                                            <div class="fw-semibold">{{ $notification->data['message'] }}</div>
-                                            <span class="fw-medium text-muted" data-toggle="tooltip" title="{{ $notification->created_at->format('d/m/Y h:i A') }}">{{ $notification->created_at->diffForHumans() }}</span>
-                                        </div>
-                                        </a>
-                                    </li>
-                                    @endforeach
+                                    </a>
+                                </li>
+                            @endforeach
                                 @else
                                 <li>
                                     <div class="text-center">
-                                        NO UNREAD NOTIFICATIONS FOUND
+                                        <small>No unread notifications found</small>
                                     </div>
                                     </li>
                                 @endif
                                 </ul>
-                                <div class="p-2 border-top text-center">
-                                    <a class="d-inline-block fw-medium" href="{{ route('notifications') }}">
-                                    <i class="fa fa-fw fa-arrow-down me-1 opacity-50"></i> View More
+                                <div class="p-2 border-top">
+                                    <a class="d-inline-block fw-medium" href="{{ route('notifications') }}" style="text-decoration: none;">
+                                      <i class=" me-1 opacity-50"></i>&nbsp;&nbsp; View More
                                     </a>
-                                </div>
+                                  </div>
                             </div>
                         </div>
                     </li>
@@ -388,7 +420,7 @@
                     </li>
                     <li class="nav-item me-2 ms-auto">
                         <a class="nav-link" href="{{ route('logout') }}">
-                            <i class="fas fa-power-off text-warning" style="font-size: 27px;"></i>
+                            <i class="fas fa-power-off text-warning" style="font-size: 27px; margin-top: 2px;"></i>
                         </a>
                     </li>
                 </ul>
