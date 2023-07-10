@@ -251,6 +251,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/{id}', [AuditController::class, 'editAuditPlan'])->name('audit.edit');
             Route::post('/', [AuditController::class, 'saveAuditPlan'])->name('audit.save');
             Route::post('/{id}/update', [AuditController::class, 'saveAuditPlan'])->name('audit.update');
+            Route::delete('/{id}', [AuditController::class, 'deleteAuditPlan'])->name('audit.delete');
         });
         Route::get('/', [AuditController::class, 'auditReports'])->name('audit-reports.index');
         Route::prefix('consolidated-audit-reports')->name('consolidated-audit-reports.')->group(function () {

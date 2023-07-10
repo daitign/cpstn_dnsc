@@ -29,7 +29,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="text-decoration-none btn-confirm px-2" data-target="#delete_directory_{{ $directory->id }}"><i class="fa fa-trash"></i>  Delete</button>
+            <a href="#" class="text-decoration-none btn-confirm px-2" data-message="Are you sure you wan't to delete this folder?" data-target="#delete_directory_{{ $directory->id }}"><i class="fa fa-trash"></i>  Delete</button>
                 <form id="delete_directory_{{ $directory->id }}" action="{{ route('archives-delete-directory', $directory->id) }}" class="d-none" method="POST">
                     @csrf
                     @method('DELETE')

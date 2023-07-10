@@ -15,4 +15,9 @@ class AuditPlanAreaUser extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function audit_plan_area()
+    {
+        return $this->belongsTo(AuditPlanArea::class);
+    }
 }

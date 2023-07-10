@@ -10,6 +10,14 @@
     <div class="container">
         <div class="row mt-3 px-2 pb-3">
             @include('layout.alert')
+            <div class="col-12">
+                <button class="btn btn-danger btn-confirm px-2" style="float:right" data-message="Are you sure you wan't to delete this audit plan?" data-target="#delete_audit_plan"><i class="fa fa-trash"></i>  Delete Audit Plan</button>
+                    <form id="delete_audit_plan" action="{{ route('lead-auditor.audit.delete', $audit_plan->id) }}" class="d-none" method="POST">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                </button>
+            </div>
             <div class="col-8">
                 <!-- <form method="POST" action="{{ route('lead-auditor.audit.update', $audit_plan->id) }}">
                     @csrf -->

@@ -99,7 +99,7 @@ class AuditController extends Controller
             $id,
             $request
         ) {
-            $audit_plan = AuditPlan::where('id', $id)->first();
+            $audit_plan = AuditPlan::find($id);
            
             if(empty($audit_plan)) {
                 $audit_plan = AuditPlan::create(['name' => $request->name]);
@@ -148,6 +148,24 @@ class AuditController extends Controller
         });
 
         return redirect()->route('lead-auditor.audit.index')->withMessage('Audit plan saved successfully');
+    }
+
+    public function deleteAuditPlan($id)
+    {
+        $audit_plan = AuditPlan::findOrFail($id);
+        $audit_area_users = AuditPlanAreaUser::where('audit_plan_id', $id)->get();
+        foreach($audit_area_users as $audit_area_user) {
+            $area_user = AreaUser::where('area_id', $audit_area_user->audit_plan_area->area_id)
+                ->where('user_id', $audit_area_user->user_id)->first();
+            if(!empty($area_user)) {
+                $area_user->delete();
+            }
+            $audit_area_user->delete();
+        }
+        AuditPlanArea::where('audit_plan_id', $id)->delete();
+        $audit_plan->delete();
+        
+        return redirect()->route('lead-auditor.audit.index')->withMessage('Audit plan deleted successfully');
     }
 
     public function auditReports(Request $request, $directory_name = '')
