@@ -112,6 +112,10 @@
         location.href = $(this).data('route')
     });
 
+    $('.btn-file').on('dblclick', function(){
+        window.open($(this).data('route'), '_blank');
+    });
+
     $('.btn-remarks').on('click', function(){
         var file_id = parseInt($(this).data('file-id'));
         
