@@ -38,7 +38,7 @@ class SurveyController extends Controller
         $request->session()->put('survey', $survey);
 
         $users = User::whereHas('role', function($q){ $q->whereIn('role_name', ['Human Resources']); })->get();
-        \Notification::notify($users, 'Submitted Survey', $request->fullname);
+        \Notification::notify($users, 'Submitted Survey', route('hr-survey-page'), $request->fullname);
         
         return redirect()->route('surveys.success');
     }

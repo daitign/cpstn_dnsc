@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Area;
 use App\Models\File;
 use App\Models\User;
+use App\Models\FileItem;
 use App\Models\FileUser;
 use App\Models\Directory;
 use App\Models\AuditPlan;
@@ -320,5 +321,38 @@ class DirectoryRepository {
         }
         $directories = $directories->where('grand_parent', $grand_parent_name);
         return Directory::whereIn('parent_id', $directories->pluck('id'))->get();
+    }
+
+    public function storeFile($name, $description, $files, $parent_directory, $type)
+    {
+        $file = File::create([
+            'directory_id' => $parent_directory ?? null,
+            'user_id' => Auth::user()->id,
+            'file_name' => $name,
+            'description' => $description,
+            'type' => $type
+        ]);
+
+        $this->storeFileItem($file, $files);
+       
+        return $file;
+    }
+
+    public function storeFileItem($file, $files)
+    {
+        foreach($files as $file_item) {
+            $now = Carbon::now();
+            $hash_name = md5($file_item->getClientOriginalName() . uniqid());
+            $target_path = sprintf('attachments/%s/%s/%s/%s/%s', Auth::user()->id, $now->year, $now->month, $now->day, $hash_name);
+            $path = Storage::put($target_path, $file_item);
+            $file_name = $file_item->getClientOriginalName();
+
+            FileItem::create([
+                'file_id' => $file->id,
+                'file_name' => $file_name,
+                'file_mime' => $file_item->getClientMimeType(),
+                'container_path' => $path
+            ]);
+        }
     }
 }

@@ -153,7 +153,7 @@ class AuditController extends Controller
                     ]);
 
                     $user = User::find($auditor);
-                    \Notification::notify($user, 'Assigned you to audit plan '.$request->name);
+                    \Notification::notify($user, 'Assigned you to audit plan '.$request->name, route('dashboard'));
                 }
             }
         });
@@ -213,23 +213,14 @@ class AuditController extends Controller
 
         $directory = $this->dr->makeAreaRootDirectories($process, $dir->id);
         $file_id = null;
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $file = $request->file('file_attachment');
-            $hash_name = md5($file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $file);
-            $file_name = $request->name.".".$file->getClientOriginalExtension();
-
-            $file = File::create([
-                'directory_id' => $directory->id,
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'description' => $request->description,
-                'type' => 'audit_reports'
-            ]);
+        if ($request->hasFile('file_attachments')) {
+            $file = $this->dr->storeFile(
+                        $request->name, 
+                        $request->description, 
+                        $request->file('file_attachments'), 
+                        $directory->id, 
+                        'audit_reports'
+            );
             $file_id = $file->id;
         }
 
@@ -245,7 +236,7 @@ class AuditController extends Controller
         ]);
 
         $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::AUDIT_REPORTS); })->get();
-        \Notification::notify($users, 'Submitted Audit Report');
+        \Notification::notify($users, 'Submitted Audit Report', route('archives-show-file', $file_id));
 
         
         return back()->withMessage('Audit report created successfully');
@@ -255,22 +246,14 @@ class AuditController extends Controller
     {
         $user = Auth::user();
         $file_id = null;
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $file = $request->file('file_attachment');
-            $hash_name = md5($file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $file);
-            $file_name = $request->name.".".$file->getClientOriginalExtension();
-
-            $file = File::create([
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'description' => $request->description,
-                'type' => 'cars'
-            ]);
+        if ($request->hasFile('file_attachments')) {
+            $file = $this->dr->storeFile(
+                        $request->name, 
+                        $request->description, 
+                        $request->file('file_attachments'), 
+                        $directory->id, 
+                        'cars'
+            );
             $file_id = $file->id;
         }
 
@@ -284,7 +267,7 @@ class AuditController extends Controller
         ]);
 
         $users = User::whereHas('role', function($q){ $q->where('role_name', 'Internal Lead Auditor'); })->get();
-        \Notification::notify($users, 'Submitted CARS');
+        \Notification::notify($users, 'Submitted CARS', route('archives-show-file', $file_id));
         
         return back()->withMessage('CARS created successfully');
     }
@@ -295,7 +278,7 @@ class AuditController extends Controller
         $parent = 'Consolidated Audit Reports';
         $data = $this->dr->getDirectoriesAndFiles($parent, $request->directory ?? null);
         
-        $data['route'] = strtolower($parent);
+        $data['route'] = 'lead-auditor.consolidated-audit-reports.index';
         $data['page_title'] = $parent;
 
         return view('archives.index', $data);
@@ -311,28 +294,20 @@ class AuditController extends Controller
     {
         $user = Auth::user();
 
+        $files = $request->file('file_attachments');
         $audit_plan = AuditPlan::findOrFail($request->audit_plan);
         $parent_directory = Directory::where('name', 'Consolidated Audit Reports')->whereNull('parent_id')->firstOrFail();
         $directory = $this->dr->getDirectory($audit_plan->name, $parent_directory->id);
         
         $file_id = null;
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $file = $request->file('file_attachment');
-            $hash_name = md5($file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $file);
-            $file_name = $request->name.".".$file->getClientOriginalExtension();
-
-            $file = File::create([
-                'directory_id' => $directory->id,
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'description' => $request->description,
-                'type' => 'consolidated_audit_reports'
-            ]);
+        if ($request->hasFile('file_attachments')) {
+            $file = $this->dr->storeFile(
+                        $request->name, 
+                        $request->description, 
+                        $request->file('file_attachments'), 
+                        $directory->id, 
+                        'consolidated_audit_reports'
+            );
             $file_id = $file->id;
         }
 
@@ -347,7 +322,7 @@ class AuditController extends Controller
         ]);
 
         $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::QUALITY_ASSURANCE_DIRECTOR); })->get();
-        \Notification::notify($users, 'Submitted Consolidated Audit Report');
+        \Notification::notify($users, 'Submitted Consolidated Audit Report', route('admin-consolidated-audit-reports'));
 
         
         return back()->withMessage('Consolidated audit report created successfully');

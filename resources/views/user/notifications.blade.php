@@ -1,10 +1,10 @@
 @extends('layout.sidebar')
 @section('title')
-<title>Unread Notifications</title>
+<title>Notifications</title>
 @endsection
 @section('page')
     <div class="page-header">
-        <h2>Unread Notifications</h2>
+        <h2>Notifications</h2>
     </div>
    
     <div class="m-3">
@@ -14,7 +14,7 @@
                     <div class="col-12 px-2">
                         <div class="card p-3">
                             <div class="card-body pt-2">
-                                <h4 class="text-success"> Unread Notifications</h4>
+                                <h4 class="text-success"> Notifications</h4>
                                 <table class="table datatables">
                                     <tr>
                                         <th>#</th>
@@ -27,8 +27,13 @@
                                                 @foreach($notifications as $notification)
                                                     <tr>
                                                         <td>{{ $loop->iteration }}</td>
-                                                        <td>{{ $notification->data['message'] }}</td>
+                                                        <td>
+                                                            <a href="{{ $notification->data['link'] ?? route('notifications') }}">
+                                                                {{ $notification->data['message'] }}
+                                                            </a>
+                                                        </td>
                                                         <td>{{ $notification->created_at->diffForHumans() }}</td>
+                                                    </tr>
                                                 @endforeach
                                             @else
                                                 <tr><td colspan="2"><h6>NO NOTIFICATIONS FOUND</h6></td></tr>

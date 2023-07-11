@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('file_histories', function (Blueprint $table) {
+        Schema::create('file_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('file_id')->constrained();
+            $table->foreignId('file_id')->nullable()->constrained();
+            $table->foreignId('file_history_id')->nullable()->constrained();
             $table->string('file_name', 200)->nullable(false);
-            $table->text('description')->nullable();
+            $table->string('file_mime', 100)->nullable(false);
+            $table->text('container_path')->nullable(false);
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('file_histories');
+        Schema::dropIfExists('file_items');
     }
 };

@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use Storage;
 use Carbon\Carbon;
-use App\Models\File;
-use App\Models\User;
-use App\Models\FileUser;
-use App\Models\Directory;
-use App\Models\FileHistory;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
+use App\Models\File;
+use App\Models\User;
 use App\Models\Manual;
 use App\Models\Evidence;
+use App\Models\FileItem;
 use App\Models\Template;
+use App\Models\FileUser;
+use App\Models\Directory;
 use App\Models\AuditReport;
+use App\Models\FileHistory;
+use App\Models\SurveyReport;
+use App\Models\ConsolidatedAuditReport;
 
 
 use App\Repositories\DirectoryRepository;
@@ -199,22 +203,9 @@ class ArchiveController extends Controller
             ->exists()){
                 return back()->withError('File Already Exists!');
         }
-
+        
         if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $file = $request->file('file_attachment');
-            $hash_name = md5($file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $file);
-            $file_name = $request->file_name.".".$file->getClientOriginalExtension();
-
-            File::create([
-                'directory_id' => $request->parent_directory ?? null,
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path
-            ]);
+            $this->dr->storeFile($request->file_name, '', $request->file('file_attachment'), $request->parent_directory);
         }
 
         return back()->withMessage('File uploaded successfully');
@@ -228,29 +219,22 @@ class ArchiveController extends Controller
                     ->where('id', $file_id)
                     ->firstOrFail();
 
-        FileHistory::create([
+        $fileHistory = FileHistory::create([
             'file_id' => $file->id,
             'file_name' => $file->file_name,
-            'file_mime' => $file->file_mime,
-            'container_path' => $file->container_path,
             'description' => $file->description,
         ]);
+                    
+        $file->file_name = $request->file_name;
+        $file->description = $request->file_description;
+        $file->save();
 
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $uploaded_file = $request->file('file_attachment');
-            $hash_name = md5($uploaded_file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $uploaded_file);
-            $uploaded_file_name = $request->file_name.".".$uploaded_file->getClientOriginalExtension();
+        if ($request->hasFile('file_attachments')) {
+            FileItem::where('file_id', $file->id)
+                        ->whereNull('file_history_id')
+                        ->update(['file_history_id' => $fileHistory->id]);
 
-            $file->file_name = $uploaded_file_name;
-            $file->description = $request->file_description;
-            $file->container_path = $path;
-            $file->save();
-        }else{
-            $file->description = $request->file_description;
-            $file->save();
+            $this->dr->storeFileItem($file, $request->file('file_attachments'));            
         }
 
         return back()->withMessage('File updated successfully');
@@ -258,16 +242,20 @@ class ArchiveController extends Controller
 
     public function downloadFile($id)
     {
-        $file = File::findOrFail($id);
+        $file = FileItem::findOrFail($id);
         $user = Auth::user();
 
         $content = Storage::get($file->container_path);
         
-        return response()->download(
-            storage_path('app/'.$file->container_path), 
-            $file->file_name, 
-            ['Content-Type' => $file->file_mime]
-        );
+        return response($content)->header('Content-Type', $file->file_mime);
+    }
+
+    public function showFile($file_id) {
+        $file = File::where('id', $file_id)
+                    ->firstOrFail();
+        $files = [$file];
+        
+        return view('archives.files.show', compact('file', 'files'));
     }
 
     public function downloadFileHistory($id)
@@ -306,7 +294,18 @@ class ArchiveController extends Controller
             SurveyReport::where('file_id', $file->id)->delete();
         }
 
+        $directory = $file->directory_id;
+        $file->items()->delete();
+        $file->histories()->delete();
         $file->delete();
+
+        $url = url()->previous();
+        $route = app('router')->getRoutes($url)->match(app('request')->create($url))->getName();
+
+        if($route == 'archives-show-file') {
+            return redirect()->route('archives-page', ['directory' => $directory])->withMessage('File deleted successfully');
+        }
+        
         return back()->withMessage('File deleted successfully');
     }
 

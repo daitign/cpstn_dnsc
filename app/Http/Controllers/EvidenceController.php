@@ -61,23 +61,14 @@ class EvidenceController extends Controller
         }
         
         $file_id = null;
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $file = $request->file('file_attachment');
-            $hash_name = md5($file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $file);
-            $file_name = $request->name.".".$file->getClientOriginalExtension();
-
-            $file = File::create([
-                'directory_id' => $directory->id,
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'description' => $request->description,
-                'type' => 'evidences'
-            ]);
+        if ($request->hasFile('file_attachments')) {
+            $file = $this->dr->storeFile(
+                        $request->name, 
+                        $request->description, 
+                        $request->file('file_attachments'), 
+                        $directory->id, 
+                        'evidences'
+            );
             $file_id = $file->id;
         }
         
@@ -94,7 +85,7 @@ class EvidenceController extends Controller
         $users = User::whereHas('role', function($q){ $q->whereIn('role_name', \FileRoles::EVIDENCES); })->get();
         foreach($users as $user) {
             if($this->dr->allowedDirectory($directory, $user)) {
-                \Notification::notify([$user], 'Submitted Evidence');
+                \Notification::notify([$user], 'Submitted Evidence', route('archives-show-file', $file_id));
             }
         }
         

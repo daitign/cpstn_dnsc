@@ -108,3 +108,7 @@ p {
 .table-bordered tr td {
     border: 1px solid black;
 }
+
+.text-right {
+    text-align: right;
+}

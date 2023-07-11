@@ -29,6 +29,25 @@
     </div>
 </div>
 
+<div class="modal fade" id="filePropertyModal" tabindex="-1" aria-labelledby="filePropertyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Properties</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -45,8 +64,7 @@
                                     <td>Name</td>
                                     <td>Description</td>
                                     <td>Date</td>
-                                    <td>File</td>
-                            </tr>
+                                </tr>
                             </thead>
                             <tbody>
                             </tbody>
@@ -172,8 +190,10 @@
                         <input type="date" id="date" class="form-control" name="date" max="{{ date('Y-m-d') }}"/>
                     </div>
                     <div class="mb-3">
-                        <label for="file_attachment" class="form-label">Attachment</label>
-                        <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        <label for="file_attachments" class="form-label">Attachment</label>
+                        <input type="file" class="form-control" name="file_attachments[]" 
+                            id="file_attachments" required multiple
+                            accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     </div>
                     <div class="mb-3">
                         <label for="search" class="form-label">Description:</label>
@@ -208,8 +228,8 @@
                         <textarea class="form-control" name="file_description" id="file_description" placeholder="Enter File Description" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="file_attachment" class="form-label">Attachment</label>
-                        <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        <label for="file_attachments" class="form-label">Attachment</label>
+                        <input type="file" class="form-control" name="file_attachments[]" id="file_attachments" required multiple accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     </div>
                 </div>
                 <div class="modal-footer">

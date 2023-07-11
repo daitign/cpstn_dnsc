@@ -113,7 +113,7 @@ class UserController extends Controller
 
         if($file->user_id !== Auth::user()->id) {
             $user = User::find($file->user_id);
-            \Notification::notify($user, 'Submitted Remarks');
+            \Notification::notify($user, 'Submitted Remarks', route('archives-show-file', $file_id));
         }
         
         return redirect()->back()->with('success', 'Your remarks has been saved successfully');
@@ -121,7 +121,7 @@ class UserController extends Controller
 
     public function notifications()
     {
-        $notifications = Auth::user()->unreadNotifications;
+        $notifications = Auth::user()->notifications;
         $notifications->markAsRead();
         return view('user.notifications', compact('notifications'));
     }
