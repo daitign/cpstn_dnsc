@@ -23,12 +23,12 @@
 
 
     <div class="m-3 py-5">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-lg-6 mb-4 mb-lg-0">
+    <div class="row d-flex justify-content-center align-items-center h-100" >
+        <div class="col col-lg-6 mb-4 mb-lg-0 mt-0"style="width: 90%; heigth: 100%">
         <div class="card mb-3" style="border-radius: 10px;">
             <div class="row g-0">
             <div class="col-md-4 gradient-custom text-center text-white" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px ">
-                <img src="{{ Storage::url($user->img) }}" alt="Avatar" class="img-fluid my-4 rounded-circle" style="width: 150px;">
+                <img src="{{ Storage::url($user->img) }}" alt="Avatar" class="img-fluid my-4 rounded-circle" style="width: 180px;">
                 <h5 class="text-warning">{{ $user->firstname }} {{ $user->surname }}</h5>
                 <p>{{ $user->role->role_name }}</p>
 
