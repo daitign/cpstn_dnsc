@@ -51,6 +51,10 @@
         
     });
 
+    $('.btn-file-property').on('click', function(){
+        $('#filePropertyModal').find('.modal-body').html($(this).parents('li').find('.file-properties').html());
+    });
+
     $('.btn-history').on('click', function(){
         var file_id = parseInt($(this).data('file-id'));
         if(file_id !== '') {

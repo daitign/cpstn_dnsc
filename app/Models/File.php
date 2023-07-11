@@ -13,7 +13,7 @@ class File extends Model
 
     protected $guarded = [];
 
-    protected $with = ['file_users', 'remarks', 'audit_report', 'histories'];
+    protected $with = ['file_users', 'remarks', 'audit_report', 'histories', 'items'];
 
     protected $appends = ['shared_users'];
 
@@ -130,5 +130,10 @@ class File extends Model
             }
         }
         return $track_records;
+    }
+
+    public function items()
+    {
+        return $this->hasMany(FileItem::class);
     }
 }

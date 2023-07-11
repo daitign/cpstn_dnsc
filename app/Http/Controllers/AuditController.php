@@ -295,7 +295,7 @@ class AuditController extends Controller
         $parent = 'Consolidated Audit Reports';
         $data = $this->dr->getDirectoriesAndFiles($parent, $request->directory ?? null);
         
-        $data['route'] = strtolower($parent);
+        $data['route'] = 'lead-auditor.consolidated-audit-reports.index';
         $data['page_title'] = $parent;
 
         return view('archives.index', $data);
@@ -311,28 +311,20 @@ class AuditController extends Controller
     {
         $user = Auth::user();
 
+        $files = $request->file('file_attachments');
         $audit_plan = AuditPlan::findOrFail($request->audit_plan);
         $parent_directory = Directory::where('name', 'Consolidated Audit Reports')->whereNull('parent_id')->firstOrFail();
         $directory = $this->dr->getDirectory($audit_plan->name, $parent_directory->id);
         
         $file_id = null;
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $file = $request->file('file_attachment');
-            $hash_name = md5($file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $file);
-            $file_name = $request->name.".".$file->getClientOriginalExtension();
-
-            $file = File::create([
-                'directory_id' => $directory->id,
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'description' => $request->description,
-                'type' => 'consolidated_audit_reports'
-            ]);
+        if ($request->hasFile('file_attachments')) {
+            $file = $this->dr->storeFile(
+                        $request->name, 
+                        $request->description, 
+                        $request->file('file_attachments'), 
+                        $directory->id, 
+                        'consolidated_audit_reports'
+            );
             $file_id = $file->id;
         }
 
