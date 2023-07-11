@@ -333,7 +333,13 @@ class DirectoryRepository {
             'type' => $type
         ]);
 
+        $this->storeFileItem($file, $files);
        
+        return $file;
+    }
+
+    public function storeFileItem($file, $files)
+    {
         foreach($files as $file_item) {
             $now = Carbon::now();
             $hash_name = md5($file_item->getClientOriginalName() . uniqid());
@@ -348,6 +354,5 @@ class DirectoryRepository {
                 'container_path' => $path
             ]);
         }
-        return $file;
     }
 }

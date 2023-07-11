@@ -134,6 +134,6 @@ class File extends Model
 
     public function items()
     {
-        return $this->hasMany(FileItem::class);
+        return $this->hasMany(FileItem::class)->whereNull('file_history_id');
     }
 }

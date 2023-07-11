@@ -65,13 +65,27 @@
             $('.file-history-table tbody').html('');
             if(file.histories.length > 0) {
                 file.histories.forEach(function(i){
+                    var items = '';
+                    if(i.items.length > 0) {
+                        items = '<tr><td colspan=3" class="px-4"><strong>Files:</strong></td></tr>';
+                        i.items.forEach(function(j) {
+                            items += `
+                                <tr>
+                                    <td colspan="2" class="px-4">` + j.file_name + `</td>
+                                    <td><a href="{{ url('/') }}/archives/file/` + i.id + `/download" target="_blank" class="text-decoration-none"><i class="fa fa-eye"></i> View</a></td>
+                                </tr>
+                            `;
+                        });
+                    }
+
                     $('.file-history-table tbody').append(`
                         <tr>
                             <td>` + i.file_name + `</td>
                             <td>` + i.description + `</td>
                             <td>` + i.created_at_format + `</td>
-                            <td><a href="{{ url('/') }}/archives/file-history/` + i.id + `" target="_blank" class="text-decoration-none"><i class="fa fa-download"></i> Download</a></td>
+                            <td></td>
                         </tr>
+                        ` + items + `
                     `);
                 });
             }

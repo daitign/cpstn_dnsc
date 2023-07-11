@@ -64,8 +64,7 @@
                                     <td>Name</td>
                                     <td>Description</td>
                                     <td>Date</td>
-                                    <td>File</td>
-                            </tr>
+                                </tr>
                             </thead>
                             <tbody>
                             </tbody>
@@ -227,8 +226,8 @@
                         <textarea class="form-control" name="file_description" id="file_description" placeholder="Enter File Description" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="file_attachment" class="form-label">Attachment</label>
-                        <input type="file" class="form-control" name="file_attachment" id="file_attachment" required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        <label for="file_attachments" class="form-label">Attachment</label>
+                        <input type="file" class="form-control" name="file_attachments[]" id="file_attachments" required multiple accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     </div>
                 </div>
                 <div class="modal-footer">

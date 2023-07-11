@@ -219,29 +219,22 @@ class ArchiveController extends Controller
                     ->where('id', $file_id)
                     ->firstOrFail();
 
-        FileHistory::create([
+        $fileHistory = FileHistory::create([
             'file_id' => $file->id,
             'file_name' => $file->file_name,
-            'file_mime' => $file->file_mime,
-            'container_path' => $file->container_path,
             'description' => $file->description,
         ]);
+                    
+        $file->file_name = $request->file_name;
+        $file->description = $request->file_description;
+        $file->save();
 
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $uploaded_file = $request->file('file_attachment');
-            $hash_name = md5($uploaded_file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $uploaded_file);
-            $uploaded_file_name = $request->file_name.".".$uploaded_file->getClientOriginalExtension();
+        if ($request->hasFile('file_attachments')) {
+            FileItem::where('file_id', $file->id)
+                        ->whereNull('file_history_id')
+                        ->update(['file_history_id' => $fileHistory->id]);
 
-            $file->file_name = $uploaded_file_name;
-            $file->description = $request->file_description;
-            $file->container_path = $path;
-            $file->save();
-        }else{
-            $file->description = $request->file_description;
-            $file->save();
+            $this->dr->storeFileItem($file, $request->file('file_attachments'));            
         }
 
         return back()->withMessage('File updated successfully');
@@ -254,12 +247,7 @@ class ArchiveController extends Controller
 
         $content = Storage::get($file->container_path);
         
-        $headers = [
-            'Content-Disposition' => 'attachment; filename='. $file->file_name. ';'
-        ];
-        return response()->stream(function () use ($content)  {
-            $content;
-        }, 200, $headers);
+        return response($content)->header('Content-Type', $file->file_mime);
     }
 
     public function showFile($file_id) {
@@ -307,7 +295,8 @@ class ArchiveController extends Controller
         }
 
         $directory = $file->directory_id;
-        $file->items->delete();
+        $file->items()->delete();
+        $file->histories()->delete();
         $file->delete();
 
         $url = url()->previous();

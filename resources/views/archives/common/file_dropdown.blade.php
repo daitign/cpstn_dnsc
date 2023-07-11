@@ -59,6 +59,7 @@
             data-file-id="{{ $file->id }}"
             data-bs-toggle="modal" data-bs-target="#historyModal"
         ><i class="fa fa-history"></i> History</a>
+        
     </li>
     @if($file->user_id == Auth::user()->id)
     <li>
