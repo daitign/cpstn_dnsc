@@ -104,3 +104,7 @@ p {
     padding: 0; /* Remove padding */
     margin: 0; /* Remove margins */
 }
+
+.table-bordered tr td {
+    border: 1px solid black;
+}

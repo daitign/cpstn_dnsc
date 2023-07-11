@@ -94,8 +94,19 @@ class AuditController extends Controller
                         })->with('audit_plan_area_user')->get();
 
         foreach($auditors as $auditor) {
-            $auditor->audit_report = AuditReport::where('audit_plan_id', $audit_plan->id)
-                    ->where('user_id', $auditor->id)->first() ?? null;
+            $areas = [];
+            $auditor_areas = [];
+            foreach($auditor->audit_plan_area_user as $plan_area) {
+                if(!in_array($plan_area->audit_plan_area->area_id, $areas)) {
+                    $plan_area->audit_report = AuditReport::where('audit_plan_id', $audit_plan->id)
+                        ->where('area_id', $plan_area->audit_plan_area->area_id
+                        )->where('user_id', $auditor->id)->first() ?? null;
+
+                    $auditor_areas[] = $plan_area;
+                    $areas[] = $plan_area->audit_plan_area->area_id;
+                }
+            }
+            $auditor->areas = $auditor_areas;
         }
         return view('audits.edit', compact('auditors', 'audit_plan'));
     }
