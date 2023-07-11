@@ -94,8 +94,11 @@ class AuditController extends Controller
                         })->with('audit_plan_area_user')->get();
 
         foreach($auditors as $auditor) {
-            $auditor->audit_report = AuditReport::where('audit_plan_id', $audit_plan->id)
+            foreach($auditor->audit_plan_area_user as $plan_area) {
+                $plan_area->audit_report = AuditReport::where('audit_plan_id', $audit_plan->id)
+                    ->where('area_id', $plan_area->audit_plan_area->area_id)
                     ->where('user_id', $auditor->id)->first() ?? null;
+            }
         }
         return view('audits.edit', compact('auditors', 'audit_plan'));
     }
@@ -131,14 +134,14 @@ class AuditController extends Controller
 
             foreach($request->process as $key => $process) {
                 $area = Area::findOrFail($process);
-                $audit_plan_area = AuditPlanArea::create([
+                $audit_plan_area = AuditPlanArea::firstOrcreate([
                     'area_id' => $area->id,
                     'audit_plan_id' => $audit_plan->id,
                 ]);
 
                 $auditors = explode(',',$request->auditors[$key]);
                 foreach($auditors as $auditor) {
-                    AuditPlanAreaUser::create([
+                    AuditPlanAreaUser::firstOrcreate([
                         'user_id' => $auditor,
                         'audit_plan_id' => $audit_plan->id,
                         'audit_plan_area_id' => $audit_plan_area->id
@@ -196,6 +199,7 @@ class AuditController extends Controller
                             });
                         })
                         ->get();
+                        
         return view('audit-reports.create', compact('audit_plans'));
     }
 
