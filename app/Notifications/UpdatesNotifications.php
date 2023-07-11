@@ -18,11 +18,13 @@ class UpdatesNotifications extends Notification
     private $message;
     private $username;
     private $user_id;
-    public function __construct($message, $user_id, $username)
+    private $link;
+    public function __construct($message, $user_id, $username, $link)
     {
         $this->message = $message;
         $this->user_id = $user_id;
         $this->username = $username;
+        $this->link = $link;
         
     }
 
@@ -46,7 +48,8 @@ class UpdatesNotifications extends Notification
         return [
            'message' => $this->message,
            'by' => $this->username,
-           'by_user_id' => $this->user_id
+           'by_user_id' => $this->user_id,
+           'link' => $this->link
         ];
     }
 }

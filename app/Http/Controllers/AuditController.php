@@ -339,7 +339,7 @@ class AuditController extends Controller
         ]);
 
         $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::QUALITY_ASSURANCE_DIRECTOR); })->get();
-        \Notification::notify($users, 'Submitted Consolidated Audit Report');
+        \Notification::notify($users, 'Submitted Consolidated Audit Report', route('admin-consolidated-audit-reports'), null);
 
         
         return back()->withMessage('Consolidated audit report created successfully');
