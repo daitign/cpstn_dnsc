@@ -65,9 +65,11 @@
                         <thead><tr><td width="45%">Process</td><td width="15%">Submitted</td><td width="40%">Time Submitted</td></tr></thead>
                         <tbody>
                             @foreach($user->areas as $area_user)
+                            <tr>
                                 <td>{{ sprintf("%s > %s", $area_user->audit_plan_area->area->parent->area_name ?? '', $area_user->audit_plan_area->area->area_name ?? 'None') }}</td>
                                 <td>{{ !empty($area_user->audit_report) ? 'YES' : 'Not Yet'}}</td>
                                 <td> {{ !empty($area_user->audit_report) ? $area_user->audit_report->created_at->format('F d, Y h:i A') : '' }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     <table>
