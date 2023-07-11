@@ -55,24 +55,14 @@ class SurveyReportController extends Controller
         $directory = $this->dr->getDirectory($year, $survey->id);
 
         $file_id = null;
-        if ($request->hasFile('file_attachment')) {
-            $now = Carbon::now();
-            $file = $request->file('file_attachment');
-            $hash_name = md5($file->getClientOriginalName() . uniqid());
-            $target_path = sprintf('attachments/%s/%s/%s/%s', $now->year, $now->month, $now->day, $hash_name);
-            $path = Storage::put($target_path, $file);
-            $file_name = $request->name.".".$file->getClientOriginalExtension();
-
-            $file = File::create([
-                'directory_id' => $directory->id,
-                'user_id' => $user->id,
-                'file_name' => $file_name,
-                'file_mime' => $file->getClientMimeType(),
-                'container_path' => $path,
-                'description' => $request->description,
-                'type' => 'survey_reports'
-            ]);
-
+        if ($request->hasFile('file_attachments')) {
+            $file = $this->dr->storeFile(
+                        $request->name, 
+                        $request->description, 
+                        $request->file('file_attachments'), 
+                        $directory->id, 
+                        'survey_reports'
+            );
             $file_id = $file->id;
         }
 
@@ -87,7 +77,7 @@ class SurveyReportController extends Controller
         ]);
 
         $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::QUALITY_ASSURANCE_DIRECTOR); })->get();
-        \Notification::notify($users, 'Submitted Survey Reports');
+        \Notification::notify($users, 'Submitted Survey Reports', route('admin-survey-reports'));
 
         return back()->withMessage('Survey Report created successfully');
     }

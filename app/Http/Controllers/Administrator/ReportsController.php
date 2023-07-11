@@ -34,10 +34,10 @@ class ReportsController extends Controller
         );
         
         $user = User::find($report->user_id);
-        \Notification::notify($user, 'Pre-approved survey report');
+        \Notification::notify($user, 'Pre-approved survey report', route('archives-show-file', $report->file_id));
         
         $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::COLLEGE_MANAGEMENT_TEAM); })->get();
-        \Notification::notify($users, 'Pre-approved survey report');
+        \Notification::notify($users, 'Pre-approved survey report', route('cmt.survey-reports'));
         
         return back()->withMessage('Survey report pre-approved successfully');
     }
@@ -55,7 +55,7 @@ class ReportsController extends Controller
         );
         
         $user = User::find($report->user_id);
-        \Notification::notify($user, 'Rejected survey report');
+        \Notification::notify($user, 'Rejected survey report', route('archives-show-file', $report->file_id));
         
         return back()->withMessage('Survey report rejected successfully');
     }
@@ -80,10 +80,10 @@ class ReportsController extends Controller
         );
 
         $user = User::find($report->user_id);
-        \Notification::notify($user, 'Pre-approved consolidated audit report');
+        \Notification::notify($user, 'Pre-approved consolidated audit report', route('archives-show-file', $report->file_id));
         
         $users = User::whereHas('role', function($q){ $q->where('role_name', \Roles::COLLEGE_MANAGEMENT_TEAM); })->get();
-        \Notification::notify($users, 'Pre-approved consolidated audit report');
+        \Notification::notify($users, 'Pre-approved consolidated audit report', route('cmt.consolidated-audit-reports'));
         
         return back()->withMessage('Consolidated audit report approved successfully');
     }
@@ -102,7 +102,7 @@ class ReportsController extends Controller
 
         
         $user = User::find($report->user_id);
-        \Notification::notify($user, 'Rejected consolidated audit report');
+        \Notification::notify($user, 'Rejected consolidated audit report', route('archives-show-file', $report->file_id));
         
         return back()->withMessage('Consolidated audit report rejected successfully');
     }
