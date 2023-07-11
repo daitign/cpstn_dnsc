@@ -2,89 +2,94 @@
 @section('title')
     <title>Profile</title>
 @endsection
-@section('css-page')
-    <style>
-        .btn-design {
-            border: 1px solid #000000 !important;
-            font-size: 1em !important;
-        }
 
-        .btn-design:hover{
-            color: #ffffff !important;
-            background-color: #005b40 !important;
-        }
-
-        .row .col-4 .active{
-            color: #ffffff !important;
-            background-color: #005b40 !important;
-        }
-
-        .row .col-8 .active{
-            color: #ffffff !important;
-            background-color: #005b40 !important;
-        }
-
-        .maxed{
-            min-height: 16rem;
-            max-height: 16rem;
-        }
-    </style>
-@endsection
 @section('page')
     <div class="page-header pb-2">
         <h2>User Profile</h2>
     </div>
-    <div class="container">
-        <div class="g-3 bg-white mt-2" style="overflow-y: auto; height:50vh;">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-3">
-                            <img src="{{ Storage::url($user->img) }}" onerror="this.src='/storage/assets/dnsc-logo.png'" class="form-control" alt="User Image">
-                        </div>
-                        <div class="col-9 row">
-                            
-                            <div class="col-6 mt-3">
-                                <span>Username</span>
-                                <input type="text" class="form-control" name="username" placeholder="username" value="{{ $user->username }}" disabled>
-                            </div>
-                            <div class="col-6 mt-3">
-                                <span>Role</span>
-                                <input type="text" class="form-control" name="username" placeholder="username" value="{{ $user->role->role_name }}" disabled>
-                            </div>
-                            @if(in_array($user->role->role_name, config('app.role_with_assigned_area')))
-                                <div class="col-12 mt-3">
-                                    <span>Assigned on</span>
-                                    @if(!empty($user->assigned_areas))
-                                        @foreach($user->assigned_areas as $area)
-                                            <br/>{{ sprintf("%s > %s", $area->parent->area_name ?? '', $area->area_name ?? 'None') }}
-                                        @endforeach
-                                    @else
-                                        {{ $user->assigned_area->area_name ?? 'None' }}
-                                    @endif
-                                </div>
-                            @endif
+    <style>
+        .gradient-custom {
+        /* fallback for old browsers */
+        background: #98e288;
 
-                            <div class="col-6 mt-3">
-                                <span>Firstname</span>
-                                <input type="text" class="form-control" name="firstname" placeholder="Enter firstname" disabled value="{{ $user->firstname }}">
-                            </div>
-                            <div class="col-6 mt-3">
-                                <span>Middlename</span>
-                                <input type="text" class="form-control" name="middlename" placeholder="Enter middlename" value="{{ $user->middlename }}" disabled>
-                            </div>
-                            <div class="col-6 mt-3">
-                                <span>Surname</span>
-                                <input type="text" class="form-control" name="surname" placeholder="Enter surname" value="{{ $user->surname }}" disabled>
-                            </div>
-                            <div class="col-6 mt-3">
-                                <span>Suffix</span>
-                                <input type="text" class="form-control" name="suffix" placeholder="Enter suffix" value="{{ $user->suffix }}" disabled>
-                            </div>
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: -webkit-linear-gradient(to right bottom, rgb(77, 215, 82), rgb(50, 107, 46));
+
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: linear-gradient(to right bottom, rgb(135, 246, 101), rgb(41, 117, 85))
+        }
+</style>
+
+
+
+    <div class="m-3 py-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-lg-6 mb-4 mb-lg-0">
+        <div class="card mb-3" style="border-radius: 10px;">
+            <div class="row g-0">
+            <div class="col-md-4 gradient-custom text-center text-white" style="border-top-left-radius: 10px; border-bottom-left-radius: 10px ">
+                <img src="{{ Storage::url($user->img) }}" alt="Avatar" class="img-fluid my-4 rounded-circle" style="width: 150px;">
+                <h5 class="text-warning">{{ $user->firstname }} {{ $user->surname }}</h5>
+                <p>{{ $user->role->role_name }}</p>
+
+
+                @if(in_array($user->role->role_name, config('app.role_with_assigned_area')))
+                        <div class="col-12 mt-3">
+                            <span>Assigned on</span>
+                            @if(!empty($user->assigned_areas))
+                                @foreach($user->assigned_areas as $area)
+                                    <br/>{{ sprintf("%s > %s", $area->parent->area_name ?? '', $area->area_name ?? 'None') }}
+                                @endforeach
+                            @else
+                                {{ $user->assigned_area->area_name ?? 'None' }}
+                            @endif
                         </div>
+                    @endif
+
+
+                <i class="fas fa-cog mb-5"></i>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body p-4">
+                <h6 class="text-warning">INFORMATION</h6>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                    <div class="col-6 mb-3">
+                    <h6>Email</h6>
+                    <p class="text-muted">{{ $user->username }}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                    <h6>Phone</h6>
+                    <p class="text-muted">123 456 789</p>
                     </div>
                 </div>
+                <h6 class="text-warning">OTHER</h6>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                    <div class="col-6 mb-3">
+                    <h6>Position</h6>
+                    <p class="text-muted">{{ $user->role->role_name }}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                    <h6>Joined</h6>
+                    <p class="text-muted">{{ $user->created_at }}</p>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-start">
+                    <a href="#!"><i class="fab fa-facebook-f fa-lg me-3"></i></a>
+                    <a href="#!"><i class="fab fa-twitter fa-lg me-3"></i></a>
+                    <a href="#!"><i class="fab fa-instagram fa-lg"></i></a>
+                </div>
+                </div>
+            </div>
             </div>
         </div>
+        </div>
     </div>
+    </div>
+
 @endsection
+
+
+
+        

@@ -8,8 +8,8 @@
         data-toggle="tooltip" title="{{ $file->directory->fullPath() ?? '' }} > {{ $file->file_name ?? '' }}" 
         class="btn align-items-center justify-content-center pb-0" data-bs-toggle="dropdown" 
         aria-expanded="false">
-            <img src="{{ Storage::url('assets/file.png') }}" alt="file.png" class="img-fluid">
-            <p class="text-whiteeee mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
+            <img src="{{ Storage::url('assets/file-white.png') }}" alt="filewhite.png" class="img-fluid">
+            <p class="text-black mb-0" style="text-overflow: ellipsis"><small>{{ $file->file_name ?? '' }}</small></p>
     </button>
 
     @if(in_array($file->type, ['evidences', 'templates', 'manuals', 'audit_reports', 'consolidated_audit_reports', 'survey_reports']))
@@ -18,7 +18,7 @@
             data-file-id="{{ $file->id }}"
             {{ (in_array(Auth::user()->role->role_name, ['Internal Auditor', 'Internal Lead Auditor', 'Staff', 'Document Control Custodian', 'College Management Team', 'Quality Assurance Director']))
             ? 'data-route='.route('save-remarks', $file->id) : '' }}>
-                    <i class="fa fa-email"></i> Remarks
+                    <small><i class="fa fa-envelope"></i> Remarks</small>
         </button>
     @endif
     <ul class="dropdown-menu text-left px-3">

@@ -3,7 +3,7 @@
 @section('css')
 <style>
     body {   
-        background: url('{{ asset("/media/bg.jpg") }}') no-repeat center center fixed; 
+        background: url('{{ asset("/media/bgbg.jpg") }}') no-repeat center center fixed; 
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;

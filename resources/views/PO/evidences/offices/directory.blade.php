@@ -125,8 +125,8 @@
                     <div class="dropdown">
                         <button class="file btn d-flex align-items-center justify-content-center" data-bs-toggle="dropdown" aria-expanded="false">
                             <div>
-                                <img src="{{ Storage::url('assets/file.png') }}" alt="File.png" class="img-fluid w-75">
-                                <span class="text-whitee">{{ $file['directory']['filename'] }}.{{ $file['directory']['extension'] }}</span>
+                                <img src="{{ Storage::url('assets/file-white.png') }}" alt="File.png" class="img-fluid w-75">
+                                <span class="text-black">{{ $file['directory']['filename'] }}.{{ $file['directory']['extension'] }}</span>
                             </div>
                         </button>
                         <ul class="dropdown-menu">
