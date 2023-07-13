@@ -36,10 +36,12 @@
                 <label>Uploaded By</label><br/>
                 <input class="form-control" type="text" readonly value="{{ $file->user->firstname }} {{ $file->user->surname }}">
             </div>
+            @if(!empty($file->directory))
             <div class="col-12 mb-3">
                 <label>Full Path</label>
                 <input class="form-control" type="text" readonly value="{{ $file->directory->fullPath() ?? '' }} > {{ $file->file_name ?? '' }}">
             </div>
+            @endif
             <div class="col-6 mb-3">
                 <label>Created</label>
                 <input class="form-control" type="text" readonly value="{{ $file->created_at->format('F d, Y h:i A') }}">

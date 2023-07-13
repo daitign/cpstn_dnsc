@@ -98,6 +98,10 @@ class AuditController extends Controller
                 $plan_area->audit_report = AuditReport::where('audit_plan_id', $audit_plan->id)
                     ->where('area_id', $plan_area->audit_plan_area->area_id)
                     ->where('user_id', $auditor->id)->first() ?? null;
+                $plan_area->cars = Car::whereHas('audit_report', function($q) use($audit_plan, $plan_area) {
+                        $q->where('audit_plan_id', $audit_plan->id)
+                        ->where('area_id', $plan_area->audit_plan_area->area_id);
+                    })->where('user_id', $auditor->id)->first() ?? null;
             }
         }
         return view('audits.edit', compact('auditors', 'audit_plan'));
@@ -251,7 +255,7 @@ class AuditController extends Controller
                         $request->name, 
                         $request->description, 
                         $request->file('file_attachments'), 
-                        $directory->id, 
+                        null, // No directory for CARS
                         'cars'
             );
             $file_id = $file->id;

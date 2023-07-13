@@ -17,4 +17,9 @@ class AuditReport extends Model
     {
         return $this->hasOne(Car::class);
     }
+
+    public function file()
+    {
+        return $this->belongsTo(File::class);
+    }
 }

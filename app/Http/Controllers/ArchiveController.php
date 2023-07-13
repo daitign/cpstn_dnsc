@@ -204,8 +204,8 @@ class ArchiveController extends Controller
                 return back()->withError('File Already Exists!');
         }
         
-        if ($request->hasFile('file_attachment')) {
-            $this->dr->storeFile($request->file_name, '', $request->file('file_attachment'), $request->parent_directory);
+        if ($request->hasFile('file_attachments')) {
+            $this->dr->storeFile($request->file_name, '', $request->file('file_attachments'), $request->parent_directory);
         }
 
         return back()->withMessage('File uploaded successfully');

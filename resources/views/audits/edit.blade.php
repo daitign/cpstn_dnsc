@@ -18,7 +18,7 @@
                     </form>
                 </button>
             </div>
-            <div class="col-7">
+            <div class="col-12">
                 <!-- <form method="POST" action="{{ route('lead-auditor.audit.update', $audit_plan->id) }}">
                     @csrf -->
                     <div>
@@ -57,23 +57,43 @@
                         </div>
                     </div>
             </div>
-            <div class="col-5 mt-2 alert alert-success">
+            <div class="col-12 mt-2">
                 <h3 class="mb-2">Checklist</h3>
-                @foreach($auditors as $user)
-                    <h4 class="mb-1">{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</h4>
-                    <table class="table table-bordered">
-                        <thead><tr><td width="45%">Process</td><td width="15%">Submitted</td><td width="40%">Time Submitted</td></tr></thead>
-                        <tbody>
+                <table class="table text-white table-process">
+                    <thead><tr><td>Auditor</td><td>Process</td><td>File Type</td><td>Submitted</td><td>Time Submitted</td><td>Action</td></tr></thead>
+                    <tbody>
+                        @foreach($auditors as $user)
                             @foreach($user->audit_plan_area_user as $area_user)
-                            <tr>
-                                <td>{{ sprintf("%s > %s", $area_user->audit_plan_area->area->parent->area_name ?? '', $area_user->audit_plan_area->area->area_name ?? 'None') }}</td>
-                                <td>{{ !empty($area_user->audit_report) ? 'YES' : 'Not Yet'}}</td>
-                                <td> {{ !empty($area_user->audit_report) ? $area_user->audit_report->created_at->format('F d, Y h:i A') : '' }}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</td>
+                                    <td>{{ sprintf("%s > %s", $area_user->audit_plan_area->area->parent->area_name ?? '', $area_user->audit_plan_area->area->area_name ?? 'None') }}</td>
+                                    <td>
+                                        {{ !empty($area_user->audit_report) && $area_user->audit_report->file->created_at != $area_user->audit_report->file->updated_at ? 'Revision AR' : 'Audit Report' }}
+                                    </td>
+                                    <td>{{ !empty($area_user->audit_report) ? 'YES' : 'Not Yet'}}</td>
+                                    <td>{{ !empty($area_user->audit_report) ? $area_user->audit_report->updated_at->format('F d, Y h:i A') : '' }}</td>
+                                    <td>
+                                        @if(!empty($area_user->audit_report))
+                                            <a href="{{ route('archives-show-file', $area_user->audit_report->file_id) }}" class="text-warning" target="_blank"><i class="fa fa-eye"> View</i></a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ sprintf("%s %s", $user->firstname ?? '', $user->surname ?? '') }}</td>
+                                    <td>{{ sprintf("%s > %s", $area_user->audit_plan_area->area->parent->area_name ?? '', $area_user->audit_plan_area->area->area_name ?? 'None') }}</td>
+                                    <td>CARS</td>
+                                    <td>{{ !empty($area_user->cars) ? 'YES' : 'Not Yet'}}</td>
+                                    <td> {{ !empty($area_user->cars) ? $area_user->cars->created_at->format('F d, Y h:i A') : '' }}</td>
+                                    <td>
+                                        @if(!empty($area_user->cars))
+                                            <a href="{{ route('archives-show-file', $area_user->cars->file_id) }}" class="text-warning" target="_blank"><i class="fa fa-eye"> View</i></a>
+                                        @endif
+                                    </td>
+                                </tr>
                             @endforeach
-                        </tbody>
-                    <table>
-                @endforeach
+                        @endforeach
+                    </tbody>
+                <table>
             </div>
         </div>
     </div>

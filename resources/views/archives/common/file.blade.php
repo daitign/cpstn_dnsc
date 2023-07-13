@@ -2,7 +2,7 @@
     @if($file->type == 'audit_reports'
         && !empty($file->audit_report)
         && !empty($file->audit_report->cars))
-            <a href="{{ route('archives-download-file', $file->audit_report->cars->file->id) }}" class="cars"><img src="{{ asset('media/info.png') }}" width="40px"></a>
+            <a href="{{ route('archives-show-file', $file->audit_report->cars->file->id) }}" class="cars" target="_blank"><img src="{{ asset('media/info.png') }}" width="40px"></a>
     @endif
     <button 
         data-toggle="tooltip" title="{{ $file->directory->fullPath() ?? '' }} > {{ $file->file_name ?? '' }}" 

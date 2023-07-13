@@ -35,7 +35,8 @@
                     
                     <div class="mb-3">
                         <label for="file_attachments" class="form-label">Attachment</label>
-                        <input type="file" class="form-control" name="file_attachments[]" id="file_attachments" multiple required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                        <input type="file" class="form-control" name="file_attachments[]" id="file_attachments" 
+                            multiple required accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                     </div>
                 </div>
                 <div style="text-align: right" class="pb-3">

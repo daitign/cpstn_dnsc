@@ -22,4 +22,9 @@ class Car extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function audit_report()
+    {
+        return $this->belongsTo(AuditReport::class);
+    }
 }
