@@ -46,7 +46,7 @@
                 </select>
             </div>
             @endif
-            <div class="col-12 mb-3">
+            <div class="col-lg-6 col-md-12 mb-3">
                 <label for="file_attachments" class="form-label">Attachment</label><span class="text-danger"> *</span>
                 <input type="file" class="form-control" name="file_attachments[]" id="file_attachments" required multiple accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
             </div>

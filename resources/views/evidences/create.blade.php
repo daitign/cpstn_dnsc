@@ -25,6 +25,7 @@
                     <label for="search" class="form-label">Description:</label><span class="text-danger"> *</span>
                     <textarea name="description" class="form-control" rows="3"></textarea>
                 </div>
+                <div class="row">
                 <div class="col-lg-6 col-md-12 mb-3">
                     <label for="directory" class="form-label">Folder (If empty, coordinate with DCC)</label><span class="text-danger"> *</span>
                     <select id="directory" name="directory" class="form-control" required>
@@ -40,12 +41,13 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-12 mb-3">
+                <div class="col-lg-6 col-md-12 mb-3">
                     <label for="file_attachments" class="form-label">Attachment</label><span class="text-danger"> *</span>
                     <input type="file" class="form-control" 
                         name="file_attachments[]" id="file_attachments" required multiple
                         accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                 </div>
+            </div>
                 <div class="col-12 d-flex justify-content-end mb-3">
                     <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Add Evidence</button>
                 </div>
