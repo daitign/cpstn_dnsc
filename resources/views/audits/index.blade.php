@@ -10,9 +10,9 @@
     <div class="page-header">
         <h1>{{ $title }}</h1>
     </div>
-    <div class="container pt-2">
+    <div class="m-3 bg-white py-2">
         @if(auth()->user()->role->role_name == 'Internal Lead Auditor')
-        <div style="text-align:right">
+        <div style="text-align:right" class="m-3">
             <a href="{{ route('lead-auditor.audit.create') }}" class="btn btn-success"><i class="fa fa-plus"></i> Start New Audit Plan</a>
             @if(!empty($audit_plans) && count($audit_plans) > 0)
                 <a href="{{ route('lead-auditor.audit.previous') }}" class="btn btn-warning"><i class="fa fa-edit"></i> Use Previous Audit Plan</a>
@@ -20,28 +20,29 @@
         </div>
         @endif
         @include('layout.alert')
-        <div class="mb-4 row">
-            <div class="row {{ auth()->user()->role->role_name == 'Internal Lead Auditor' ? 'col-8' : 'col-12' }}">
+        <div class="mb-4 row m-3">
+            <div class="row {{ auth()->user()->role->role_name == 'Internal Lead Auditor' ? 'col-lg-8' : 'col-lg-12' }}">
                 @foreach($audit_plans as $plan)
-                    <div class="col-3">
-                        <a href="{{ route(auth()->user()->role->role_name == 'Internal Lead Auditor' ? 'lead-auditor.audit.edit' : 'auditor.audit.evidence.show', $plan->id) }}">
-                            <div class="card bg-success text-white">
-                                <div class="card-body ">
-                                    <div class="block-content block-content-full">
-                                        <div class="d-flex justify-content-center">
-                                            <div class="text-center">
-                                                <h5 class="fs-md fw-semibold mt-3 text-uppercase">{{ $plan->name ?? '' }}</h5>
-                                                <p>{{ $plan->description ?? '' }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer">{{ $plan->date ? \Carbon\Carbon::parse($plan->date)->format('F d, Y') : ''}}</div>
+                  <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+                    <a href="{{ route(auth()->user()->role->role_name == 'Internal Lead Auditor' ? 'lead-auditor.audit.edit' : 'auditor.audit.evidence.show', $plan->id) }}">
+                      <div class="card bg-success text-white">
+                        <div class="card-body">
+                          <div class="block-content block-content-full">
+                            <div class="d-flex justify-content-center">
+                              <div class="text-center">
+                                <h5 class="fs-md fw-semibold mt-3 text-uppercase">{{ $plan->name ?? '' }}</h5>
+                                <p>{{ $plan->description ?? '' }}</p>
+                              </div>
                             </div>
-                        </a>
-                    </div>
+                          </div>
+                        </div>
+                        <div class="card-footer">{{ $plan->date ? \Carbon\Carbon::parse($plan->date)->format('F d, Y') : '' }}</div>
+                      </div>
+                    </a>
+                  </div>
                 @endforeach
-            </div>
+              </div>
+`                 
 
             @if(auth()->user()->role->role_name == 'Internal Lead Auditor')
             <div class="col-4 mt-2 alert alert-success">
