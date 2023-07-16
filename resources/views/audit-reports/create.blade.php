@@ -15,21 +15,21 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="name" class="form-label">Name</label><span class="text-danger"> *
-            <input type="text" class="form-control" name="name" id="name" placeholder="Enter Audit Report Name" required>
+            <input type="text" class="form-control shadow-none" name="name" id="name" placeholder="Enter Audit Report Name" required>
           </div>
           <div class="col-md-6">
             <label for="date" class="form-label">Date</label><span class="text-danger"> *
-            <input type="date" id="date" class="form-control" name="date" max="{{ date('Y-m-d') }}" />
+            <input type="date" id="date" class="form-control shadow-none" name="date" max="{{ date('Y-m-d') }}" />
           </div>
         </div>
         <div class="mb-3">
           <label for="search" class="form-label">Description</label><span class="text-danger"> *
-          <textarea name="description" class="form-control" rows="3"></textarea>
+          <textarea name="description" class="form-control shadow-none" rows="3"></textarea>
         </div>
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="audit_plan" class="form-label">Audit Plan</label><span class="text-danger"> *
-            <select id="audit_plan" name="audit_plan" class="form-control" required>
+            <select id="audit_plan" name="audit_plan" class="form-control shadow-none" required>
               <option value="">Select Audit Plan</option>
               @foreach($audit_plans as $audit_plan)
               <option value="{{ $audit_plan->id }}">{{ $audit_plan->name ?? '' }}</option>
@@ -38,14 +38,14 @@
           </div>
           <div class="col-md-6">
             <label for="process" class="form-label">Process</label><span class="text-danger"> *
-            <select id="process" name="process" class="form-control" required>
+            <select id="process" name="process" class="form-control shadow-none" required>
               <option value="">Select Process</option>
             </select>
           </div>
         </div>
         <div class="mb-3">
           <label for="file_attachments" class="form-label">Attachment</label><span class="text-danger"> *
-          <input type="file" class="form-control" name="file_attachments[]" id="file_attachments" required multiple
+          <input type="file" class="form-control shadow-none" name="file_attachments[]" id="file_attachments" required multiple
             accept="image/jpeg,image/png,application/pdf,application/vnd.oasis.opendocument.text,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
         </div>
         <div style="text-align: right" class="pb-3">
