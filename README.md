@@ -9,8 +9,11 @@
 
 ## How to Run
 1. Run composer install
-2. Run php artisan migrate --seed
-3. Run php artisan storage:link
+2. npm install
+3. php artisan key:generate
+4. Run php artisan migrate --seed
+5. php artisan db:seed --class=SurveySeeder
+6. php artisans torage:link
 
 ## About Laravel
 
