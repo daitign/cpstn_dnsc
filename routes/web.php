@@ -120,6 +120,10 @@ Route::middleware(['auth'])->group(function(){
         Route::delete('/users/{id}',[AdminUserController::class,'destroy'])->name('admin-user-destroy');
         Route::post('/users/{id}/enable',[AdminUserController::class,'enable'])->name('admin-user-enable');
 
+         //newly add as Route [dashboard] not defined.
+
+         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
         // Route::prefix('roles')->group(function(){
         //     Route::get('/',[RoleController::class,'index'])->name('admin-role-page');
         //     Route::get('{id}',[RoleController::class,'show'])->name('admin-user-list');
